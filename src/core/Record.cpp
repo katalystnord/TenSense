@@ -349,7 +349,7 @@ QString writeRecord(const QString &dir, const Table &source, const TensionImport
         w.write("results/curve.vtp", curveVtp.toUtf8(), {{"role", "results"}});
 
     const QJsonObject manifest{
-        {"format", "tenforge-record"},
+        {"format", "tensense-record"},
         {"version", "1.0"},
         {"created", QDateTime::currentDateTimeUtc().toString(Qt::ISODate)},
         {"start", QJsonObject{{"host_utc", QJsonValue()}}},
@@ -374,7 +374,7 @@ OpenedRecord openRecord(const QString &dirIn)
         dir = QFileInfo(dir).absolutePath();  // the manifest itself was named
     r.dir = dir;
     if (!QFile::exists(dir + "/" + kManifest)) {
-        r.error = "no " + kManifest + " in " + dir + "; it is not a TenForge record";
+        r.error = "no " + kManifest + " in " + dir + "; it is not a TenSense record";
         return r;
     }
     QString err;
@@ -383,14 +383,16 @@ OpenedRecord openRecord(const QString &dirIn)
         r.error = err;
         return r;
     }
-    if (manifest.value("format").toString() != "tenforge-record") {
-        r.error = dir + "/" + kManifest + " is not a TenForge record manifest";
+    // "tenforge-record": written before the rename to TenSense (2026-11-15).
+    if (const QString fmt = manifest.value("format").toString();
+        fmt != "tensense-record" && fmt != "tenforge-record") {
+        r.error = dir + "/" + kManifest + " is not a TenSense record manifest";
         return r;
     }
     const QString version = manifest.value("version").toString();
     if (version.section('.', 0, 0) != "1") {
         r.error = "the record is version " + version
-                  + "; this TenForge reads version 1 records. A newer TenForge is needed.";
+                  + "; this TenSense reads version 1 records. A newer TenSense is needed.";
         return r;
     }
 
@@ -416,7 +418,7 @@ OpenedRecord openRecord(const QString &dirIn)
     r.mode = test.value("mode").toString();
     if (r.mode != "tension" && r.mode != "compression" && r.mode != "flexure") {
         r.error = "the record is a " + r.mode
-                  + " test; this TenForge analyses tension, compression and flexure tests";
+                  + " test; this TenSense analyses tension, compression and flexure tests";
         return r;
     }
     r.fixture = fixtureFromJson(test.value("fixture").toObject());

@@ -1,5 +1,5 @@
 {
-  "format": "tenforge-profile",
+  "format": "tensense-profile",
   "version": "1.0",
   "id": "iso-14125-1998-four-point",
   "profile_version": "0.1.0",
@@ -75,13 +75,13 @@
           "value": 0.01,
           "unit": "GPa",
           "source": {
-            "document": "TenForge",
+            "document": "TenSense",
             "clause": ""
           },
           "confirmed": false,
           "confirmed_from": "",
           "confirmed_by": "",
-          "note": "Reporting step. TenForge's choice; ISO 14125:1998 to be checked for a rule of its own."
+          "note": "Reporting step. TenSense's choice; ISO 14125:1998 to be checked for a rule of its own."
         }
       }
     },
@@ -100,13 +100,13 @@
           "value": 0.1,
           "unit": "MPa",
           "source": {
-            "document": "TenForge",
+            "document": "TenSense",
             "clause": ""
           },
           "confirmed": false,
           "confirmed_from": "",
           "confirmed_by": "",
-          "note": "Reporting step. TenForge's choice; ISO 14125:1998 to be checked for a rule of its own."
+          "note": "Reporting step. TenSense's choice; ISO 14125:1998 to be checked for a rule of its own."
         }
       }
     },
@@ -125,13 +125,13 @@
           "value": 0.01,
           "unit": "%",
           "source": {
-            "document": "TenForge",
+            "document": "TenSense",
             "clause": ""
           },
           "confirmed": false,
           "confirmed_from": "",
           "confirmed_by": "",
-          "note": "Reporting step. TenForge's choice; ISO 14125:1998 to be checked for a rule of its own."
+          "note": "Reporting step. TenSense's choice; ISO 14125:1998 to be checked for a rule of its own."
         }
       }
     },
@@ -150,13 +150,13 @@
           "value": 0.1,
           "unit": "N",
           "source": {
-            "document": "TenForge",
+            "document": "TenSense",
             "clause": ""
           },
           "confirmed": false,
           "confirmed_from": "",
           "confirmed_by": "",
-          "note": "Reporting step. TenForge's choice; ISO 14125:1998 to be checked for a rule of its own."
+          "note": "Reporting step. TenSense's choice; ISO 14125:1998 to be checked for a rule of its own."
         }
       }
     }
@@ -177,7 +177,7 @@
         "confirmed": false,
         "confirmed_from": "",
         "confirmed_by": "",
-        "note": "The loading span is a third of the span (https://cdn.standards.iteh.ai/samples/23637/ba7c56f2f2f64e27a63392bf4f28baed/ISO-14125-1998.pdf). The tolerance (1/3 within 1 %) is TenForge's choice; the standard's own tolerance is to be confirmed from the purchased text."
+        "note": "The loading span is a third of the span (https://cdn.standards.iteh.ai/samples/23637/ba7c56f2f2f64e27a63392bf4f28baed/ISO-14125-1998.pdf). The tolerance (1/3 within 1 %) is TenSense's choice; the standard's own tolerance is to be confirmed from the purchased text."
       },
       "max": {
         "value": 0.3367,

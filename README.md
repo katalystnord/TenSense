@@ -1,4 +1,4 @@
-# TenForge
+# TenSense
 
 Open universal testing software: tension, compression and bending, for
 any universal testing machine.
@@ -16,7 +16,7 @@ testXpert III's own evaluation of TU Braunschweig's four-point tests (see
 [Validation](#validation)). The manual: [docs/manual/](docs/manual/).
 What comes next: [ROADMAP.md](ROADMAP.md).
 
-![TenForge with a four-point bending test analysed](docs/manual/images/bend-analysed.png)
+![TenSense with a four-point bending test analysed](docs/manual/images/bend-analysed.png)
 
 ## What it is for
 
@@ -35,10 +35,10 @@ What comes next: [ROADMAP.md](ROADMAP.md).
 
 ## Works alongside, never requires
 
-TenForge interoperates with [SurView](https://github.com/katalystnord/SurView)
+TenSense interoperates with [SurView](https://github.com/katalystnord/SurView)
 (digital image correlation) and [OpenCorr](https://github.com/vincentjzy/OpenCorr)
 through open, documented files, and with any other tool that reads or
-writes them. None of them is needed to use TenForge, and TenForge is not
+writes them. None of them is needed to use TenSense, and TenSense is not
 needed to use them.
 
 ## Building
@@ -51,8 +51,8 @@ sudo apt install cmake ninja-build g++ qt6-base-dev qt6-base-dev-tools qt6-svg-d
 cmake -S . -B build-ninja -G Ninja
 cmake --build build-ninja
 tools/run-tests.sh
-build-ninja/src/TenForge          # the window
-tools/make-appimage.sh            # dist/TenForge-<version>-x86_64.AppImage
+build-ninja/src/TenSense          # the window
+tools/make-appimage.sh            # dist/TenSense-<version>-x86_64.AppImage
 ```
 
 ## Installing
@@ -100,7 +100,7 @@ each reason.
 - **NPL TENSTAND** (15 files with agreed values, NPL Report DEPC MPE 015):
   Rp0.2, ReH, ReL, Rm and A for all 15 files within the proof-of-confidence
   limits of EN 10002-1 Annex A.5; Rp0.1, Fm, At, Ag and Agt within
-  TenForge's own tighter bands. E falls inside the agreed range for 13 of
+  TenSense's own tighter bands. E falls inside the agreed range for 13 of
   15 files. The data is fetched when the tests run.
 - **BAM S355** (10 specimens, raw exports and BAM's evaluated results):
   ReH within 0.7 MPa, Rm within 0.5 MPa and Fm within 0.1 % of BAM's

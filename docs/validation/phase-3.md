@@ -1,7 +1,7 @@
 # Phase 3 validation
 
-How TenForge's compression and bending analysis compares with a reference
-evaluation, as run by the test suite on 2026-11-13 (TenForge 0.2.0,
+How TenSense's compression and bending analysis compares with a reference
+evaluation, as run by the test suite on 2026-11-13 (TenSense 0.2.0,
 profile `iso-14125-1998-four-point` 0.1.0). The suite regenerates these
 numbers on every run: `braunschweig_14125_agrees_with_testxpert`.
 
@@ -36,7 +36,7 @@ digit in all 25 files). The crosshead moves the loading points, not the
 beam's middle. testXpert's strains reproduce only when the deflection is
 taken at the loading points (strain = 3 h s / (a (3 L - 4 a)), 5.4 h s / L^2
 at a = L/3), not with the textbook mid-span formula (4.70 h s / L^2), which
-gives moduli 14 to 23 % higher than testXpert's on these files. TenForge therefore asks where a four-point
+gives moduli 14 to 23 % higher than testXpert's on these files. TenSense therefore asks where a four-point
 deflection was measured instead of assuming either; the walkthrough and
 the session tests follow that step.
 
@@ -49,7 +49,7 @@ of 161 comparisons failed; the modulus window's upper end moved from
 0.25 % to 0.30 % strain, 67 failed; an exclusion whose reason no longer held (feucht8's
 header set to its data's maximum), refused.
 
-| Specimen | Quantity | testXpert | TenForge | Tolerance | |
+| Specimen | Quantity | testXpert | TenSense | Tolerance | |
 |---|---|---|---|---|---|
 | Hanf80°Cgetrocknet_90min_15 | Ef (GPa) | 6.22 | 6.21532 | 0.005 | pass |
 | Hanf80°Cgetrocknet_90min_15 | f' (MPa) | 1.680 | 1.67958 | 0.0005 | pass |
@@ -218,11 +218,11 @@ header set to its data's maximum), refused.
 Each excluded file's own header states a maximum flexural stress its force
 data never reach, at the header's own width, thickness and span. The
 curve exported is not the one testXpert evaluated, so it cannot check
-TenForge against testXpert. The test re-checks this on every run: if an
+TenSense against testXpert. The test re-checks this on every run: if an
 excluded file's data did reach its header's maximum, the run fails.
 
 
-- Hanf80°Cfeucht8: header 120.259 MPa, data 101.117 MPa. The file's own header gives a maximum flexural stress of 120.259 MPa; its force data peak at 242.2 N, which at its stated width, thickness and span is 101.1 MPa. The curve in the file is not the one testXpert evaluated, so it cannot check TenForge against testXpert.
+- Hanf80°Cfeucht8: header 120.259 MPa, data 101.117 MPa. The file's own header gives a maximum flexural stress of 120.259 MPa; its force data peak at 242.2 N, which at its stated width, thickness and span is 101.1 MPa. The curve in the file is not the one testXpert evaluated, so it cannot check TenSense against testXpert.
 - Hanf80°Cfeucht_mit_Sensor1: header 116.381 MPa, data 114.983 MPa. The file's own header gives a maximum flexural stress of 116.381 MPa; its force data peak at 1.2 % less. As for feucht8, the curve in the file is not the one testXpert evaluated.
 
 ## Synthetic curves
@@ -237,7 +237,7 @@ reproduce every answer to within 1e-6 of its value
 (`compression_and_bending_models`, `analysis_session_guides_and_analyses`).
 
 ISO 178's stress at conventional deflection is defined at a deflection of
-1.5 h, which is 3.5 % strain only when L = 16 h. TenForge computes the
+1.5 h, which is 3.5 % strain only when L = 16 h. TenSense computes the
 strain for each specimen; on the three-point fixture (L/h = 15.6) that is
 3.69 %, and the stress matches the closed form there.
 

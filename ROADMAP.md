@@ -1,7 +1,7 @@
-# TenForge roadmap
+# TenSense roadmap
 
 Approved by David on 2026-11-11. Copied from the planning document of
-record (`katalystnord/tenforge-plan.md`, outside this repository); update
+record (`katalystnord/tensense-plan.md`, outside this repository); update
 both together.
 
 ## Architecture
@@ -121,12 +121,16 @@ criteria met and verified by driving the real thing.
 
 ### Phase 0: Foundations (S)
 
-- Repository `katalystnord/TenForge` (created when David says), CMake
+- Repository `katalystnord/TenSense` (created when David says), CMake
   targets, CLAUDE.md with settled tenets, process tooling, CI.
-- Trademark check for "TenForge" (EUIPO, Swedish PRV) before anything
-  goes public. Collision checks done 2026-11-11: one inactive unrelated
-  GitHub repo, PyPI free, tenforge.org and .io unregistered, tenforge.com
-  registered but empty.
+- Trademark check for "TenSense" (EUIPO, Swedish PRV) before anything
+  goes public. Renamed from TenForge on 2026-11-15 (David): SurView is
+  surface view, TenSense is tension sensing. Collision checks done
+  2026-11-15: Tensense.ai is a software company of the same name in an
+  unrelated field (organisational sensemaking), to look at first in the
+  trademark search; PyPI and npm free; tensense.io, .se and .eu had no
+  DNS; tensense.com is for sale at Afternic; tensense.org, .app, .dev and
+  .net are registered.
 - Written specs, reviewed by David before code: test record v1, profile
   schema v1, results schema v1.
 - Exit: CI green on the skeleton; specs approved.
@@ -186,7 +190,7 @@ criteria met and verified by driving the real thing.
   a reference evaluation for compression (no open dataset with one found;
   the D1621 foam set has raw curves only), ISO 14125 Annex B, ISO 844's
   250 Pa fallback zero, specimen classes.
-- **Added in 0.2, 2026-11-13** (David: TenForge is first an offline
+- **Added in 0.2, 2026-11-13** (David: TenSense is first an offline
   post-processor, so analysis, figures and reports must be good): shaded
   regions and result labels on the chart, notes on the curve, a modulus
   window moved by dragging or typing (kept in the record), and the chart
@@ -209,7 +213,7 @@ criteria met and verified by driving the real thing.
   automatic test where FreeCAD's flatpak is installed); PyVista 0.49 (VTK
   9.7) reads the curve and its results; the JSON-LD names only terms of
   the released ontologies; ParaView 6.1.0 reads the curve (line chart)
-  and opens whole records with TenForge's reader plugin, refusing a
+  and opens whole records with TenSense's reader plugin, refusing a
   changed one (automatic test where ParaView's flatpak is installed).
   The record as `.pvd`/`.vtu` moves to Phase 6, when there are DIC
   fields to hold. Version 0.3.0; the release attaches the ParaView reader
@@ -217,7 +221,7 @@ criteria met and verified by driving the real thing.
 
 ### Planned, place in the order to be decided: series and materials
 
-Asked for by David, 2026-11-13, for TenForge as an offline post-processor
+Asked for by David, 2026-11-13, for TenSense as an offline post-processor
 that keeps a record of tests and materials.
 
 - **Series statistics.** A series file (results-v1 section 4, still to be

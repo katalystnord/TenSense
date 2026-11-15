@@ -147,8 +147,8 @@ QString reportHtml(const QJsonObject &doc, const Specimen &sp, const QString &ch
     const QJsonArray own = doc.value("source_results").toArray();
     if (!own.isEmpty()) {
         h += "<h2>Results in the file, from its own software</h2>\n"
-             "<p>As the machine's software wrote them into the data file: not TenForge's, "
-             "not checked by TenForge, and not used by its analysis.</p>\n"
+             "<p>As the machine's software wrote them into the data file: not TenSense's, "
+             "not checked by TenSense, and not used by its analysis.</p>\n"
              "<table width=\"100%\">\n<tr><th width=\"34%\">Result</th><th>Value</th>"
              "<th>Unit</th><th>Where</th></tr>\n";
         for (const QJsonValue &v : own) {
@@ -195,7 +195,7 @@ QString reportHtml(const QJsonObject &doc, const Specimen &sp, const QString &ch
         h += row("How the file was read", notes.join("; "));
     h += row("Profile", profile.value("id").toString() + " version "
                             + profile.value("profile_version").toString()
-                            + (profile.value("shipped").toBool() ? ", shipped with TenForge"
+                            + (profile.value("shipped").toBool() ? ", shipped with TenSense"
                                                                  : ", a user profile"));
     h += row("Profile SHA-256", profile.value("sha256").toString());
     // Curves from elsewhere drawn beside this one: named, with their files.

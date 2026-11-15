@@ -1,6 +1,6 @@
 #pragma once
 
-// The stress-strain chart with what TenForge draws over it: a label at
+// The stress-strain chart with what TenSense draws over it: a label at
 // each stress result, the user's notes, and the modulus window, whose two
 // edges can be dragged with the mouse. Everything is painted through
 // VTK's 2D context, so the SVG export draws exactly what the screen shows.

@@ -1,13 +1,13 @@
 #!/bin/sh
-# make-appimage.sh -- TenForge as one AppImage, from a fresh Release build.
+# make-appimage.sh -- TenSense as one AppImage, from a fresh Release build.
 #
 # Usage: tools/make-appimage.sh [output-dir]
 #
 # Uses linuxdeploy and its Qt plugin (vetted, widely used; tenet 4), pinned
 # by release and SHA-256 below and fetched into the build tree on first use.
-# They run as programs here only; nothing of theirs is linked into TenForge.
+# They run as programs here only; nothing of theirs is linked into TenSense.
 #
-# The AppImage carries Qt, VTK and every other library TenForge needs, but
+# The AppImage carries Qt, VTK and every other library TenSense needs, but
 # not the C library or the OpenGL driver, which must come from the system:
 # it runs on distributions at least as new as the one it was built on
 # (Ubuntu 26.04 in CI, the first whose VTK is built against Qt 6).
@@ -49,7 +49,7 @@ cmake --build "$build"
 rm -rf "$build/AppDir"
 DESTDIR="$build/AppDir" cmake --install "$build" >/dev/null
 
-version=$(sed -n 's/^project(TenForge VERSION \([0-9.]*\).*/\1/p' "$here/CMakeLists.txt")
+version=$(sed -n 's/^project(TenSense VERSION \([0-9.]*\).*/\1/p' "$here/CMakeLists.txt")
 # Lessons from SurView's packaging (same tools, same pins):
 #  - the Qt plugin brings the platform, image-format and style plugins the
 #    program loads at run time; the SVG image format among them, or the
@@ -58,7 +58,7 @@ version=$(sed -n 's/^project(TenForge VERSION \([0-9.]*\).*/\1/p' "$here/CMakeLi
 #    very last step fails, so it is unset unless someone sets it.
 export QMAKE="${QMAKE:-/usr/lib/qt6/bin/qmake6}"
 export EXTRA_QT_PLUGINS="${EXTRA_QT_PLUGINS:-svg;imageformats}"
-export LDAI_OUTPUT="TenForge-$version-x86_64.AppImage"
+export LDAI_OUTPUT="TenSense-$version-x86_64.AppImage"
 if [ -z "${LDAI_UPDATE_INFORMATION:-}" ]; then
     unset LDAI_UPDATE_INFORMATION
 fi
@@ -70,8 +70,8 @@ cd "$out"
 "$tools/linuxdeploy-x86_64.AppImage" \
     --appdir "$build/AppDir" \
     --executable "$build/AppDir/usr/bin/tf-analyse" \
-    --desktop-file "$build/AppDir/usr/share/applications/tenforge.desktop" \
-    --icon-file "$build/AppDir/usr/share/icons/hicolor/scalable/apps/tenforge.svg" \
+    --desktop-file "$build/AppDir/usr/share/applications/tensense.desktop" \
+    --icon-file "$build/AppDir/usr/share/icons/hicolor/scalable/apps/tensense.svg" \
     --plugin qt \
     --output appimage
 ls -l "$out/$LDAI_OUTPUT"

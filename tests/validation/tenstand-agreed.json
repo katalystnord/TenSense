@@ -19,7 +19,7 @@
   "E": "GPa"
  },
  "tolerances": {
-  "source": "EN 10002-1:2001 Annex A.5, Table A.1, as reproduced in NPL Report DEPC MPE 015, section 9. A difference passes if it is within the relative OR the absolute limit. That reading of the table is TenForge's, not yet confirmed from the standard's text.",
+  "source": "EN 10002-1:2001 Annex A.5, Table A.1, as reproduced in NPL Report DEPC MPE 015, section 9. A difference passes if it is within the relative OR the absolute limit. That reading of the table is TenSense's, not yet confirmed from the standard's text.",
   "Rp0.2": {
    "relative": 0.005,
    "absolute": 2.0

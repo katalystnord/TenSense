@@ -1,13 +1,13 @@
-# TenForge test record, version 1
+# TenSense test record, version 1
 
 **Status: APPROVED by David, 2026-11-12.** It is a contract:
 changes are additive within version 1; anything else is version 2
 (engineering principle 9).
 
-A test record is everything TenForge knows about one test: what was
+A test record is everything TenSense knows about one test: what was
 measured, how, on what, and with which calibration. It is the thing every
-other tool receives from TenForge, so it must be complete and
-self-describing without TenForge (tenets 6 and 10).
+other tool receives from TenSense, so it must be complete and
+self-describing without TenSense (tenets 6 and 10).
 
 ## 1. Principles
 
@@ -71,11 +71,11 @@ can recognise a record by one file.
 
 ```json
 {
-  "format": "tenforge-record",
+  "format": "tensense-record",
   "version": "1.0",
   "created": "2026-11-11T14:03:22Z",
   "start": { "host_utc": "2026-11-11T14:03:25.118Z" },
-  "application": { "name": "TenForge", "version": "0.1.0", "build": "<git sha>" },
+  "application": { "name": "TenSense", "version": "0.1.0", "build": "<git sha>" },
   "files": [
     { "path": "test.json", "role": "metadata", "sha256": "..." },
     { "path": "channels/force.csv", "role": "channel", "channel": "force", "sha256": "..." },
@@ -85,6 +85,9 @@ can recognise a record by one file.
 ```
 
 - `start.host_utc` is the instant all `t_*_s` columns count from.
+- `format` was `tenforge-record` before the application was renamed
+  TenSense (2026-11-15). A reader takes both; a writer writes
+  `tensense-record`. Likewise `tenforge-analysis` and `tenforge-results`.
 - A reader refuses a major version it does not know and says so; it reads
   any minor version of a known major, ignoring fields it does not know.
 - Roles: `metadata`, `channel`, `source`, `frame-index`, `frame`, `field`,
@@ -104,7 +107,7 @@ One row per sample, in arrival order. Columns:
 
 **Imported channels** (1.0 as written by release 0.1): a file imported
 from a machine's export has no host arrival times and usually no device
-clock TenForge can vouch for, so both time columns are empty, never
+clock TenSense can vouch for, so both time columns are empty, never
 invented; `start.host_utc` is `null`, and `timestamps` in test.json is
 `none`. The file itself is kept verbatim under `source/`, time column
 included. A channel whose source column is a strain (e.g. in %) is
@@ -151,7 +154,7 @@ may be given as an array, and the profile states how they are combined.
 `grips` (gripping distance), `platens` (initial platen distance),
 `three-point` (support span, loading-edge radius, support radius),
 `four-point` (support span, loading span, radii). These are inputs to the
-stress and strain models, recorded as data; TenForge designs no fixtures.
+stress and strain models, recorded as data; TenSense designs no fixtures.
 
 ### 5.4 `channels`
 Keyed by channel id:
@@ -200,7 +203,7 @@ one small `analysis.json` that any tool can write:
 
 ```json
 {
-  "format": "tenforge-analysis",
+  "format": "tensense-analysis",
   "version": "1.0",
   "tool": { "name": "SurView", "version": "0.9.2" },
   "created": "2026-11-12T10:15:00Z",
@@ -227,15 +230,15 @@ one small `analysis.json` that any tool can write:
 
 Rules:
 
-1. **TenForge interprets an analysis only where it has an importer** (for
+1. **TenSense interprets an analysis only where it has an importer** (for
    SurView series CSV and OpenCorr tables, Phase 6). Otherwise it keeps
    the files, lists them, and shows any `results` beside its own,
    labelled with the tool that made them.
-2. **Other tools may write here without TenForge.** The manifest belongs
-   to TenForge: when it opens a record and finds files the manifest does
+2. **Other tools may write here without TenSense.** The manifest belongs
+   to TenSense: when it opens a record and finds files the manifest does
    not list, it says so and offers to add them with their hashes. It
    never adopts them silently and never changes them.
-3. **Adding an analysis never changes the record's data or TenForge's
+3. **Adding an analysis never changes the record's data or TenSense's
    results** (tenet 10).
 4. **`source/` holds inputs only** (e.g. a machine's export); a tool's
    output goes under `analyses/`.
@@ -243,9 +246,9 @@ Rules:
 ### 7.1 Imported DIC fields: `fields/<id>/`
 
 Where an analysis holds per-frame fields (e.g. SurView's `.vtu`, or
-OpenCorr's per-image tables converted), TenForge places a ParaView view
+OpenCorr's per-image tables converted), TenSense places a ParaView view
 of them under `fields/<id>/` with a `.pvd` collection, `<id>` matching
-the folder under `analyses/`. Each `.vtu` written by TenForge carries in
+the folder under `analyses/`. Each `.vtu` written by TenSense carries in
 its FieldData: `TimeValue` (seconds from record start; ParaView's XML
 readers use it as time) and `force_at_capture_N`. The join to frames is
 by frame file name or SHA-256 where the tool carries them, never by row

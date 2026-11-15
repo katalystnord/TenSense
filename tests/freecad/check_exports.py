@@ -1,4 +1,4 @@
-# Runs inside FreeCAD (FreeCADCmd): TenForge's FreeCAD exports, used as a
+# Runs inside FreeCAD (FreeCADCmd): TenSense's FreeCAD exports, used as a
 # FreeCAD user would use them (ROADMAP Phase 4 exit criterion).
 #
 #   TF_CARD=<name>.FCMat  TF_YIELD=<name>-yieldpoints.txt  TF_OUT=<result.json>
@@ -8,11 +8,11 @@
 # throwaway folder: a test never touches the user's own FreeCAD.
 #
 # 1. The material card loads in FreeCAD's material manager, with the values
-#    TenForge wrote.
+#    TenSense wrote.
 # 2. FreeCAD's own nonlinear example (femexamples.material_nl_platewithhole)
-#    is set up, given TenForge's modulus and yield points, written for
+#    is set up, given TenSense's modulus and yield points, written for
 #    CalculiX and solved by ccx through FEM's own tools. The solve must end,
-#    the input FreeCAD wrote must carry TenForge's *PLASTIC lines, and the
+#    the input FreeCAD wrote must carry TenSense's *PLASTIC lines, and the
 #    plate must yield (some von Mises stress above initial yield).
 #
 # Poisson's ratio is not measured by a tensile test; the example's 0.30 is
@@ -37,7 +37,7 @@ try:
     home = os.environ["FREECAD_USER_HOME"]
     if not os.path.realpath(FreeCAD.getUserAppDataDir()).startswith(os.path.realpath(home)):
         raise RuntimeError("refusing to run outside the throwaway FREECAD_USER_HOME")
-    lib = os.path.join(home, "Material", "TenForge")
+    lib = os.path.join(home, "Material", "TenSense")
     os.makedirs(lib, exist_ok=True)
     shutil.copy(card, lib)
     uuid = re.search(r'UUID: "([0-9a-f-]{36})"', open(card).read()).group(1)

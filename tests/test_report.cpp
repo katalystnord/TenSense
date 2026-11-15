@@ -83,7 +83,7 @@ TF_CASE(the_report_carries_specimen_source_profile_and_build)
     TF_CHECK(html.contains("iso-6892-1-2019"));
     TF_CHECK(html.contains(s.analysis()->profile.profileVersion));
     TF_CHECK(html.contains(QString::fromLatin1(s.analysis()->profile.sha256)));
-    TF_CHECK(html.contains("TenForge"));
+    TF_CHECK(html.contains("TenSense"));
 }
 
 TF_CASE(text_from_files_and_users_is_escaped)
@@ -118,7 +118,7 @@ TF_CASE(the_files_own_results_are_shown_apart_and_as_written)
 {
     // Bluehill Universal's results table (tests/fixtures/instron): shown in
     // its own section, value and unit as Bluehill wrote them, never among
-    // TenForge's results; a file without one gets no such section.
+    // TenSense's results; a file without one gets no such section.
     Session s;
     s.profile = "iso-527-1-2019";
     TF_REQUIRE(s.openData(QString(TF_FIXTURES) + "/instron/bluehill-universal-results.csv").isEmpty());

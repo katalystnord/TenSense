@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""The hardening curve TenForge's FreeCAD and CalculiX exports must give for
+"""The hardening curve TenSense's FreeCAD and CalculiX exports must give for
 the committed Ramberg-Osgood fixture, from its closed form.
 
 Run once; the output is committed as tests/fixtures/exports/
-ro-hardening.json. Standard library only. The test compares TenForge's
-export with these numbers, so this file must not share TenForge's code.
+ro-hardening.json. Standard library only. The test compares TenSense's
+export with these numbers, so this file must not share TenSense's code.
 
 The fixture (make_synthetic.py, ro-continuous): engineering strain
     e(s) = s / E + 0.002 (s / Rp)^n,  E = 200000 MPa, Rp = 300 MPa, n = 10,

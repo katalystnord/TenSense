@@ -1,5 +1,5 @@
 {
-  "format": "tenforge-profile",
+  "format": "tensense-profile",
   "version": "1.0",
   "id": "iso-178-2019",
   "profile_version": "0.1.0",
@@ -74,13 +74,13 @@
           "value": 1,
           "unit": "MPa",
           "source": {
-            "document": "TenForge",
+            "document": "TenSense",
             "clause": ""
           },
           "confirmed": false,
           "confirmed_from": "",
           "confirmed_by": "",
-          "note": "Reporting step. TenForge's choice; ISO 178:2019 to be checked for a rule of its own."
+          "note": "Reporting step. TenSense's choice; ISO 178:2019 to be checked for a rule of its own."
         }
       }
     },
@@ -99,13 +99,13 @@
           "value": 0.1,
           "unit": "MPa",
           "source": {
-            "document": "TenForge",
+            "document": "TenSense",
             "clause": ""
           },
           "confirmed": false,
           "confirmed_from": "",
           "confirmed_by": "",
-          "note": "Reporting step. TenForge's choice; ISO 178:2019 to be checked for a rule of its own."
+          "note": "Reporting step. TenSense's choice; ISO 178:2019 to be checked for a rule of its own."
         }
       }
     },
@@ -124,13 +124,13 @@
           "value": 0.01,
           "unit": "%",
           "source": {
-            "document": "TenForge",
+            "document": "TenSense",
             "clause": ""
           },
           "confirmed": false,
           "confirmed_from": "",
           "confirmed_by": "",
-          "note": "Reporting step. TenForge's choice; ISO 178:2019 to be checked for a rule of its own."
+          "note": "Reporting step. TenSense's choice; ISO 178:2019 to be checked for a rule of its own."
         }
       }
     },
@@ -161,13 +161,13 @@
           "value": 0.1,
           "unit": "MPa",
           "source": {
-            "document": "TenForge",
+            "document": "TenSense",
             "clause": ""
           },
           "confirmed": false,
           "confirmed_from": "",
           "confirmed_by": "",
-          "note": "Reporting step. TenForge's choice; ISO 178:2019 to be checked for a rule of its own."
+          "note": "Reporting step. TenSense's choice; ISO 178:2019 to be checked for a rule of its own."
         }
       }
     },
@@ -183,25 +183,25 @@
           "value": 5.0,
           "unit": "1",
           "source": {
-            "document": "TenForge",
+            "document": "TenSense",
             "clause": ""
           },
           "confirmed": false,
           "confirmed_from": "",
           "confirmed_by": "",
-          "note": "A break is a fall in force at least this many times the fall before it. TenForge's choice; ISO 178:2019 to be checked for a rule of its own."
+          "note": "A break is a fall in force at least this many times the fall before it. TenSense's choice; ISO 178:2019 to be checked for a rule of its own."
         },
         "min_drop": {
           "value": 0.1,
           "unit": "1",
           "source": {
-            "document": "TenForge",
+            "document": "TenSense",
             "clause": ""
           },
           "confirmed": false,
           "confirmed_from": "",
           "confirmed_by": "",
-          "note": "A break is a fall of at least this fraction of the maximum force. TenForge's choice; ISO 178:2019 to be checked for a rule of its own."
+          "note": "A break is a fall of at least this fraction of the maximum force. TenSense's choice; ISO 178:2019 to be checked for a rule of its own."
         }
       },
       "report": {
@@ -210,13 +210,13 @@
           "value": 0.1,
           "unit": "MPa",
           "source": {
-            "document": "TenForge",
+            "document": "TenSense",
             "clause": ""
           },
           "confirmed": false,
           "confirmed_from": "",
           "confirmed_by": "",
-          "note": "Reporting step. TenForge's choice; ISO 178:2019 to be checked for a rule of its own."
+          "note": "Reporting step. TenSense's choice; ISO 178:2019 to be checked for a rule of its own."
         }
       }
     },
@@ -232,25 +232,25 @@
           "value": 5.0,
           "unit": "1",
           "source": {
-            "document": "TenForge",
+            "document": "TenSense",
             "clause": ""
           },
           "confirmed": false,
           "confirmed_from": "",
           "confirmed_by": "",
-          "note": "A break is a fall in force at least this many times the fall before it. TenForge's choice; ISO 178:2019 to be checked for a rule of its own."
+          "note": "A break is a fall in force at least this many times the fall before it. TenSense's choice; ISO 178:2019 to be checked for a rule of its own."
         },
         "min_drop": {
           "value": 0.1,
           "unit": "1",
           "source": {
-            "document": "TenForge",
+            "document": "TenSense",
             "clause": ""
           },
           "confirmed": false,
           "confirmed_from": "",
           "confirmed_by": "",
-          "note": "A break is a fall of at least this fraction of the maximum force. TenForge's choice; ISO 178:2019 to be checked for a rule of its own."
+          "note": "A break is a fall of at least this fraction of the maximum force. TenSense's choice; ISO 178:2019 to be checked for a rule of its own."
         }
       },
       "report": {
@@ -259,13 +259,13 @@
           "value": 0.01,
           "unit": "%",
           "source": {
-            "document": "TenForge",
+            "document": "TenSense",
             "clause": ""
           },
           "confirmed": false,
           "confirmed_from": "",
           "confirmed_by": "",
-          "note": "Reporting step. TenForge's choice; ISO 178:2019 to be checked for a rule of its own."
+          "note": "Reporting step. TenSense's choice; ISO 178:2019 to be checked for a rule of its own."
         }
       }
     },
@@ -284,13 +284,13 @@
           "value": 0.1,
           "unit": "N",
           "source": {
-            "document": "TenForge",
+            "document": "TenSense",
             "clause": ""
           },
           "confirmed": false,
           "confirmed_from": "",
           "confirmed_by": "",
-          "note": "Reporting step. TenForge's choice; ISO 178:2019 to be checked for a rule of its own."
+          "note": "Reporting step. TenSense's choice; ISO 178:2019 to be checked for a rule of its own."
         }
       }
     }

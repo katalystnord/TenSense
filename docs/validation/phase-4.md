@@ -1,6 +1,6 @@
 # Phase 4 validation
 
-What TenForge's exports were checked against, on 2026-11-13 (TenForge
+What TenSense's exports were checked against, on 2026-11-13 (TenSense
 0.3.0). Exports are judged by whether the receiving program reads them
 and does the right thing with them, so each check runs that program.
 The rules for each file: [exports-v1](../specs/exports-v1.md).

@@ -1,9 +1,9 @@
-# TenForge results, version 1
+# TenSense results, version 1
 
 **Status: APPROVED by David, 2026-11-12.** A contract from here: changes
 are additive within version 1; anything else is version 2.
 
-What TenForge computed from a record with a profile, how, and how far it
+What TenSense computed from a record with a profile, how, and how far it
 can be trusted. Written into the record's `results/` folder; one
 `results.json` per analysis of one test.
 
@@ -17,7 +17,7 @@ can be trusted. Written into the record's `results/` folder; one
 3. **Conformity is stated, not implied** (tenet 9). Each analysis is
    either `to-standard` or `aligned`, and an aligned analysis lists every
    reason.
-4. **Recomputable.** Given the record and the profile, the same TenForge
+4. **Recomputable.** Given the record and the profile, the same TenSense
    version produces the same results; the file records what is needed to
    check that.
 
@@ -25,10 +25,10 @@ can be trusted. Written into the record's `results/` folder; one
 
 ```json
 {
-  "format": "tenforge-results",
+  "format": "tensense-results",
   "version": "1.0",
   "computed": "2026-11-11T15:20:00Z",
-  "application": { "name": "TenForge", "version": "0.1.0", "build": "<git sha>" },
+  "application": { "name": "TenSense", "version": "0.1.0", "build": "<git sha>" },
   "record": { "manifest_sha256": "..." },
   "profile": { "id": "iso-527-1-2019", "profile_version": "1.0.0", "sha256": "..." },
   "conformity": {
@@ -152,7 +152,7 @@ SHA-256. Specified with Phase 2, when the GUI first handles series.
   section's title line), when it has any. One
   object per value, `{"table", "row", "name", "unit", "value"}`, every
   field a string exactly as written ("285.30", "-----"), the unit with its
-  brackets removed. They are the file's, not TenForge's: never converted,
+  brackets removed. They are the file's, not TenSense's: never converted,
   never checked, never used by the analysis, and never among `results`.
   The report and the window show them in their own section, saying so.
 - The area the file's software used, from such a table (`Area`), is taken

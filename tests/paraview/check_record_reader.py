@@ -1,4 +1,4 @@
-# Runs inside ParaView (pvpython): TenForge's record reader plugin, and the
+# Runs inside ParaView (pvpython): TenSense's record reader plugin, and the
 # .vtp export, as ParaView reads them.
 #
 #   pvpython check_record_reader.py <plugin.py> <record folder> <tampered copy> <out.json>
@@ -35,7 +35,7 @@ try:
     bad.UpdatePipeline()
     result["tampered_points"] = sm.Fetch(bad).GetNumberOfPoints()
 
-    result["ok"] = (result["reader"] == "TenForgeRecordReader"
+    result["ok"] = (result["reader"] == "TenSenseRecordReader"
                     and result["points"] > 0
                     and "stress_MPa" in result["point_arrays"]
                     and result["Rm_Pa"] is not None

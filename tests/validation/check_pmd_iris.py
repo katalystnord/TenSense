@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Every class and property TenForge's PMD JSON-LD uses must exist in the
+"""Every class and property TenSense's PMD JSON-LD uses must exist in the
 released ontologies it names: PMDco 3.1.2 and TTO 3.0.0 (fetched at test
 time, pinned by SHA-256). Units must be QUDT unit IRIs from the fixed list
 checked by hand on 2026-11-13 (each resolved, HTTP 200; PMD's own example's

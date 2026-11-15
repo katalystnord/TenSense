@@ -1,5 +1,5 @@
 {
-  "format": "tenforge-profile",
+  "format": "tensense-profile",
   "version": "1.0",
   "id": "iso-6892-1-2019",
   "profile_version": "0.1.0",
@@ -72,13 +72,13 @@
           "value": 0.1,
           "unit": "GPa",
           "source": {
-            "document": "TenForge",
+            "document": "TenSense",
             "clause": ""
           },
           "confirmed": false,
           "confirmed_from": "",
           "confirmed_by": "",
-          "note": "TenForge's choice; the standard's rounding for E not yet read."
+          "note": "TenSense's choice; the standard's rounding for E not yet read."
         }
       }
     },
@@ -132,37 +132,37 @@
           "value": 0.005,
           "unit": "1",
           "source": {
-            "document": "TenForge",
+            "document": "TenSense",
             "clause": ""
           },
           "confirmed": false,
           "confirmed_from": "",
           "confirmed_by": "",
-          "note": "Smallest fall after the peak, as a fraction of it. TenForge's choice: real yield points on BAM S355 fall 0.99 % and more."
+          "note": "Smallest fall after the peak, as a fraction of it. TenSense's choice: real yield points on BAM S355 fall 0.99 % and more."
         },
         "min_span": {
           "value": 0.0075,
           "unit": "1",
           "source": {
-            "document": "TenForge",
+            "document": "TenSense",
             "clause": ""
           },
           "confirmed": false,
           "confirmed_from": "",
           "confirmed_by": "",
-          "note": "Strain over which the stress must stay at or below the peak. TenForge's choice, measured: real yield points on TENSTAND and BAM S355 stay below for 0.8 % strain or more, noise and serrations before 1 % plastic strain for 0.6 % at most."
+          "note": "Strain over which the stress must stay at or below the peak. TenSense's choice, measured: real yield points on TENSTAND and BAM S355 stay below for 0.8 % strain or more, noise and serrations before 1 % plastic strain for 0.6 % at most."
         },
         "max_plastic": {
           "value": 0.01,
           "unit": "1",
           "source": {
-            "document": "TenForge",
+            "document": "TenSense",
             "clause": ""
           },
           "confirmed": false,
           "confirmed_from": "",
           "confirmed_by": "",
-          "note": "Largest non-proportional strain at the peak. TenForge's choice, measured: up to about 0.005 on BAM S355; it keeps the search before the plateau near maximum force."
+          "note": "Largest non-proportional strain at the peak. TenSense's choice, measured: up to about 0.005 on BAM S355; it keeps the search before the plateau near maximum force."
         }
       },
       "report": {
@@ -234,13 +234,13 @@
           "value": 0.001,
           "unit": "kN",
           "source": {
-            "document": "TenForge",
+            "document": "TenSense",
             "clause": ""
           },
           "confirmed": false,
           "confirmed_from": "",
           "confirmed_by": "",
-          "note": "TenForge's choice."
+          "note": "TenSense's choice."
         }
       }
     },
@@ -345,13 +345,13 @@
           "value": 0.1,
           "unit": "1",
           "source": {
-            "document": "TenForge",
+            "document": "TenSense",
             "clause": ""
           },
           "confirmed": false,
           "confirmed_from": "",
           "confirmed_by": "",
-          "note": "The fall must also be at least this fraction of Fm. TenForge's choice: EN 10002-1 A.4.6 also asks for a fall below 3 % of Fm, which NPL reports most files never reach because recording stops at the break."
+          "note": "The fall must also be at least this fraction of Fm. TenSense's choice: EN 10002-1 A.4.6 also asks for a fall below 3 % of Fm, which NPL reports most files never reach because recording stops at the break."
         }
       },
       "report": {

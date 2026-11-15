@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Refuse a commit that does not build and pass TenForge's tests.
+# Refuse a commit that does not build and pass TenSense's tests.
 #
 # The regime is "run the suite, then commit", and a regime that depends on
 # remembering lapses exactly when it matters. This makes it automatic.
@@ -48,7 +48,7 @@ if ! cmake --build "$build" >"$log" 2>&1; then
     exit 1
 fi
 
-echo "pre-commit: running TenForge's test suite..."
+echo "pre-commit: running TenSense's test suite..."
 if ! ( cd "$build" && ctest --output-on-failure ); then
     echo "pre-commit: TESTS FAILED. Commit refused." >&2
     exit 1

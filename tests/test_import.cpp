@@ -1,10 +1,10 @@
-// Reading machine exports: the dialects TenForge meets first.
+// Reading machine exports: the dialects TenSense meets first.
 //
 // The fixtures are hand-written, small, and in the layouts of the files the
 // validation uses: a quoted preamble with semicolons (NPL TENSTAND's
 // layout), a decimal comma with a units row in brackets and an empty cell
 // where an extensometer came off (BAM's layout), and a plain CSV with the
-// unit in the column name (TenForge's synthetic fixtures).
+// unit in the column name (TenSense's synthetic fixtures).
 
 #include "core/Import.h"
 #include "check.h"
@@ -362,7 +362,7 @@ TF_CASE(force_and_displacement_names_in_other_languages_are_recognised)
 
 // --- MTS ---------------------------------------------------------------------
 // Real exports, unchanged (tests/fixtures/mts/SOURCE.md). Every expected value
-// below was read from the file with awk, not with TenForge.
+// below was read from the file with awk, not with TenSense.
 
 // The value of the preamble entry whose key, without a trailing colon, is key.
 static QString entry(const Table &t, const QString &key)
@@ -467,7 +467,7 @@ TF_CASE(testsuite_export_with_a_decimal_comma_and_exponents)
 
 TF_CASE(french_testsuite_export_asks_which_of_its_deformations_to_use)
 {
-    // Two extensometer readings and the crosshead's deformation: TenForge
+    // Two extensometer readings and the crosshead's deformation: TenSense
     // cannot know which the person wants, so it asks.
     const auto r = readTable(fixture("mts/testsuite-french.txt"));
     TF_REQUIRE(r.table.has_value());

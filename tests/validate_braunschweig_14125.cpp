@@ -155,13 +155,13 @@ int main(int argc, char *argv[])
 
     QString report;
     QTextStream o(&report);
-    o << "# TenForge against testXpert III: TU Braunschweig ISO 14125 four-point bending\n\n"
+    o << "# TenSense against testXpert III: TU Braunschweig ISO 14125 four-point bending\n\n"
       << agreed.value("dataset").toString() << "\n\n"
       << "Method: " << agreed.value("method").toString() << "\n\n"
       << "Tolerance: " << agreed.value("tolerance").toString() << "\n\n"
       << "Specimens analysed: " << analysed << "; comparisons: " << rows.size()
       << "; failed: " << failed << "; excluded: " << excludedNotes.size() << ".\n\n"
-      << "| Specimen | Quantity | testXpert | TenForge | Tolerance | |\n|---|---|---|---|---|---|\n";
+      << "| Specimen | Quantity | testXpert | TenSense | Tolerance | |\n|---|---|---|---|---|---|\n";
     for (const Row &r : rows)
         o << "| " << r.specimen << " | " << r.quantity << " | " << r.printed << " | "
           << QString::number(r.ours, 'f', r.quantity == "N" ? 0 : 5) << " | "

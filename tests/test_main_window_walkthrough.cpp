@@ -240,7 +240,7 @@ private slots:
         tf::gui::MainWindow window;
         window.show();
         QVERIFY(QTest::qWaitForWindowExposed(&window));
-        QVERIFY2(window.windowTitle().contains(QStringLiteral("TenForge")),
+        QVERIFY2(window.windowTitle().contains(QStringLiteral("TenSense")),
                  qPrintable(window.windowTitle()));
         QVERIFY2(window.windowTitle().contains(
                      QStringLiteral("open universal testing software")),
@@ -643,7 +643,7 @@ private slots:
     // An Instron Bluehill Universal export (tests/fixtures/instron): the
     // area comes from Bluehill's own results table, the window says the
     // header's dimensions disagree, and Bluehill's results are shown below
-    // TenForge's, set apart, as Bluehill wrote them.
+    // TenSense's, set apart, as Bluehill wrote them.
     void open_an_instron_export_and_see_its_own_results_set_apart()
     {
         tf::gui::MainWindow w;
@@ -675,7 +675,7 @@ private slots:
             if (t->item(r, 0) && t->item(r, 0)->text() == "sigma_m" && first < 0)
                 first = r;
         }
-        QVERIFY2(heading > first && first >= 0, "the file's results are not set apart below TenForge's");
+        QVERIFY2(heading > first && first >= 0, "the file's results are not set apart below TenSense's");
     }
 
     void open_a_file_of_specimens_side_by_side_and_choose_one()

@@ -95,7 +95,7 @@ runs:
           # appear in the full install closure on these images without anything
           # being wrong.
           if apt-cache depends "$vtk_qt" | grep -q 'libqt5'; then
-            echo "$vtk_qt on this image is a Qt5 build; TenForge is Qt6." >&2
+            echo "$vtk_qt on this image is a Qt5 build; TenSense is Qt6." >&2
             echo "Use a runner image whose VTK is built against Qt6." >&2
             exit 1
           fi

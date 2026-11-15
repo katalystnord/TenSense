@@ -119,7 +119,7 @@
         "sigma_fM_MPa": "120.259"
       },
       "loading_span_mm": 15,
-      "excluded": "The file's own header gives a maximum flexural stress of 120.259 MPa; its force data peak at 242.2 N, which at its stated width, thickness and span is 101.1 MPa. The curve in the file is not the one testXpert evaluated, so it cannot check TenForge against testXpert."
+      "excluded": "The file's own header gives a maximum flexural stress of 120.259 MPa; its force data peak at 242.2 N, which at its stated width, thickness and span is 101.1 MPa. The curve in the file is not the one testXpert evaluated, so it cannot check TenSense against testXpert."
     },
     {
       "file": "Four-Point Bending Tests/force_displacement_data/Hemp_moist/4PB_DIN14125_NFK_Osten_19122024_Hemp80_C_moist_without_sensor_class3_2.CSV",

@@ -1,7 +1,12 @@
-# TenForge - Context File
+# TenSense - Context File
 
 Open universal testing software: tension, compression and bending, for any
 universal testing machine. Katalyst Nord. Licence LGPL-2.1-or-later.
+
+**Named TenSense on 2026-11-15** (David; it was TenForge): tension
+sensing, as SurView is surface view. The `tf` prefix (targets, `tf-analyse`,
+`manifest.tfrec`, test macros) stays. Readers also take the old
+`tenforge-*` format names; `tests/fixtures/profiles/` keep them on purpose.
 
 The full plan and roadmap: [ROADMAP.md](ROADMAP.md). The data contracts:
 [docs/specs/](docs/specs/).
@@ -16,7 +21,7 @@ the rest of the file disagrees with a tenet, the tenet wins.
    co-equal pillars: faithfully record the test, and analyse it by named
    standard procedures. Everything else may only augment them.
 2. **There was no open, hardware-agnostic, ecosystem-native testing
-   application a working scientist could adopt.** This is why TenForge
+   application a working scientist could adopt.** This is why TenSense
    exists.
 3. **We build our own analysis core from the standards' definitions.**
    Existing code is a source of ideas, not a parent.
@@ -39,10 +44,10 @@ the rest of the file disagrees with a tenet, the tenet wins.
   and rigs are data the software records, not things this project designs.
 - **Scope:** tension, compression, bending (three- and four-point). Later:
   fracture toughness, small punch. Concrete is out of scope.
-- **Independent kits.** SurView, OpenCorr and TenForge never link, import
+- **Independent kits.** SurView, OpenCorr and TenSense never link, import
   or build against each other's code. Each installs, runs and is useful
   alone. Interop is optional at both ends, through open documented file
-  formats that any third party can also use. TenForge never calls,
+  formats that any third party can also use. TenSense never calls,
   launches or detects another tool; the user hands files across. Each
   kit's tests run with the others absent.
 - **Klipper** is the machine-side firmware of choice for DIY rigs, talked

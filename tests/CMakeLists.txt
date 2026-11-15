@@ -148,6 +148,16 @@
 #     the window listing a repeated name twice, or hiding the specimen
 #       list: the walkthrough case red.
 
+# NEGATIVE CHECKS, 2026-11-15, the rename from TenForge to TenSense:
+#   - a_record_written_under_the_old_name_tenforge_still_opens and
+#     a_profile_written_under_the_old_name_tenforge_still_loads: written
+#     first, seen red after the rename with only the new names read
+#     (with them, a_user_profile_is_labelled_as_not_shipped and
+#     a_profile_naming_the_wrong_primitive went red, since
+#     tests/fixtures/profiles/ keep the old name on purpose).
+#   - a_manifest_of_another_format_is_still_refused and
+#     the_shipped_profiles_say_tensense: guards, green before the fix.
+
 # --- The engine stands alone ------------------------------------------------
 # Every public header of tf_analysis, included into one translation unit and
 # compiled with ONLY tf_analysis's own include path and link line: Eigen, no
@@ -347,7 +357,7 @@ target_compile_definitions(validate_bam_s355 PRIVATE
     TF_FIXTURES="${CMAKE_CURRENT_SOURCE_DIR}/fixtures")
 add_test(NAME bam_s355_matches_reported_results COMMAND validate_bam_s355)
 
-# --- FreeCAD and CalculiX take TenForge's exports (Phase 4 exit) -------------
+# --- FreeCAD and CalculiX take TenSense's exports (Phase 4 exit) -------------
 # Runs only where FreeCAD's flatpak is installed (not in CI): an external
 # program cannot be a dependency of the suite, but where it is present the
 # check is real, end to end.
@@ -375,7 +385,7 @@ else()
                    "CalculiX export check is not run")
 endif()
 
-# --- ParaView reads records with TenForge's plugin (Phase 4 exit) ----------
+# --- ParaView reads records with TenSense's plugin (Phase 4 exit) ----------
 # Only where ParaView's flatpak and xvfb-run are installed (not in CI).
 find_program(TF_XVFB_RUN xvfb-run)   # also found below; cached either way
 set(tf_have_paraview FALSE)
@@ -392,7 +402,7 @@ if(tf_have_paraview)
                      -DTF_ANALYSE=$<TARGET_FILE:tf-analyse>
                      -DFIXTURE=${CMAKE_CURRENT_SOURCE_DIR}/fixtures/synthetic/discontinuous.csv
                      -DSCRIPT=${CMAKE_CURRENT_SOURCE_DIR}/paraview/check_record_reader.py
-                     -DPLUGIN=${CMAKE_SOURCE_DIR}/tools/paraview/TenForgeRecordReader.py
+                     -DPLUGIN=${CMAKE_SOURCE_DIR}/tools/paraview/TenSenseRecordReader.py
                      -DWORK=${CMAKE_BINARY_DIR}/paraview-check
                      -P ${CMAKE_CURRENT_SOURCE_DIR}/paraview/run_check.cmake)
     set_tests_properties(paraview_opens_a_record_and_refuses_a_changed_one PROPERTIES TIMEOUT 300)
@@ -408,9 +418,9 @@ set_tests_properties(cli_reports_its_version PROPERTIES
     PASS_REGULAR_EXPRESSION "^tf-analyse ${PROJECT_VERSION}")
 
 # The window's program answers --version with no display (packaging needs it).
-add_test(NAME gui_reports_its_version_without_a_display COMMAND TenForge --version)
+add_test(NAME gui_reports_its_version_without_a_display COMMAND TenSense --version)
 set_tests_properties(gui_reports_its_version_without_a_display PROPERTIES
-    PASS_REGULAR_EXPRESSION "^TenForge ${PROJECT_VERSION} \\(build "
+    PASS_REGULAR_EXPRESSION "^TenSense ${PROJECT_VERSION} \\(build "
     ENVIRONMENT "DISPLAY=;WAYLAND_DISPLAY=;QT_QPA_PLATFORM=")
 
 # The analysis from the command line, on a committed synthetic curve with a
@@ -433,7 +443,7 @@ add_test(NAME cli_writes_results_json_to_standard_output
          COMMAND tf-analyse --profile iso-527-1-2019 --area "40 mm2"
                  --gauge-length "75 mm" --json - ${TF_SYN}/polymer.csv)
 set_tests_properties(cli_writes_results_json_to_standard_output PROPERTIES
-    PASS_REGULAR_EXPRESSION "\"format\": \"tenforge-results\".*\"id\": \"Et\"")
+    PASS_REGULAR_EXPRESSION "\"format\": \"tensense-results\".*\"id\": \"Et\"")
 
 # tf-analyse --record writes a record a reader can open: its manifest lists
 # the curve ParaView reads (checked in ParaView itself where it is installed).

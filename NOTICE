@@ -1,4 +1,4 @@
-TenForge, Katalyst Nord.
+TenSense, Katalyst Nord.
 Licensed under the GNU Lesser General Public License, version 2.1 or later
 (see LICENSE).
 
@@ -108,6 +108,6 @@ from NPL Report DEPC MPE 015 (2005), Table 9.
 Platform MaterialDigital ontologies: PMD Core Ontology 3.1.2
 (https://w3id.org/pmd/co/, github.com/materialdigital/core-ontology) and
 the Tensile Test Ontology 3.0.0 (https://w3id.org/pmd/tto/,
-github.com/materialdigital/tensile-test-ontology), CC BY 4.0. TenForge's
+github.com/materialdigital/tensile-test-ontology), CC BY 4.0. TenSense's
 JSON-LD export uses their term IRIs; the test suite fetches the released
 files to check them, and they are not included.

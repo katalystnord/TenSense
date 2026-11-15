@@ -129,7 +129,7 @@ TF_CASE(results_document_states_conformity_and_how_each_value_was_made)
                                          imp.forceColumn, imp.extensionColumn, imp.notes},
                                         QDateTime::currentDateTimeUtc());
 
-    TF_CHECK(doc.value("format").toString() == "tenforge-results");
+    TF_CHECK(doc.value("format").toString() == "tensense-results");
     const QJsonObject conf = doc.value("conformity").toObject();
     TF_CHECK(conf.value("status").toString() == "aligned");
     QStringList codes;
@@ -159,6 +159,25 @@ TF_CASE(results_document_states_conformity_and_how_each_value_was_made)
     TF_CHECK(csv.startsWith("id,symbol,status,value,unit,reported_value"));
     TF_CHECK(csv.contains("Rp0.2,R_p0.2,determined,"));
     TF_CHECK(csv.contains("ReH,R_eH,not-determined,,Pa,,,,,aligned,"));
+}
+
+// tests/fixtures/profiles/ were written before the rename (2026-11-15) and
+// say "tenforge-profile"; they stay so, and must still load.
+TF_CASE(a_profile_written_under_the_old_name_tenforge_still_loads)
+{
+    const auto prof = loadProfile(fixture("profiles/user-polymer.json"));
+    TF_CHECK(prof.error.isEmpty());
+    TF_CHECK(prof.profile.has_value());
+}
+
+TF_CASE(the_shipped_profiles_say_tensense)
+{
+    for (const QString &id : shippedProfiles()) {
+        QFile f(QStringLiteral(TF_FIXTURES "/../../profiles/") + id + ".json");
+        TF_REQUIRE(f.open(QIODevice::ReadOnly));
+        TF_CHECK(QJsonDocument::fromJson(f.readAll()).object().value("format").toString()
+                 == "tensense-profile");
+    }
 }
 
 TF_CASE(a_user_profile_is_labelled_as_not_shipped)
@@ -302,7 +321,7 @@ TF_CASE(a_curve_profile_that_cannot_run_is_refused_and_says_why)
     }));
     TF_CHECK(!c.profile);
     TF_CHECK(c.error.contains("five-point"));
-    // A validity check on a quantity TenForge does not know.
+    // A validity check on a quantity TenSense does not know.
     auto d = loadProfile(variant(dir, "iso-178-2019", [](QJsonObject &r) {
         QJsonArray v = r["validity"].toArray();
         QJsonObject x = v[0].toObject();

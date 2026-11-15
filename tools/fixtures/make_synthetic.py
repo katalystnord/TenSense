@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Write TenForge's synthetic tension fixtures and their exact answers.
+"""Write TenSense's synthetic tension fixtures and their exact answers.
 
 Run once; the output is committed under tests/fixtures/synthetic/. The
-answers come from the closed-form curves below, never from TenForge's own
+answers come from the closed-form curves below, never from TenSense's own
 code, so a test that compares the two is a real check (the project's
 fixture rule, CLAUDE.md).
 

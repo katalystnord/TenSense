@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
             return 0;
         }
         if (!std::strcmp(argv[i], "--help") || !std::strcmp(argv[i], "-h")) {
-            std::printf("%s - %s\n\nUsage: TenForge [--version]\n\nThe window guides every step. "
+            std::printf("%s - %s\n\nUsage: TenSense [--version]\n\nThe window guides every step. "
                         "For analysis without a window, use tf-analyse.\n",
                         qPrintable(tf::core::applicationName()),
                         qPrintable(tf::core::applicationSubtitle()));
@@ -36,7 +36,7 @@ int main(int argc, char *argv[])
     QApplication::setApplicationName(tf::core::applicationName());
     QApplication::setOrganizationName(QStringLiteral("Katalyst Nord"));
     QApplication::setApplicationVersion(tf::core::applicationVersion());
-    QApplication::setDesktopFileName(QStringLiteral("tenforge"));
+    QApplication::setDesktopFileName(QStringLiteral("tensense"));
 
     tf::gui::MainWindow window;
     window.show();

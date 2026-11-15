@@ -2,7 +2,7 @@
 
 // The engine's primitives: small, pure functions over sampled curves.
 //
-// Every standard in TenForge is built from these (ROADMAP, section 3.1).
+// Every standard in TenSense is built from these (ROADMAP, section 3.1).
 // They know nothing about a standard, a unit system for display, Qt or a
 // file. Inputs are plain arrays of doubles in SI; outputs say how they were
 // found, and a result that cannot be found says why instead of returning a

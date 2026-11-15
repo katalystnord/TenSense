@@ -186,7 +186,7 @@ QString Session::openRecord(const QString &dirOrManifest)
         m_notices << p + ".";
     for (const QString &u : o.unlisted)
         m_notices << u + " is in the record's folder but not in its manifest, so something "
-                         "other than TenForge put it there.";
+                         "other than TenSense put it there.";
 
     profile.clear();
     if (shippedProfiles().contains(o.profileId)) {
@@ -194,12 +194,12 @@ QString Session::openRecord(const QString &dirOrManifest)
         const auto p = loadProfile(o.profileId);
         if (p.profile && p.profile->sha256 != o.profileSha256)
             m_notices << "The record was analysed with " + o.profileId + " version "
-                             + o.profileVersion + "; the one shipped with this TenForge (version "
+                             + o.profileVersion + "; the one shipped with this TenSense (version "
                              + p.profile->profileVersion
                              + ") differs, and the results shown are from it.";
     } else {
         m_notices << "The record was analysed with the profile \"" + o.profileId
-                         + "\", which is not shipped with this TenForge; choose a procedure.";
+                         + "\", which is not shipped with this TenSense; choose a procedure.";
     }
 
     if (!analyse())
@@ -617,7 +617,7 @@ bool Session::analyse()
                         QDateTime::currentDateTimeUtc(), validity(a.profile));
     if (!m_table->results.empty()) {
         // The machine software's own results, as written: shown beside
-        // TenForge's, never used by the analysis, never converted.
+        // TenSense's, never used by the analysis, never converted.
         QJsonArray own;
         for (const FileResult &r : m_table->results)
             own.append(QJsonObject{{"table", r.table}, {"row", r.row}, {"name", r.name},

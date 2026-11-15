@@ -60,7 +60,7 @@ QJsonObject resultsJson(const Profile &profile, const tf::analysis::AnalysisResu
                         const QJsonArray &validity)
 {
     QJsonObject root;
-    root["format"] = "tenforge-results";
+    root["format"] = "tensense-results";
     root["version"] = "1.0";
     root["computed"] = computedUtc.toUTC().toString(Qt::ISODate);
     root["application"] = QJsonObject{{"name", applicationName()},
@@ -120,7 +120,7 @@ QJsonObject resultsJson(const Profile &profile, const tf::analysis::AnalysisResu
     }
     if (!profile.shipped)
         reasons.append(QJsonObject{{"code", "user-profile"},
-                                   {"detail", "The profile is not one shipped with TenForge: " + profile.path}});
+                                   {"detail", "The profile is not one shipped with TenSense: " + profile.path}});
     root["conformity"] = QJsonObject{{"status", "aligned"}, {"reasons", reasons}};
 
     // --- Results ------------------------------------------------------------------

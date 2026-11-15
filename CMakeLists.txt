@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.21)
-project(TenForge VERSION 0.3.0 LANGUAGES C CXX)
+project(TenSense VERSION 0.3.0 LANGUAGES C CXX)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -39,7 +39,7 @@ find_package(VTK REQUIRED COMPONENTS
     InteractionStyle
     GUISupportQt              # QVTKOpenGLNativeWidget: VTK inside a Qt widget
     # Charts are VTK's own, never Qt Charts: Qt Charts is GPL-3.0-only and
-    # would force TenForge's licence to GPL.
+    # would force TenSense's licence to GPL.
     ChartsCore                # vtkChartXY
     ViewsContext2D            # vtkContextView
     RenderingContextOpenGL2   # the 2D context's OpenGL backend

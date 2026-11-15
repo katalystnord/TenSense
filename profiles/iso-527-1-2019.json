@@ -1,5 +1,5 @@
 {
-  "format": "tenforge-profile",
+  "format": "tensense-profile",
   "version": "1.0",
   "id": "iso-527-1-2019",
   "profile_version": "0.1.0",
@@ -71,13 +71,13 @@
           "value": 1,
           "unit": "MPa",
           "source": {
-            "document": "TenForge",
+            "document": "TenSense",
             "clause": ""
           },
           "confirmed": false,
           "confirmed_from": "",
           "confirmed_by": "",
-          "note": "TenForge's choice. Not yet read in ISO 527-1:2019; to be confirmed from the purchased text."
+          "note": "TenSense's choice. Not yet read in ISO 527-1:2019; to be confirmed from the purchased text."
         }
       }
     },
@@ -96,13 +96,13 @@
           "value": 0.1,
           "unit": "MPa",
           "source": {
-            "document": "TenForge",
+            "document": "TenSense",
             "clause": ""
           },
           "confirmed": false,
           "confirmed_from": "",
           "confirmed_by": "",
-          "note": "TenForge's choice. Not yet read in ISO 527-1:2019; to be confirmed from the purchased text."
+          "note": "TenSense's choice. Not yet read in ISO 527-1:2019; to be confirmed from the purchased text."
         }
       }
     },
@@ -122,13 +122,13 @@
           "value": 0.1,
           "unit": "%",
           "source": {
-            "document": "TenForge",
+            "document": "TenSense",
             "clause": ""
           },
           "confirmed": false,
           "confirmed_from": "",
           "confirmed_by": "",
-          "note": "TenForge's choice. Not yet read in ISO 527-1:2019; to be confirmed from the purchased text."
+          "note": "TenSense's choice. Not yet read in ISO 527-1:2019; to be confirmed from the purchased text."
         }
       }
     },
@@ -144,7 +144,7 @@
           "value": 5.0,
           "unit": "1",
           "source": {
-            "document": "TenForge",
+            "document": "TenSense",
             "clause": ""
           },
           "confirmed": false,
@@ -156,7 +156,7 @@
           "value": 0.1,
           "unit": "1",
           "source": {
-            "document": "TenForge",
+            "document": "TenSense",
             "clause": ""
           },
           "confirmed": false,
@@ -171,13 +171,13 @@
           "value": 0.1,
           "unit": "MPa",
           "source": {
-            "document": "TenForge",
+            "document": "TenSense",
             "clause": ""
           },
           "confirmed": false,
           "confirmed_from": "",
           "confirmed_by": "",
-          "note": "TenForge's choice. Not yet read in ISO 527-1:2019; to be confirmed from the purchased text."
+          "note": "TenSense's choice. Not yet read in ISO 527-1:2019; to be confirmed from the purchased text."
         }
       }
     },
@@ -197,13 +197,13 @@
           "value": 0.1,
           "unit": "%",
           "source": {
-            "document": "TenForge",
+            "document": "TenSense",
             "clause": ""
           },
           "confirmed": false,
           "confirmed_from": "",
           "confirmed_by": "",
-          "note": "TenForge's choice. Not yet read in ISO 527-1:2019; to be confirmed from the purchased text."
+          "note": "TenSense's choice. Not yet read in ISO 527-1:2019; to be confirmed from the purchased text."
         }
       }
     }

@@ -2,7 +2,7 @@
 // the FreeCAD material card, and the curve as VTK XML for ParaView.
 //
 // The hardening curve's expected values come from
-// tools/fixtures/make_exports.py (closed form, not TenForge's code). The
+// tools/fixtures/make_exports.py (closed form, not TenSense's code). The
 // .vtp is read back with VTK's own XML reader, the one ParaView and
 // PyVista use.
 

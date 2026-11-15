@@ -1,10 +1,10 @@
-# TenForge exports, version 1
+# TenSense exports, version 1
 
 **Status: DRAFT, for David's review (2026-11-13).** Written with Phase 4.
 
 Exports carry an analysis to other tools. They are **derived**: each says
 inside itself where it came from (data file and SHA-256, procedure,
-TenForge version) and whether its results are to the standard or only
+TenSense version) and whether its results are to the standard or only
 aligned with it. The test record remains the record.
 
 ## 1. The hardening curve (FreeCAD FEM, CalculiX)
@@ -61,7 +61,7 @@ measure them; the card says to enter them in FreeCAD before an FEM
 analysis), and **ultimate strain** (FreeCAD 1.1 declares it with a
 pressure unit). Bending results are refused: the card's values are
 uniaxial. `General` holds a new UUID, a name (the material, else the
-specimen id), `Author: TenForge <version>` and the conformity in
+specimen id), `Author: TenSense <version>` and the conformity in
 `Description`; comment lines say where the values came from.
 
 ## 3. The analysed curve (`.vtp`, ParaView and PyVista)
@@ -89,8 +89,8 @@ alone made the curve look right when opened; opened in ParaView 6.1, the
   (plate with hole) with CalculiX using the yield points
   (`freecad_loads_the_card_and_calculix_runs_the_yield_points`).
 
-- ParaView reads whole records with TenForge's reader plugin
-  (`tools/paraview/TenForgeRecordReader.py`, plain Python): it opens
+- ParaView reads whole records with TenSense's reader plugin
+  (`tools/paraview/TenSenseRecordReader.py`, plain Python): it opens
   `manifest.tfrec`, checks `results/curve.vtp` against the manifest's
   SHA-256 and refuses it if changed, and outputs the curve with the
   specimen, mode, procedure and conformity as field data. Where ParaView's
@@ -106,7 +106,7 @@ digitised with PlotTracer) drawn beside the test's own, dashed, named
 
 - PlotTracer records axis labels but no units, so the user says which
   column is strain and which is stress, and their units (strain: %, 1;
-  stress: MPa, N/mm2, GPa, kPa, Pa). TenForge proposes them from the labels.
+  stress: MPa, N/mm2, GPa, kPa, Pa). TenSense proposes them from the labels.
 - A point missing either value is left out: a gap is not a zero.
 - An error-bar series (with `relation`) is not offered as a curve.
 - Never used by the analysis. Named in results.json (`reference_curves`)
@@ -129,7 +129,7 @@ scalar value specification (`obo:OBI_0001931`) with the number
 realizes a plan concretizing the test method (`tto:TTO_0000054`), labelled
 with the standard.
 
-| TenForge | Class | Unit |
+| TenSense | Class | Unit |
 |---|---|---|
 | S0 | `tto:TTO_0000026` | `unit:MilliM2` |
 | gauge length | `pmd:PMD_0060016` | `unit:MilliM` |
@@ -148,7 +148,7 @@ process's `rdfs:comment`, never forced onto a wrong class; so are the
 provenance and the conformity. Tension only: PMD has process classes for
 compression and bending but no ontology of their results.
 
-Two choices are TenForge's and not taken from a PMD example: the
+Two choices are TenSense's and not taken from a PMD example: the
 strengths and the modulus are characteristics of the test piece
 (`obo:RO_0000053`), S0 and the gauge length its qualities
 (`obo:RO_0000086`); PMD's own S355 example puts strengths on the material

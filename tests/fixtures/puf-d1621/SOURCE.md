@@ -13,5 +13,5 @@ Mendeley Data: `1BAT-DIR1-1.TRA` 2403e87713625dfba70fe6c28e87ddbc33a2d68f9666ea4
 `1BAT-DIM.txt` 406ad865a060e7194caa305a85a1d71cc3f9beb277982f2f07498539cd1620ea.
 
 The dataset publishes no evaluated results, so these files check that
-TenForge reads the export (French names in quotes, a units row) and that
+TenSense reads the export (French names in quotes, a units row) and that
 the ISO 844 profile runs on real data; they are compared with nothing.

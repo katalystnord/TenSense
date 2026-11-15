@@ -498,7 +498,7 @@ TF_CASE(the_files_own_results_travel_with_the_analysis_as_written)
     TF_CHECK(fm.value("name").toString() == "Maximum Force");
     TF_CHECK(fm.value("unit").toString() == "N");
     TF_CHECK(fm.value("value").toString() == "285.30");
-    // Never among TenForge's own results.
+    // Never among TenSense's own results.
     for (const QJsonValue &v : s.analysis()->doc.value("results").toArray())
         TF_CHECK(v.toObject().value("id").toString() != "Maximum Force");
 }
@@ -506,7 +506,7 @@ TF_CASE(the_files_own_results_travel_with_the_analysis_as_written)
 TF_CASE(a_file_of_specimens_side_by_side_asks_which_and_the_record_keeps_it)
 {
     // Shimadzu Trapezium (tests/fixtures/shimadzu): three specimens side by
-    // side. TenForge must not pick one silently.
+    // side. TenSense must not pick one silently.
     const QString path = fixture("shimadzu/trapezium-side-by-side.csv");
     Session s;
     s.profile = "iso-527-1-2019";

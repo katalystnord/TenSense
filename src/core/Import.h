@@ -28,7 +28,7 @@ struct PreambleEntry {
 
 // A result the machine's software wrote into its export (Bluehill's
 // "Results Table"), kept exactly as written: the file's own result, never
-// TenForge's, and never used by the analysis.
+// TenSense's, and never used by the analysis.
 struct FileResult {
     QString table;   // the block's title, e.g. "Results Table 1"
     QString row;     // the row's first cell: the specimen number, "Mean", ...
@@ -112,7 +112,7 @@ std::optional<double> preambleQuantity(const Table &table, const QStringList &ke
 // SI; nothing when absent, not a number ("-----") or in an unknown unit.
 std::optional<double> fileResultQuantity(const Table &table, const QStringList &names,
                                          const QString &dimension, const FileResult **found = nullptr);
-// The units TenForge reads for a dimension ("force", "length", "strain"),
+// The units TenSense reads for a dimension ("force", "length", "strain"),
 // most common first.
 QStringList knownUnits(const QString &dimension);
 

@@ -331,12 +331,14 @@ ProfileOrError loadProfile(const QString &pathOrId)
         return fail(path + " is not valid JSON: " + pe.errorString() + " at offset "
                     + QString::number(pe.offset));
     const QJsonObject root = doc.object();
-    if (root.value("format").toString() != "tenforge-profile")
-        return fail(path + " is not a TenForge profile (format is not \"tenforge-profile\")");
+    // "tenforge-profile": written before the rename to TenSense (2026-11-15).
+    if (const QString fmt = root.value("format").toString();
+        fmt != "tensense-profile" && fmt != "tenforge-profile")
+        return fail(path + " is not a TenSense profile (format is not \"tensense-profile\")");
     const QString version = root.value("version").toString();
     if (!version.startsWith("1."))
         return fail(path + " is profile format version " + version
-                    + "; this TenForge reads version 1.x");
+                    + "; this TenSense reads version 1.x");
 
     Profile p;
     p.id = root.value("id").toString();
@@ -355,7 +357,7 @@ ProfileOrError loadProfile(const QString &pathOrId)
     p.sha256 = QCryptographicHash::hash(bytes, QCryptographicHash::Sha256).toHex();
     if (p.mode != "tension" && p.mode != "compression" && p.mode != "flexure")
         return fail("profile " + p.id + " is for mode \"" + p.mode
-                    + "\"; this TenForge analyses tension, compression and flexure");
+                    + "\"; this TenSense analyses tension, compression and flexure");
 
     Reader rd{&p.parameters, {}};
     if (const QString err = readValidity(root, p, rd); !err.isEmpty())

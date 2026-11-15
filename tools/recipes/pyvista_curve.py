@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Read a TenForge curve (.vtp, from File > Export curve for ParaView or
+"""Read a TenSense curve (.vtp, from File > Export curve for ParaView or
 tf-analyse --vtp) with PyVista: the arrays, the results stored with it,
 and a plot.
 
@@ -26,7 +26,7 @@ def main():
     stress = curve.point_data["stress_Pa"] * 1e-6    # MPa
     if len(sys.argv) > 2:
         chart = pv.Chart2D()
-        chart.line(strain, stress, label="TenForge curve")
+        chart.line(strain, stress, label="TenSense curve")
         chart.x_label = "Strain (%)"
         chart.y_label = "Stress (MPa)"
         chart.show(off_screen=True, screenshot=sys.argv[2])

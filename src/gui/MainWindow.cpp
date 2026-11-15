@@ -133,9 +133,9 @@ MainWindow::MainWindow(QWidget *parent)
     file->addSeparator();
     file->addAction(tr("&Quit"), QKeySequence::Quit, qApp, &QApplication::quit);
     QMenu *help = menuBar()->addMenu(tr("&Help"));
-    help->addAction(tr("&About TenForge"), this, [this] {
+    help->addAction(tr("&About TenSense"), this, [this] {
         QMessageBox::about(
-            this, tr("About TenForge"),
+            this, tr("About TenSense"),
             QStringLiteral("<h3>%1 %2</h3><p>%3</p><p>Build %4</p>"
                            "<p>Licensed under the GNU LGPL, version 2.1 or later.</p>")
                 .arg(tf::core::applicationName(), tf::core::applicationVersion(),
@@ -356,7 +356,7 @@ QWidget *MainWindow::buildInputs()
         if (m_profile->itemData(i).toString() != QLatin1String(kProfileFile))
             return;
         const QString path = chooseFile(false, tr("Choose a profile file"),
-                                        tr("TenForge profiles (*.json)"), {});
+                                        tr("TenSense profiles (*.json)"), {});
         const auto p = path.isEmpty() ? tf::core::ProfileOrError{} : tf::core::loadProfile(path);
         if (p.profile) {
             m_profileFile = path;
@@ -389,7 +389,7 @@ QWidget *MainWindow::buildOutputs()
     v->addWidget(m_emptyState);
 
     // The chart area: VTK's own charting inside Qt (never Qt Charts, which is
-    // GPL-3.0-only and would force TenForge's licence to GPL).
+    // GPL-3.0-only and would force TenSense's licence to GPL).
     m_chart = new QVTKOpenGLNativeWidget;
     m_chart->setObjectName(QStringLiteral("chart"));
     m_chart->setMinimumHeight(320);
@@ -769,14 +769,14 @@ void MainWindow::showResults()
                                                     : tr("not determined: %1")
                                                           .arg(r.value("reason").toString())));
     }
-    // The machine software's own results, below TenForge's and set apart:
+    // The machine software's own results, below TenSense's and set apart:
     // as written, not checked, not used.
     const QJsonArray own = a->doc.value("source_results").toArray();
     if (!own.isEmpty()) {
         const int head = m_results->rowCount();
         m_results->insertRow(head);
         auto *h = new QTableWidgetItem(
-            tr("In the file, from its own software (as written; not TenForge's, not checked):"));
+            tr("In the file, from its own software (as written; not TenSense's, not checked):"));
         QFont f = h->font();
         f.setItalic(true);
         h->setFont(f);
@@ -1090,8 +1090,8 @@ void MainWindow::openData()
 
 void MainWindow::openRecord()
 {
-    const QString path = chooseFile(false, tr("Open a TenForge record"),
-                                    tr("TenForge records (manifest.tfrec)"), {});
+    const QString path = chooseFile(false, tr("Open a TenSense record"),
+                                    tr("TenSense records (manifest.tfrec)"), {});
     if (path.isEmpty())
         return;
     const QString err = m_session.openRecord(path);
@@ -1111,7 +1111,7 @@ void MainWindow::saveRecord()
     const QString suggested = m_session.specimen.id.isEmpty() ? QStringLiteral("record")
                                                               : m_session.specimen.id;
     const QString dir = chooseFile(true, tr("Save the test record as a new folder"),
-                                   tr("TenForge record folder (*)"), suggested);
+                                   tr("TenSense record folder (*)"), suggested);
     if (dir.isEmpty())
         return;
     const QString err = m_session.saveRecord(dir);
@@ -1320,7 +1320,7 @@ void MainWindow::addReference()
         return;
     }
     // Which curve, which columns are strain and stress, in which units:
-    // PlotTracer records labels but no units, so the user says; TenForge's
+    // PlotTracer records labels but no units, so the user says; TenSense's
     // guess from the labels is filled in.
     QDialog dlg(this);
     dlg.setObjectName(QStringLiteral("referenceDialog"));

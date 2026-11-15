@@ -1,6 +1,6 @@
 # The ParaView exit check (ROADMAP Phase 4) as one CTest: tf-analyse writes
 # a record, a copy has its curve changed, and ParaView (flatpak
-# org.paraview.ParaView) must open the record with TenForge's reader plugin
+# org.paraview.ParaView) must open the record with TenSense's reader plugin
 # and refuse the copy.
 #
 #   cmake -DTF_ANALYSE=... -DFIXTURE=... -DSCRIPT=... -DPLUGIN=... -DWORK=... -P run_check.cmake

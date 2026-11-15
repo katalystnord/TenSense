@@ -79,10 +79,10 @@ struct ProfileOrError {
     QString error;
 };
 
-// A path to a profile file, or the id of a profile shipped with TenForge.
+// A path to a profile file, or the id of a profile shipped with TenSense.
 ProfileOrError loadProfile(const QString &pathOrId);
 
-// Ids of the profiles shipped with TenForge.
+// Ids of the profiles shipped with TenSense.
 QStringList shippedProfiles();
 
 } // namespace tf::core

@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Write TenForge's synthetic compression and flexure fixtures and their
+"""Write TenSense's synthetic compression and flexure fixtures and their
 exact answers.
 
 Run once; the output is committed under tests/fixtures/modes/. As with
 make_synthetic.py, the answers come from the closed-form curves below,
-never from TenForge's own code, so a test comparing the two is a real
+never from TenSense's own code, so a test comparing the two is a real
 check (the project's fixture rule, CLAUDE.md). Standard library only.
 
 Each curve is defined as stress against strain, then written as a machine

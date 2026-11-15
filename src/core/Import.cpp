@@ -219,7 +219,7 @@ bool knownUnit(const QString &u)
     return false;
 }
 
-// The unit a column's name carries, when it is one TenForge knows: after
+// The unit a column's name carries, when it is one TenSense knows: after
 // the last underscore ("force_kN"), in brackets at the end ("Force (kN)"),
 // or as the last word ("Load N", Instron Merlin). A bare number is never
 // taken as a unit ("Extension 1" is not a strain).
@@ -791,7 +791,7 @@ TensionImport toTension(const Table &t, const TensionMapping &m)
         const auto a = parseQuantity(p->value + " " + p->unit, "area");
         if (!a)
             return fail("the file gives the cross-section area as \"" + p->value + " " + p->unit
-                        + "\", which is not an area TenForge reads");
+                        + "\", which is not an area TenSense reads");
         out.input.area = *a;
         out.notes << "cross-section area S0 from the file's \"" + p->key + "\"";
     } else {
@@ -810,7 +810,7 @@ TensionImport toTension(const Table &t, const TensionMapping &m)
         const auto g = parseQuantity(p->value + " " + p->unit, "length");
         if (!g)
             return fail("the file gives the extensometer gauge length as \"" + p->value + " "
-                        + p->unit + "\", which is not a length TenForge reads");
+                        + p->unit + "\", which is not a length TenSense reads");
         out.input.gaugeLength = *g;
         out.notes << "extensometer gauge length from the file's \"" + p->key + "\"";
     } else {

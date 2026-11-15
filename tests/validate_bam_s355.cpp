@@ -6,8 +6,8 @@
 // with the shipped ISO 6892-1 profile and BAM's measured S0, and compared
 // with what BAM reported:
 //  - ReH and Rm within EN 10002-1 Annex A.5 (relative or absolute limit,
-//    TenForge's reading of the table, as for TENSTAND);
-//  - Fm within 0.5 % (TenForge's band; A.5 has none for force);
+//    TenSense's reading of the table, as for TENSTAND);
+//  - Fm within 0.5 % (TenSense's band; A.5 has none for force);
 //  - E printed beside BAM's, without a limit (no standard sets one here).
 
 #include "core/Import.h"
@@ -78,7 +78,7 @@ void within(const Specimen &s, const char *id, double ours, double theirs, doubl
 {
     const double limit = std::max(rel * std::fabs(theirs), abs);
     const double dev = ours - theirs;
-    std::printf("  %s %-3s TenForge %10.3f  BAM %10.3f %-3s  diff %+7.3f  limit %.3f\n",
+    std::printf("  %s %-3s TenSense %10.3f  BAM %10.3f %-3s  diff %+7.3f  limit %.3f\n",
                 qPrintable(s.id), id, ours, theirs, unit, dev, limit);
     if (!(std::fabs(dev) <= limit))
         tf::test::fail(__FILE__, __LINE__, (s.id + " " + id + " outside its limit").toStdString());
@@ -140,7 +140,7 @@ TF_CASE(modulus_beside_bam_for_the_record_without_a_limit)
 {
     for (const auto &s : specimens()) {
         const auto *e = find(s, "E");
-        std::printf("  %s E   TenForge %7.1f  BAM %5.0f GPa (no limit)\n", qPrintable(s.id),
+        std::printf("  %s E   TenSense %7.1f  BAM %5.0f GPa (no limit)\n", qPrintable(s.id),
                     e && e->determined ? e->value * 1e-9 : NAN, s.reported.value("E_GPa").toDouble());
     }
 }

@@ -130,11 +130,11 @@ std::optional<ReferenceCurve> readReferenceCurve(const QString &path, const QStr
         return std::nullopt;
     const auto su = strainUnits().find(strainUnit);
     if (su == strainUnits().end())
-        return fail("\"" + strainUnit + "\" is not a strain unit TenForge reads ("
+        return fail("\"" + strainUnit + "\" is not a strain unit TenSense reads ("
                     + referenceStrainUnits().join(", ") + ")");
     const auto tu = stressUnits().find(stressUnit);
     if (tu == stressUnits().end())
-        return fail("\"" + stressUnit + "\" is not a stress unit TenForge reads ("
+        return fail("\"" + stressUnit + "\" is not a stress unit TenSense reads ("
                     + referenceStressUnits().join(", ") + ")");
 
     QStringList names;

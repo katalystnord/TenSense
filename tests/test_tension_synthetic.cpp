@@ -1,7 +1,7 @@
 // The tension model against the committed synthetic curves.
 //
 // The curves and their answers come from tools/fixtures/make_synthetic.py,
-// closed-form, never from TenForge. Each file is in machine units (kN, mm)
+// closed-form, never from TenSense. Each file is in machine units (kN, mm)
 // with a cross-section and gauge length that are not 1, so a unit slip
 // cannot pass.
 

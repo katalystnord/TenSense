@@ -372,7 +372,7 @@ QByteArray chartSvg(vtkRenderWindow *window, QString *error)
     vtkNew<vtkSVGExporter> svg;
     svg->SetRenderWindow(window);
     svg->SetFileName(path.toLocal8Bit().constData());
-    svg->SetTitle("TenForge chart");
+    svg->SetTitle("TenSense chart");
     svg->DrawBackgroundOn();
     svg->TextAsPathOff();  // text stays text: searchable, editable in a drawing program
     svg->Write();
@@ -427,7 +427,7 @@ QString writeChart(const QByteArray &svg, const QString &path, int pngWidthPx)
         QPdfWriter pdf(path);
         pdf.setPageSize(QPageSize(QSizeF(wMm, hMm), QPageSize::Millimeter));
         pdf.setPageMargins(QMarginsF(0, 0, 0, 0));
-        pdf.setTitle("TenForge chart");
+        pdf.setTitle("TenSense chart");
         QPainter p;
         if (!p.begin(&pdf))
             return "cannot write " + path;

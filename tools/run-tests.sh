@@ -1,12 +1,12 @@
 #!/bin/sh
 # run-tests.sh -- the whole suite, in one command.
 #
-# This is TenForge's `npm test`: "run the tests" is one thing a person, a
+# This is TenSense's `npm test`: "run the tests" is one thing a person, a
 # hook or CI can do without knowing which build directory is current or
 # which tests need a display.
 #
-# There is one half only. TenForge builds against no other project's
-# checkout (SurView, OpenCorr and TenForge are independent kits), so there
+# There is one half only. TenSense builds against no other project's
+# checkout (SurView, OpenCorr and TenSense are independent kits), so there
 # is no pinned engine suite to run beside it.
 #
 # Usage: tools/run-tests.sh [-q]
@@ -30,12 +30,12 @@ say() { [ "$quiet" -eq 1 ] || printf '%s\n' "$*"; }
 say "=== No em-dashes ==="
 "$here/tools/check-no-em-dashes.sh"
 
-say "=== Building TenForge and its tests ==="
+say "=== Building TenSense and its tests ==="
 cmake -S "$here" -B "$build" -G Ninja >/dev/null
 cmake --build "$build"
 
 say ""
-say "=== TenForge test suite ==="
+say "=== TenSense test suite ==="
 status=0
 ( cd "$build" && ctest --output-on-failure ) || status=$?
 
@@ -44,5 +44,5 @@ if [ "$status" -eq 0 ]; then
     echo "ALL TESTS PASSED"
     exit 0
 fi
-echo "FAILED: TenForge test suite"
+echo "FAILED: TenSense test suite"
 exit 1

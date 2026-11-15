@@ -3,7 +3,7 @@
 // curves.
 //
 // The curves and their answers come from tools/fixtures/make_modes.py,
-// closed-form, never from TenForge. Each file is in machine units with
+// closed-form, never from TenSense. Each file is in machine units with
 // dimensions that are not round, so a unit or formula slip cannot pass.
 
 #include "analysis/Curve.h"

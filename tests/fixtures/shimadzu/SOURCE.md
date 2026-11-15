@@ -20,7 +20,7 @@ f5bfd739260e661d4fe7d52f3ecf06d6b79c48a93f4a845701224e8780efc89d  trapezium-japa
 ```
 
 What each is relied on for (every number read with iconv and awk, not
-TenForge):
+TenSense):
 
 - `trapezium-japanese.csv`: names 時間, 試験力, ｽﾄﾛｰｸ (time, test force,
   stroke), units sec, N, mm; 2012 rows; the last stroke written `.335`.

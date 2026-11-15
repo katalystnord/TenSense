@@ -1,6 +1,6 @@
-# TenForge manual
+# TenSense manual
 
-For TenForge 0.3. This manual grows with each release; what is not here
+For TenSense 0.3. This manual grows with each release; what is not here
 yet is listed under [What 0.3 does not do](#what-03-does-not-do).
 
 1. [Installing](#installing)
@@ -19,12 +19,12 @@ yet is listed under [What 0.3 does not do](#what-03-does-not-do).
 
 ## Installing
 
-**The AppImage** (Linux, x86_64): download `TenForge-0.3.0-x86_64.AppImage`
+**The AppImage** (Linux, x86_64): download `TenSense-0.3.0-x86_64.AppImage`
 from the project's Releases page, make it executable and run it:
 
 ```bash
-chmod +x TenForge-0.3.0-x86_64.AppImage
-./TenForge-0.3.0-x86_64.AppImage
+chmod +x TenSense-0.3.0-x86_64.AppImage
+./TenSense-0.3.0-x86_64.AppImage
 ```
 
 It carries Qt, VTK and everything else it needs, except the C library
@@ -36,11 +36,11 @@ an older one it refuses to start with a message naming `GLIBC`.
 
 ## Analysing a tensile test
 
-TenForge reads the file your testing machine exports: a CSV or text
+TenSense reads the file your testing machine exports: a CSV or text
 file of columns, whatever its dialect (comma, semicolon or tab; decimal
 point or comma; a block of `key;value` lines above the header; units in a
 row of their own or in the column names). Nothing in the file is changed;
-TenForge only reads it.
+TenSense only reads it.
 
 Exports checked with real files from: **ZwickRoell** testXpert III (and a
 French-language Zwick export); **Instron** Bluehill 2 and 3 (also in
@@ -54,7 +54,7 @@ Portuguese and Japanese; a controller's set point ("Sollwert",
 do, the window asks which column is which.
 
 **Several specimens in one file.** Trapezium can write a batch's
-specimens side by side, each under its title. TenForge then asks which
+specimens side by side, each under its title. TenSense then asks which
 one to analyse ("Specimen in the file", in the Data box; `--specimen`
 on the command line) and never picks one by itself. Each specimen is
 read with its own rows only. The results and the record say which
@@ -66,12 +66,12 @@ and again in N), the name means the first, and the notes say so.
 **The machine software's own results.** Some exports carry the results
 the machine's software computed (Instron Bluehill writes a "Results
 Table" above the curve; an MTS 793 file can hold a second, unlabelled
-acquisition after the curve). TenForge shows them under its own results, in
+acquisition after the curve). TenSense shows them under its own results, in
 a section of their own, exactly as written: they are the file's, not
-TenForge's, and TenForge neither checks nor uses them. Side by side they
+TenSense's, and TenSense neither checks nor uses them. Side by side they
 show where two methods differ: a modulus found by Bluehill's "Automatic
 Young's" is not ISO 527-1's fit between 0.05 % and 0.25 % strain. When
-the file's own results give the area its software used, TenForge takes
+the file's own results give the area its software used, TenSense takes
 it; if the file's header gives dimensions that do not match it (Bluehill
 can keep a method's default width and thickness there), the notes say so.
 
@@ -96,14 +96,14 @@ length.
   fibre composites in three-point (method A) or four-point (method B)
   bending (see [Bending tests](#bending-tests)).
 
-**A profile file...** loads a procedure you wrote yourself in TenForge's
+**A profile file...** loads a procedure you wrote yourself in TenSense's
 profile format ([docs/specs/profile-v1.md](../specs/profile-v1.md)).
 Results from it are labelled as coming from a user profile.
 
 ### 2. Data
 
 Press **Open data...** (or **File > Open data**, Ctrl+O) and choose the
-file. TenForge finds the force column and the extension, deformation or
+file. TenSense finds the force column and the extension, deformation or
 deflection column by their names (force, load, Kraft; extensometer first,
 then extension, deflection, deformation, Verformung, Durchbiegung,
 Déformation and others, then a crosshead or position column), and their
@@ -124,13 +124,13 @@ inner diameter), or the cross-section S0 directly if that is all you
 have. S0 is shown as soon as it can be computed. Then enter the
 extensometer gauge length Le.
 
-If the file states S0 (`So`) or Le in its header block, TenForge fills
+If the file states S0 (`So`) or Le in its header block, TenSense fills
 them in and says so; check them against your specimen.
 
 The specimen id and material are optional; they appear in the report and
 the record.
 
-As soon as nothing is missing, TenForge analyses the test. Change
+As soon as nothing is missing, TenSense analyses the test. Change
 anything on the left and the results follow at once.
 
 ![Analysed: the curve with the elastic line and each result, the conformity statement and the results](images/analysed.png)
@@ -149,7 +149,7 @@ deflection was measured**:
 - **Mid-span (deflectometer)**: a deflection gauge under the middle of
   the beam.
 
-The two give strains about 15 % apart, so TenForge asks rather than
+The two give strains about 15 % apart, so TenSense asks rather than
 assumes. In three-point bending they are the same place and it does not
 ask.
 
@@ -176,7 +176,7 @@ the cross-section as for tension, then **L0, the length the deformation
 is measured over**: the specimen's height between the platens when the
 column is the platens' travel, or the extensometer's gauge length.
 
-Machines often record compression as negative force and travel. TenForge
+Machines often record compression as negative force and travel. TenSense
 takes the test's own direction as positive and says so in the notes; the
 file and the record keep its signs.
 
@@ -195,7 +195,7 @@ own deflection. **Machine compliance...** under the data takes a table
 of force against that deflection, measured without a specimen (a CSV
 with a force column and a displacement column, units stated), and
 subtracts it from the travel before strain is worked out. The table must
-cover the largest force of the test; TenForge never extrapolates it and
+cover the largest force of the test; TenSense never extrapolates it and
 says so if it does not. **None** removes it. A record keeps the table
 with the test.
 
@@ -217,7 +217,7 @@ been verified, so nobody mistakes them for certified values.
 **The table** gives each result rounded as the procedure states, with its
 unit. A result that could not be found says why, for example *"no yield
 point: no sustained fall in stress before the maximum"*, or that the
-extensometer stopped before fracture. TenForge never fills a gap with a
+extensometer stopped before fracture. TenSense never fills a gap with a
 guess.
 
 **The chart** shows stress against strain, the elastic line the modulus
@@ -262,7 +262,7 @@ wide.
 name the file `.html`. The chart in either is the same vector figure. The report holds the conformity statement and its
 reasons, the specimen, the chart, every result or the reason it is
 missing, any flags, and the provenance: the data file's name and SHA-256,
-the procedure's version and SHA-256, and the TenForge version and build.
+the procedure's version and SHA-256, and the TenSense version and build.
 Anyone holding the same file can check that it is the one analysed.
 
 ## Test records
@@ -281,16 +281,16 @@ S355-07/
 
 The format is open and described in
 [docs/specs/test-record-v1.md](../specs/test-record-v1.md); any tool can
-read it without TenForge.
+read it without TenSense.
 
-**File > Open record** opens a record by its `manifest.tfrec`. TenForge
+**File > Open record** opens a record by its `manifest.tfrec`. TenSense
 analyses it again and tells you, above the fields:
 
 - if a file in the record has changed or gone missing since it was saved;
 - if a stored result differs from what a fresh analysis gives (for
   instance after the procedure was updated);
 - if the folder holds files the manifest does not list, for example a
-  script or a DIC analysis you put under `analyses/`. TenForge never
+  script or a DIC analysis you put under `analyses/`. TenSense never
   adopts them silently: **Add them to the record's manifest** records
   them with their hashes, and changes nothing else.
 
@@ -326,11 +326,11 @@ results travel with it. Every saved record also holds its curve as
 **In ParaView** (6.1 checked): open the `.vtp`, then show it in a **Line
 Chart View** with X array `strain_percent` and Y `stress_MPa`. The 3D view
 scales both axes alike and squeezes the curve to a sliver. To open whole
-records, load TenForge's reader once (Tools > Manage Plugins > Load New,
-choose `TenForgeRecordReader.py`, attached to each release from 0.3 and
-in TenForge's sources under `tools/paraview/`,
+records, load TenSense's reader once (Tools > Manage Plugins > Load New,
+choose `TenSenseRecordReader.py`, attached to each release from 0.3 and
+in TenSense's sources under `tools/paraview/`,
 tick Auto Load); then File > Open a record's `manifest.tfrec` gives its
-curve with the specimen, procedure and conformity. Like TenForge, the
+curve with the specimen, procedure and conformity. Like TenSense, the
 reader refuses a record whose curve changed after it was written.
 
 **File > Export for Platform MaterialDigital (JSON-LD)...** writes the
@@ -343,7 +343,7 @@ Ontology, for PMD's knowledge graphs.
 elsewhere, for example a figure from a paper digitised with PlotTracer,
 beside your test's own: choose PlotTracer's JSON export, then the curve,
 which column is strain and which is stress, and their units (PlotTracer
-does not record units; TenForge proposes them from the column names).
+does not record units; TenSense proposes them from the column names).
 It is drawn dashed and named, appears in exported figures and the report,
 is kept in the record with its file, and is never used by the analysis.
 
@@ -372,7 +372,7 @@ with the option that supplies it.
 
 ## What 0.3 does not do
 
-- **Files only.** Running a machine arrives in 0.4; until then TenForge
+- **Files only.** Running a machine arrives in 0.4; until then TenSense
   analyses what another program recorded.
 - **Exports for simulation from tension only.** The hardening curve and
   the PMD file come from tensile tests; the FreeCAD card also takes a

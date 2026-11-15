@@ -55,7 +55,7 @@ endif()
 target_compile_definitions(tf_core PRIVATE TF_VERSION="${PROJECT_VERSION}"
                                            TF_BUILD="${TF_BUILD}")
 
-# The profiles shipped with TenForge, compiled in so the CLI and the GUI
+# The profiles shipped with TenSense, compiled in so the CLI and the GUI
 # find them without an install step: loadProfile("iso-6892-1-2019").
 file(GLOB TF_SHIPPED_PROFILES CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/profiles/*.json)
 qt_add_resources(tf_core "shipped_profiles"
@@ -74,9 +74,9 @@ target_link_libraries(tf_gui PUBLIC tf_core Qt6::Widgets Qt6::OpenGLWidgets Qt6:
     ${VTK_LIBRARIES})
 vtk_module_autoinit(TARGETS tf_gui MODULES ${VTK_LIBRARIES})
 
-add_executable(TenForge gui/main.cpp)
-target_link_libraries(TenForge PRIVATE tf_gui)
-vtk_module_autoinit(TARGETS TenForge MODULES ${VTK_LIBRARIES})
+add_executable(TenSense gui/main.cpp)
+target_link_libraries(TenSense PRIVATE tf_gui)
+vtk_module_autoinit(TARGETS TenSense MODULES ${VTK_LIBRARIES})
 
 # --- tf-analyse: the headless command line ----------------------------------
 add_executable(tf-analyse cli/main.cpp)
@@ -84,10 +84,10 @@ target_link_libraries(tf-analyse PRIVATE tf_core)
 
 # --- Installation: the application, the command line, the desktop entry ----
 include(GNUInstallDirs)
-install(TARGETS TenForge tf-analyse RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-install(FILES ${CMAKE_SOURCE_DIR}/packaging/tenforge.desktop
+install(TARGETS TenSense tf-analyse RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
+install(FILES ${CMAKE_SOURCE_DIR}/packaging/tensense.desktop
         DESTINATION ${CMAKE_INSTALL_DATADIR}/applications)
-install(FILES ${CMAKE_SOURCE_DIR}/packaging/tenforge.svg
+install(FILES ${CMAKE_SOURCE_DIR}/packaging/tensense.svg
         DESTINATION ${CMAKE_INSTALL_DATADIR}/icons/hicolor/scalable/apps)
 install(FILES ${CMAKE_SOURCE_DIR}/LICENSE ${CMAKE_SOURCE_DIR}/NOTICE
         DESTINATION ${CMAKE_INSTALL_DOCDIR})

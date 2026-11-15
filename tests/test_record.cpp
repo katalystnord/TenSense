@@ -116,9 +116,9 @@ TF_CASE(the_manifest_lists_every_file_with_its_hash_and_role)
     const auto w = writeSynthetic();
     TF_REQUIRE(w->error.isEmpty());
     const QJsonObject man = jsonOf(w->dir + "/manifest.tfrec");
-    TF_CHECK(man.value("format").toString() == "tenforge-record");
+    TF_CHECK(man.value("format").toString() == "tensense-record");
     TF_CHECK(man.value("version").toString().startsWith("1."));
-    TF_CHECK(man.value("application").toObject().value("name").toString() == "TenForge");
+    TF_CHECK(man.value("application").toObject().value("name").toString() == "TenSense");
     QStringList listed;
     for (const QJsonValue &v : man.value("files").toArray()) {
         const QJsonObject f = v.toObject();
@@ -208,7 +208,7 @@ TF_CASE(an_opened_record_gives_back_exactly_what_was_written)
         same = same && o.input.force[i] == w->imp.input.force[i]
                && o.input.extension[i] == w->imp.input.extension[i];
     TF_CHECK(same);  // bit for bit, not "close"
-    TF_CHECK(o.results.value("format").toString() == "tenforge-results");
+    TF_CHECK(o.results.value("format").toString() == "tensense-results");
 }
 
 TF_CASE(a_percent_strain_channel_is_a_strain_and_an_empty_cell_stays_empty)
@@ -285,6 +285,36 @@ TF_CASE(a_record_of_an_unknown_major_version_is_refused_with_the_version)
     f.close();
     const OpenedRecord o = openRecord(w->dir);
     TF_CHECK(o.error.contains("2.0"));
+}
+
+// Renamed from TenForge on 2026-11-15: records written before that say
+// "tenforge-record" and must still open.
+TF_CASE(a_record_written_under_the_old_name_tenforge_still_opens)
+{
+    const auto w = writeSynthetic();
+    TF_REQUIRE(w->error.isEmpty());
+    QJsonObject man = jsonOf(w->dir + "/manifest.tfrec");
+    man["format"] = "tenforge-record";
+    QFile f(w->dir + "/manifest.tfrec");
+    TF_REQUIRE(f.open(QIODevice::WriteOnly | QIODevice::Truncate));
+    f.write(QJsonDocument(man).toJson());
+    f.close();
+    const OpenedRecord o = openRecord(w->dir);
+    TF_CHECK(o.error.isEmpty());
+}
+
+TF_CASE(a_manifest_of_another_format_is_still_refused)
+{
+    const auto w = writeSynthetic();
+    TF_REQUIRE(w->error.isEmpty());
+    QJsonObject man = jsonOf(w->dir + "/manifest.tfrec");
+    man["format"] = "someone-elses-record";
+    QFile f(w->dir + "/manifest.tfrec");
+    TF_REQUIRE(f.open(QIODevice::WriteOnly | QIODevice::Truncate));
+    f.write(QJsonDocument(man).toJson());
+    f.close();
+    const OpenedRecord o = openRecord(w->dir);
+    TF_CHECK(o.error.contains("is not a TenSense record manifest"));
 }
 
 TF_CASE(a_record_is_never_written_over_an_existing_folder_with_files)

@@ -1,5 +1,5 @@
 {
-  "format": "tenforge-profile",
+  "format": "tensense-profile",
   "version": "1.0",
   "id": "iso-14125-1998-three-point",
   "profile_version": "0.1.0",
@@ -74,13 +74,13 @@
           "value": 0.01,
           "unit": "GPa",
           "source": {
-            "document": "TenForge",
+            "document": "TenSense",
             "clause": ""
           },
           "confirmed": false,
           "confirmed_from": "",
           "confirmed_by": "",
-          "note": "Reporting step. TenForge's choice; ISO 14125:1998 to be checked for a rule of its own."
+          "note": "Reporting step. TenSense's choice; ISO 14125:1998 to be checked for a rule of its own."
         }
       }
     },
@@ -99,13 +99,13 @@
           "value": 0.1,
           "unit": "MPa",
           "source": {
-            "document": "TenForge",
+            "document": "TenSense",
             "clause": ""
           },
           "confirmed": false,
           "confirmed_from": "",
           "confirmed_by": "",
-          "note": "Reporting step. TenForge's choice; ISO 14125:1998 to be checked for a rule of its own."
+          "note": "Reporting step. TenSense's choice; ISO 14125:1998 to be checked for a rule of its own."
         }
       }
     },
@@ -124,13 +124,13 @@
           "value": 0.01,
           "unit": "%",
           "source": {
-            "document": "TenForge",
+            "document": "TenSense",
             "clause": ""
           },
           "confirmed": false,
           "confirmed_from": "",
           "confirmed_by": "",
-          "note": "Reporting step. TenForge's choice; ISO 14125:1998 to be checked for a rule of its own."
+          "note": "Reporting step. TenSense's choice; ISO 14125:1998 to be checked for a rule of its own."
         }
       }
     },
@@ -149,13 +149,13 @@
           "value": 0.1,
           "unit": "N",
           "source": {
-            "document": "TenForge",
+            "document": "TenSense",
             "clause": ""
           },
           "confirmed": false,
           "confirmed_from": "",
           "confirmed_by": "",
-          "note": "Reporting step. TenForge's choice; ISO 14125:1998 to be checked for a rule of its own."
+          "note": "Reporting step. TenSense's choice; ISO 14125:1998 to be checked for a rule of its own."
         }
       }
     }

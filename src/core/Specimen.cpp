@@ -125,7 +125,7 @@ std::optional<Specimen> specimenFromJson(const QJsonObject &o, QString *error)
         }
     if (!known) {
         if (error)
-            *error = "the specimen's shape \"" + shape + "\" is not one TenForge knows";
+            *error = "the specimen's shape \"" + shape + "\" is not one TenSense knows";
         return std::nullopt;
     }
     for (const Dim &d : dimsOf(s.shape))

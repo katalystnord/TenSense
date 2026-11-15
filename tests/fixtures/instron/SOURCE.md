@@ -1,13 +1,13 @@
 # Instron exports
 
 Six raw exports written by Instron's own software, one per dialect
-TenForge reads. Each file is unchanged: its SHA-256 here equals the
+TenSense reads. Each file is unchanged: its SHA-256 here equals the
 upstream file's at the commit or version named (checked 2026-11-13).
 Renamed only, so the folder says which dialect each one is.
 
 | File here | Software (from its layout) | Test | Source | Licence |
 |---|---|---|---|---|
-| `bluehill2-flexure.csv` | Bluehill 2/3, imperial units, results in the header | three-point bend | UML Applied Solid Mechanics Lab, [TensileDataAnalysis](https://github.com/UML-AppliedSolidMechanicsLab/TensileDataAnalysis), `DataAnalyzer/TestFiles/Specimen_RawData_1.csv` at 28f44dd | LGPL-2.1 (the repository's LICENSE.txt), as TenForge |
+| `bluehill2-flexure.csv` | Bluehill 2/3, imperial units, results in the header | three-point bend | UML Applied Solid Mechanics Lab, [TensileDataAnalysis](https://github.com/UML-AppliedSolidMechanicsLab/TensileDataAnalysis), `DataAnalyzer/TestFiles/Specimen_RawData_1.csv` at 28f44dd | LGPL-2.1 (the repository's LICENSE.txt), as TenSense |
 | `bluehill2-dimensions.csv` | Bluehill 2/3, a `Dimension : key,"value",unit` header | cyclic compression | Aryan Senthil, [Contact-Detection](https://github.com/AryanSenthil/Contact-Detection), `Specimen_RawData_1.csv` at 670fd16 | MIT, notice below |
 | `bluehill2-italian.csv` | Bluehill 2/3 in Italian: semicolons with a decimal point | tension | Signorini, C., Nobili, A., Sola, A., Messori, M. (2019). *Diluted epoxy-coatings for TRM composites: tensile tests raw data.* Mendeley Data, v3. https://doi.org/10.17632/kbg7dz3yhx.3, `LGEW25_1.csv` | CC BY 4.0 |
 | `bluehill-universal-results.csv` | Bluehill Universal: Bluehill's results table above the curve | tension | Javier Linero, [gradient-optimized-joints](https://github.com/javierlinero/gradient-optimized-joints), `src/instron_data/firstsample_1.csv` at 57b2d2a | MIT, notice below |
@@ -29,13 +29,13 @@ What each is relied on for:
 
 - `bluehill2-flexure.csv`: Bluehill's "Maximum Load" (131.18347 lbf) and
   the extension there (1.50294 in), from its header, are checked against
-  what TenForge reads in lbf and in.
+  what TenSense reads in lbf and in.
 - `bluehill-universal-results.csv`: Bluehill's results table (maximum force
   285.30 N, its strain and displacement there, its modulus 143.72 MPa) is
-  read as the file's own results, never as TenForge's.
+  read as the file's own results, never as TenSense's.
 - `bluehill-universal-composite.csv`: the header's width and thickness
   (0.39 in, 0.04 in) are the method's defaults and disagree with the
-  results table's measured area (30.42 mm2); TenForge must take the area
+  results table's measured area (30.42 mm2); TenSense must take the area
   and say so.
 
   This set was considered as a validation of tensile strength and
@@ -44,7 +44,7 @@ What each is relied on for:
   file records: 0.2 to 2.3 MPa lower, and in one specimen at a later time
   than the maximum. No moving average of the curve reproduces all six.
   Bluehill's rule for that result is a method setting the export does not
-  record, so the comparison cannot say whether TenForge is right. (Its
+  record, so the comparison cannot say whether TenSense is right. (Its
   maximum force does agree with the curve, in the two files that report
   one, and is checked.)
 - `merlin-compression.raw`: read only for its layout. Merlin's results

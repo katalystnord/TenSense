@@ -13,7 +13,7 @@
 #include <QMap>
 #include <QTextStream>
 
-// tf-analyse: TenForge's analysis without a window, for scripts and tests.
+// tf-analyse: TenSense's analysis without a window, for scripts and tests.
 //
 //   tf-analyse --profile iso-6892-1-2019 machine-export.csv
 //
@@ -77,7 +77,7 @@ int main(int argc, char *argv[])
                                  QStringLiteral("A delimited text export from a testing machine."));
     const QCommandLineOption specimenOpt("specimen", "Which specimen to analyse, by its title in the file, when the file holds several side by side (Shimadzu Trapezium).", "title");
     const QCommandLineOption profileOpt("profile", "Profile id (see --list-profiles) or a profile file.", "id-or-path");
-    const QCommandLineOption listOpt("list-profiles", "List the profiles shipped with TenForge.");
+    const QCommandLineOption listOpt("list-profiles", "List the profiles shipped with TenSense.");
     const QCommandLineOption forceOpt("force", "Name of the force column (found by name if not given).", "column");
     const QCommandLineOption extOpt("extension", "Name of the extension, deformation or deflection column (found by name if not given).", "column");
     const QCommandLineOption forceUnitOpt("force-unit", "Unit of the force column, if the file does not say (N, kN).", "unit");
@@ -241,7 +241,7 @@ int main(int argc, char *argv[])
     o << tf::core::applicationName() << " " << tf::core::applicationVersion() << " - "
       << tf::core::applicationSubtitle() << "\n";
     o << "Profile:  " << profile.id << " " << profile.profileVersion << " (" << profile.title << ")"
-      << (profile.shipped ? "" : ", NOT shipped with TenForge") << "\n";
+      << (profile.shipped ? "" : ", NOT shipped with TenSense") << "\n";
     o << "File:     " << table.path << "\n";
     o << "          sha256 " << table.sha256 << "\n";
     for (const QString &n : notes)
@@ -273,7 +273,7 @@ int main(int argc, char *argv[])
     }
     const QJsonArray own = doc.value("source_results").toArray();
     if (!own.isEmpty()) {
-        o << "\nResults in the file, from its own software (as written; not TenForge's, not "
+        o << "\nResults in the file, from its own software (as written; not TenSense's, not "
              "checked)\n";
         for (const QJsonValue &v : own) {
             const QJsonObject r = v.toObject();

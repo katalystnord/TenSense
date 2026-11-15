@@ -4,7 +4,7 @@ namespace tf::core {
 
 QString applicationName()
 {
-    return QStringLiteral("TenForge");
+    return QStringLiteral("TenSense");
 }
 
 QString applicationSubtitle()

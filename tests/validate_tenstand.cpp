@@ -11,7 +11,7 @@
 //  - A.5: Rp0.2, ReH, ReL, Rm and A against the "proof of confidence"
 //    limits of EN 10002-1 Annex A.5. These decide pass or fail; they are
 //    the Phase 1 exit criterion (ROADMAP).
-//  - TenForge's own regression bands for what A.5 does not cover (Rp0.1,
+//  - TenSense's own regression bands for what A.5 does not cover (Rp0.1,
 //    Fm, At, Ag, Agt, and that a yield point is reported exactly where the
 //    agreed table has one, or where some labs reported one, file 38).
 //    These also fail the test, so a change that
@@ -36,7 +36,7 @@ using namespace tf::core;
 namespace {
 
 struct Row {
-    QString file, key, kind;  // kind: "A.5", "TenForge", "info"
+    QString file, key, kind;  // kind: "A.5", "TenSense", "info"
     double ours = NAN, lo = NAN, hi = NAN, dev = NAN, limit = NAN;
     QString verdict;
 };
@@ -121,7 +121,7 @@ int main(int argc, char *argv[])
                 if (std::fabs(r.dev) > r.limit)
                     ++failures;
             } else {
-                r.kind = "TenForge";
+                r.kind = "TenSense";
                 r.verdict = "FAIL: yield point reported where the agreed table has none";
                 ++failures;
             }
@@ -158,9 +158,9 @@ int main(int argc, char *argv[])
             } else if (key == "E") {
                 r.kind = "info";
             } else {
-                // TenForge's regression bands: half the reported precision
+                // TenSense's regression bands: half the reported precision
                 // beyond the agreed value, plus room for the fit.
-                r.kind = "TenForge";
+                r.kind = "TenSense";
                 if (key == "Rp0.1")
                     r.limit = std::max(0.005 * std::fabs(ref), 2.0);
                 else if (key == "Fm")
@@ -183,7 +183,7 @@ int main(int argc, char *argv[])
     // --- Print, and write the report when asked ------------------------------------
     QString md;
     QTextStream ts(&md);
-    ts << "| File | Result | TenForge | Agreed | Outside by | Limit | Check | Verdict |\n";
+    ts << "| File | Result | TenSense | Agreed | Outside by | Limit | Check | Verdict |\n";
     ts << "|---|---|---|---|---|---|---|---|\n";
     for (const Row &r : rows) {
         const QString agreed = std::isnan(r.lo) ? "none"

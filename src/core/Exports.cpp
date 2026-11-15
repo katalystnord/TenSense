@@ -177,7 +177,7 @@ Hardening hardeningCurve(const Analysis &a, int points)
             ++raised;
         }
 
-    h.notes << "Derived by TenForge " + applicationVersion() + " from " + source(a);
+    h.notes << "Derived by TenSense " + applicationVersion() + " from " + source(a);
     h.notes << conformityLine(a);
     h.notes << "True stress = engineering stress (1 + e); true plastic strain = ln(1 + e) - "
                "true stress / E, with e counted from the zero point and E = "
@@ -224,7 +224,7 @@ QString freecadCard(const Analysis &a, const Specimen &s, QString *error)
 
     auto quote = [](QString v) { return "\"" + v.replace('"', '\'') + "\""; };
     QStringList fields;
-    QStringList comments{"# Made by TenForge " + applicationVersion() + " from " + source(a),
+    QStringList comments{"# Made by TenSense " + applicationVersion() + " from " + source(a),
                          "# " + conformityLine(a),
                          "# Values as reported. A tensile test does not measure Poisson's "
                          "ratio or density;",
@@ -254,12 +254,12 @@ QString freecadCard(const Analysis &a, const Specimen &s, QString *error)
 
     const QString name = !s.material.isEmpty() ? s.material
                          : !s.id.isEmpty()     ? s.id
-                                               : QStringLiteral("TenForge material");
+                                               : QStringLiteral("TenSense material");
     QString out = "---\n" + comments.join('\n') + "\n";
     out += "General:\n";
     out += "  UUID: \"" + QUuid::createUuid().toString(QUuid::WithoutBraces) + "\"\n";
     out += "  Name: " + quote(name) + "\n";
-    out += "  Author: " + quote("TenForge " + applicationVersion()) + "\n";
+    out += "  Author: " + quote("TenSense " + applicationVersion()) + "\n";
     out += "  Description: " + quote("Measured; " + conformityLine(a)) + "\n";
     out += "Models:\n";
     out += "  LinearElastic:\n";
@@ -286,7 +286,7 @@ QString curveVtp(const Analysis &a)
         return s + "\n        </DataArray>\n";
     };
     QString x = "<?xml version=\"1.0\"?>\n";
-    x += "<!-- TenForge " + applicationVersion() + ": the analysed curve of " + source(a).toHtmlEscaped()
+    x += "<!-- TenSense " + applicationVersion() + ": the analysed curve of " + source(a).toHtmlEscaped()
          + ", analysed with " + a.profile.id.toHtmlEscaped() + " " + a.profile.profileVersion.toHtmlEscaped()
          + ". Plot it in a Line Chart View, X array strain_percent, Y stress_MPa (the 3D "
            "view scales both axes alike and squeezes the curve). Points are (strain %, "
@@ -338,7 +338,7 @@ QString pmdJsonLd(const Analysis &a, const Specimen &s, QString *error)
                      "(TTO); for compression and bending they have process classes only";
         return {};
     }
-    // TenForge's quantity -> the class of the quality or characteristic,
+    // TenSense's quantity -> the class of the quality or characteristic,
     // the QUDT unit, and the factor from SI. TTO 3.0.0 terms that TTO's
     // main branch has since deprecated are given as their PMDco 3.1.2
     // replacements (ReH, ReL, A, the gauge length), so the document stays
@@ -358,7 +358,7 @@ QString pmdJsonLd(const Analysis &a, const Specimen &s, QString *error)
         {"Agt", {"tto:TTO_0000040", "unit:PERCENT", 100.0}},
         {"Ag", {"tto:TTO_0000037", "unit:PERCENT", 100.0}},
     };
-    const QString base = "urn:tenforge:"
+    const QString base = "urn:tensense:"
                          + a.doc.value("source").toObject().value("sha256").toString().left(32) + ":";
     auto id = [&](const QString &local) { return QJsonObject{{"@id", base + local}}; };
     QJsonArray graph, outputs, characteristics, qualities;
@@ -405,7 +405,7 @@ QString pmdJsonLd(const Analysis &a, const Specimen &s, QString *error)
                         {"obo:OBI_0000293", id("testpiece")},
                         {"obo:BFO_0000055", id("plan")},
                         {"obo:OBI_0000299", outputs}};
-    QString comment = "Made by TenForge " + applicationVersion() + " from " + source(a) + ". "
+    QString comment = "Made by TenSense " + applicationVersion() + " from " + source(a) + ". "
                       + conformityLine(a) + ".";
     if (!skipped.isEmpty())
         comment += " Results with no class in PMDco or TTO, left out: " + skipped.join(", ") + ".";

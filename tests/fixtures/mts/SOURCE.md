@@ -25,10 +25,10 @@ f33ecd3b31d8e77fe5b93c1de5e25e7961e82820563bbde291bf4ac780911f81  testsuite-deci
 d78048775a44e1ffb24a39efe8ee122f678be3882abac0348be425d5c14d06f8  testsuite-french.txt
 ```
 
-What each is relied on for (every number read with awk, not TenForge):
+What each is relied on for (every number read with awk, not TenSense):
 
 - `mts793-chunked.dat`: 1245 rows in all; the first block ends at
-  102.01074 s and the second begins at 102.11035 s. TenForge must read
+  102.01074 s and the second begins at 102.11035 s. TenSense must read
   both, in order.
 - `mts793-german.dat`: 572 rows of 8 columns; "Ch 1 Kraft Sollwert" is
   the controller's set point and must never be taken as the force. The
@@ -36,7 +36,7 @@ What each is relied on for (every number read with awk, not TenForge):
   file's own values. Its force values (0.80352277 and -147.20456 kN) lie
   just outside the logged curve's range (0.776989 to -147.161 kN), as a
   peak and valley caught at a higher rate would; the file does not say
-  so, so TenForge does not call them that and uses neither.
+  so, so TenSense does not call them that and uses neither.
 - `testsuite-quoted.csv`: 681 rows; the four header lines.
 - `testsuite-decimal-comma.txt`: 1856 rows; `6,97374318292532E-05`.
 - `testsuite-french.txt`: 120 rows; three columns could be the

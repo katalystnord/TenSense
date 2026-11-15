@@ -1,4 +1,4 @@
-# TenForge profile, version 1
+# TenSense profile, version 1
 
 **Status: APPROVED by David, 2026-11-12.** A contract from here: changes
 are additive within version 1; anything else is version 2.
@@ -31,7 +31,7 @@ One JSON file per profile, `profiles/<id>.json`, for example
 
 ```json
 {
-  "format": "tenforge-profile",
+  "format": "tensense-profile",
   "version": "1.0",
   "id": "iso-527-1-2019",
   "profile_version": "1.0.0",
@@ -105,6 +105,10 @@ Each result:
 }
 ```
 
+`format` was `tenforge-profile` before the application was renamed
+TenSense (2026-11-15). A reader takes both; a writer writes
+`tensense-profile`.
+
 Primitives, from the engine: `linear-fit`, `offset-intersection`,
 `total-strain-intersection`, `maximum`, `first-local-maximum`,
 `zero-slope`, `discontinuous-yield`, `break`, `value-at`,
@@ -146,7 +150,7 @@ and record metadata.
 1. **JSON**, not YAML: no ambiguity, one parser shared with records and
    results.
 2. **User-defined profiles are allowed from 0.1**, clearly marked as not
-   shipped with TenForge, and labelled aligned unless every parameter is
+   shipped with TenSense, and labelled aligned unless every parameter is
    confirmed.
 
 ## 7. Additions in release 0.2 (Phase 3; additive, for David's review)
