@@ -5,10 +5,10 @@
 # NEGATIVE CHECKS, 2026-11-11 (each property broken on purpose, test seen red,
 # then restored):
 #   - a Qt include added to analysis/Version.h: red, but caught FIRST by
-#     tf_analysis's own compile (its sources include the header and it has no
+#     ts_analysis's own compile (its sources include the header and it has no
 #     Qt path), so this test is the second guard for that header, and the
-#     first only for a future header no tf_analysis source includes;
-#   - Qt6::Core added to tf_analysis's link line: configure refuses
+#     first only for a future header no ts_analysis source includes;
+#   - Qt6::Core added to ts_analysis's link line: configure refuses
 #     (src/CMakeLists.txt guard);
 #   - empty engine version, wrong CLI version: each turned its own test red;
 #   - window title without the subtitle, empty state without "release 0.1",
@@ -157,111 +157,117 @@
 #     tests/fixtures/profiles/ keep the old name on purpose).
 #   - a_manifest_of_another_format_is_still_refused and
 #     the_shipped_profiles_say_tensense: guards, green before the fix.
+#   Then the prefix (tf to ts, manifest.tfrec to manifest.tsrec):
+#   - a_record_saved_before_the_rename_with_manifest_tfrec_still_opens:
+#     written first, red (no manifest found; files could not be added).
+#   - paraview_opens_a_record_and_refuses_a_changed_one, the old-record
+#     copy: added after the reader took both extensions; with "tfrec"
+#     taken out again it went red ("No reader found"), and green restored.
 
 # --- The engine stands alone ------------------------------------------------
-# Every public header of tf_analysis, included into one translation unit and
-# compiled with ONLY tf_analysis's own include path and link line: Eigen, no
+# Every public header of ts_analysis, included into one translation unit and
+# compiled with ONLY ts_analysis's own include path and link line: Eigen, no
 # Qt, no VTK. A header that reaches for Qt fails to compile here, which the
 # configure-time guard in src/CMakeLists.txt cannot see.
-file(GLOB TF_ANALYSIS_HEADERS CONFIGURE_DEPENDS
+file(GLOB TS_ANALYSIS_HEADERS CONFIGURE_DEPENDS
      ${CMAKE_SOURCE_DIR}/src/analysis/*.h)
-set(tf_headers_tu "${CMAKE_CURRENT_BINARY_DIR}/analysis_headers_tu.cpp")
-set(tf_headers_body "// Generated: every tf_analysis header, nothing else.\n")
-foreach(h IN LISTS TF_ANALYSIS_HEADERS)
-    string(APPEND tf_headers_body "#include \"${h}\"\n")
+set(ts_headers_tu "${CMAKE_CURRENT_BINARY_DIR}/analysis_headers_tu.cpp")
+set(ts_headers_body "// Generated: every ts_analysis header, nothing else.\n")
+foreach(h IN LISTS TS_ANALYSIS_HEADERS)
+    string(APPEND ts_headers_body "#include \"${h}\"\n")
 endforeach()
-string(APPEND tf_headers_body
+string(APPEND ts_headers_body
     "#include <cstdio>\n"
-    "int main() { const char *v = tf::analysis::version();\n"
+    "int main() { const char *v = ts::analysis::version();\n"
     "  if (!v || !*v) { std::puts(\"empty engine version\"); return 1; }\n"
-    "  std::printf(\"tf_analysis %s, built with no Qt\\n\", v); return 0; }\n")
-file(GENERATE OUTPUT ${tf_headers_tu} CONTENT "${tf_headers_body}")
-add_executable(test_analysis_stands_alone ${tf_headers_tu})
-target_link_libraries(test_analysis_stands_alone PRIVATE tf_analysis)
+    "  std::printf(\"ts_analysis %s, built with no Qt\\n\", v); return 0; }\n")
+file(GENERATE OUTPUT ${ts_headers_tu} CONTENT "${ts_headers_body}")
+add_executable(test_analysis_stands_alone ${ts_headers_tu})
+target_link_libraries(test_analysis_stands_alone PRIVATE ts_analysis)
 add_test(NAME analysis_headers_compile_without_qt
          COMMAND test_analysis_stands_alone)
 
 # --- The engine's primitives and the tension model ---------------------------
-# Built with tf_analysis's own dependencies only (tests/check.h, no Qt), so
+# Built with ts_analysis's own dependencies only (tests/check.h, no Qt), so
 # the engine's tests prove it stands alone too.
 add_executable(test_primitives test_primitives.cpp)
-target_link_libraries(test_primitives PRIVATE tf_analysis)
+target_link_libraries(test_primitives PRIVATE ts_analysis)
 add_test(NAME engine_primitives COMMAND test_primitives)
 
 add_executable(test_statistics test_statistics.cpp)
-target_link_libraries(test_statistics PRIVATE tf_analysis)
+target_link_libraries(test_statistics PRIVATE ts_analysis)
 add_test(NAME engine_statistics_and_energy COMMAND test_statistics)
 
 add_executable(test_tension_synthetic test_tension_synthetic.cpp)
-target_link_libraries(test_tension_synthetic PRIVATE tf_analysis)
+target_link_libraries(test_tension_synthetic PRIVATE ts_analysis)
 target_compile_definitions(test_tension_synthetic PRIVATE
-    TF_FIXTURES="${CMAKE_CURRENT_SOURCE_DIR}/fixtures")
+    TS_FIXTURES="${CMAKE_CURRENT_SOURCE_DIR}/fixtures")
 add_test(NAME tension_on_synthetic_curves COMMAND test_tension_synthetic)
 
 add_executable(test_curve test_curve.cpp)
-target_link_libraries(test_curve PRIVATE tf_analysis)
+target_link_libraries(test_curve PRIVATE ts_analysis)
 target_compile_definitions(test_curve PRIVATE
-    TF_FIXTURES="${CMAKE_CURRENT_SOURCE_DIR}/fixtures")
+    TS_FIXTURES="${CMAKE_CURRENT_SOURCE_DIR}/fixtures")
 add_test(NAME compression_and_bending_models COMMAND test_curve)
 
-# --- Reading machine exports (tf_core) ---------------------------------------
+# --- Reading machine exports (ts_core) ---------------------------------------
 add_executable(test_import test_import.cpp)
-target_link_libraries(test_import PRIVATE tf_core)
+target_link_libraries(test_import PRIVATE ts_core)
 target_compile_definitions(test_import PRIVATE
-    TF_FIXTURES="${CMAKE_CURRENT_SOURCE_DIR}/fixtures")
+    TS_FIXTURES="${CMAKE_CURRENT_SOURCE_DIR}/fixtures")
 add_test(NAME import_machine_exports COMMAND test_import)
 
-# --- Profiles in, results documents out (tf_core) ----------------------------
+# --- Profiles in, results documents out (ts_core) ----------------------------
 add_executable(test_profiles_results test_profiles_results.cpp)
-target_link_libraries(test_profiles_results PRIVATE tf_core)
+target_link_libraries(test_profiles_results PRIVATE ts_core)
 target_compile_definitions(test_profiles_results PRIVATE
-    TF_FIXTURES="${CMAKE_CURRENT_SOURCE_DIR}/fixtures")
+    TS_FIXTURES="${CMAKE_CURRENT_SOURCE_DIR}/fixtures")
 add_test(NAME profiles_and_results_documents COMMAND test_profiles_results)
 
-# --- The specimen and the test record (tf_core) ------------------------------
+# --- The specimen and the test record (ts_core) ------------------------------
 add_executable(test_specimen test_specimen.cpp)
-target_link_libraries(test_specimen PRIVATE tf_core)
+target_link_libraries(test_specimen PRIVATE ts_core)
 add_test(NAME specimen_geometry_and_json COMMAND test_specimen)
 
 add_executable(test_record test_record.cpp)
-target_link_libraries(test_record PRIVATE tf_core)
+target_link_libraries(test_record PRIVATE ts_core)
 target_compile_definitions(test_record PRIVATE
-    TF_FIXTURES="${CMAKE_CURRENT_SOURCE_DIR}/fixtures")
+    TS_FIXTURES="${CMAKE_CURRENT_SOURCE_DIR}/fixtures")
 add_test(NAME test_record_written_and_opened COMMAND test_record)
 
-# --- What the chart shows besides the curve (tf_core) -----------------------
+# --- What the chart shows besides the curve (ts_core) -----------------------
 add_executable(test_annotations test_annotations.cpp)
-target_link_libraries(test_annotations PRIVATE tf_core)
+target_link_libraries(test_annotations PRIVATE ts_core)
 target_compile_definitions(test_annotations PRIVATE
-    TF_FIXTURES="${CMAKE_CURRENT_SOURCE_DIR}/fixtures")
+    TS_FIXTURES="${CMAKE_CURRENT_SOURCE_DIR}/fixtures")
 add_test(NAME chart_regions_labels_notes_and_modulus_window COMMAND test_annotations)
 
-# --- Exports for FreeCAD, CalculiX and ParaView (tf_core) -------------------
+# --- Exports for FreeCAD, CalculiX and ParaView (ts_core) -------------------
 # The .vtp is read back with VTK's XML reader, as ParaView and PyVista do.
 add_executable(test_exports test_exports.cpp)
-target_link_libraries(test_exports PRIVATE tf_core VTK::IOXML VTK::CommonDataModel)
+target_link_libraries(test_exports PRIVATE ts_core VTK::IOXML VTK::CommonDataModel)
 target_compile_definitions(test_exports PRIVATE
-    TF_FIXTURES="${CMAKE_CURRENT_SOURCE_DIR}/fixtures")
+    TS_FIXTURES="${CMAKE_CURRENT_SOURCE_DIR}/fixtures")
 add_test(NAME exports_for_freecad_calculix_and_paraview COMMAND test_exports)
 
-# --- Reference curves from PlotTracer (tf_core) -----------------------------
+# --- Reference curves from PlotTracer (ts_core) -----------------------------
 add_executable(test_references test_references.cpp)
-target_link_libraries(test_references PRIVATE tf_core)
+target_link_libraries(test_references PRIVATE ts_core)
 target_compile_definitions(test_references PRIVATE
-    TF_FIXTURES="${CMAKE_CURRENT_SOURCE_DIR}/fixtures")
+    TS_FIXTURES="${CMAKE_CURRENT_SOURCE_DIR}/fixtures")
 add_test(NAME reference_curves_from_plottracer COMMAND test_references)
 
-# --- The analysis session behind the window (tf_core) -----------------------
+# --- The analysis session behind the window (ts_core) -----------------------
 add_executable(test_session test_session.cpp)
-target_link_libraries(test_session PRIVATE tf_core)
+target_link_libraries(test_session PRIVATE ts_core)
 target_compile_definitions(test_session PRIVATE
-    TF_FIXTURES="${CMAKE_CURRENT_SOURCE_DIR}/fixtures")
+    TS_FIXTURES="${CMAKE_CURRENT_SOURCE_DIR}/fixtures")
 add_test(NAME analysis_session_guides_and_analyses COMMAND test_session)
 
 add_executable(test_report test_report.cpp)
-target_link_libraries(test_report PRIVATE tf_core)
+target_link_libraries(test_report PRIVATE ts_core)
 target_compile_definitions(test_report PRIVATE
-    TF_FIXTURES="${CMAKE_CURRENT_SOURCE_DIR}/fixtures")
+    TS_FIXTURES="${CMAKE_CURRENT_SOURCE_DIR}/fixtures")
 add_test(NAME report_carries_results_conformity_and_provenance COMMAND test_report)
 
 # --- Validation: NPL TENSTAND (Phase 1 exit criterion) -----------------------
@@ -269,28 +275,28 @@ add_test(NAME report_carries_results_conformity_and_provenance COMMAND test_repo
 # committed: a setup test fetches them into the build tree (or the cache
 # directory below), pinned by SHA-256. The agreed values are facts from
 # NPL's public report and are committed (tests/validation/).
-option(TF_VALIDATION_DOWNLOADS "Fetch validation datasets that cannot be committed" ON)
-set(TF_VALIDATION_CACHE "${CMAKE_BINARY_DIR}/validation-data" CACHE PATH
+option(TS_VALIDATION_DOWNLOADS "Fetch validation datasets that cannot be committed" ON)
+set(TS_VALIDATION_CACHE "${CMAKE_BINARY_DIR}/validation-data" CACHE PATH
     "Where fetched validation datasets are kept between builds")
 add_executable(validate_tenstand validate_tenstand.cpp)
-target_link_libraries(validate_tenstand PRIVATE tf_core)
-if(TF_VALIDATION_DOWNLOADS)
-    file(READ ${CMAKE_CURRENT_SOURCE_DIR}/validation/tenstand-agreed.json tf_tenstand_json)
-    string(JSON tf_tenstand_url GET "${tf_tenstand_json}" data url)
-    string(JSON tf_tenstand_sha GET "${tf_tenstand_json}" data sha256)
+target_link_libraries(validate_tenstand PRIVATE ts_core)
+if(TS_VALIDATION_DOWNLOADS)
+    file(READ ${CMAKE_CURRENT_SOURCE_DIR}/validation/tenstand-agreed.json ts_tenstand_json)
+    string(JSON ts_tenstand_url GET "${ts_tenstand_json}" data url)
+    string(JSON ts_tenstand_sha GET "${ts_tenstand_json}" data sha256)
     add_test(NAME fetch_tenstand
-             COMMAND ${CMAKE_COMMAND} -DURL=${tf_tenstand_url} -DSHA256=${tf_tenstand_sha}
-                     -DDEST=${TF_VALIDATION_CACHE}/tenstand
+             COMMAND ${CMAKE_COMMAND} -DURL=${ts_tenstand_url} -DSHA256=${ts_tenstand_sha}
+                     -DDEST=${TS_VALIDATION_CACHE}/tenstand
                      -P ${CMAKE_CURRENT_SOURCE_DIR}/validation/fetch.cmake)
     set_tests_properties(fetch_tenstand PROPERTIES FIXTURES_SETUP tenstand)
     add_test(NAME tenstand_within_en10002_annex_a5
              COMMAND validate_tenstand
                      ${CMAKE_CURRENT_SOURCE_DIR}/validation/tenstand-agreed.json
-                     ${TF_VALIDATION_CACHE}/tenstand/data
+                     ${TS_VALIDATION_CACHE}/tenstand/data
                      ${CMAKE_BINARY_DIR}/tenstand-report.md)
     set_tests_properties(tenstand_within_en10002_annex_a5 PROPERTIES FIXTURES_REQUIRED tenstand)
 else()
-    message(STATUS "TF_VALIDATION_DOWNLOADS is OFF: the TENSTAND validation is not run")
+    message(STATUS "TS_VALIDATION_DOWNLOADS is OFF: the TENSTAND validation is not run")
 endif()
 
 # --- Validation: TU Braunschweig ISO 14125 (Phase 3 exit criterion) ---------
@@ -299,20 +305,20 @@ endif()
 # committed as the importer's fixture for testXpert's dialect. testXpert's
 # own results for each specimen are committed as transcribed facts.
 add_executable(validate_braunschweig_14125 validate_braunschweig_14125.cpp)
-target_link_libraries(validate_braunschweig_14125 PRIVATE tf_core)
-if(TF_VALIDATION_DOWNLOADS)
-    file(READ ${CMAKE_CURRENT_SOURCE_DIR}/validation/braunschweig-14125-agreed.json tf_bs_json)
-    string(JSON tf_bs_url GET "${tf_bs_json}" data url)
-    string(JSON tf_bs_sha GET "${tf_bs_json}" data sha256)
+target_link_libraries(validate_braunschweig_14125 PRIVATE ts_core)
+if(TS_VALIDATION_DOWNLOADS)
+    file(READ ${CMAKE_CURRENT_SOURCE_DIR}/validation/braunschweig-14125-agreed.json ts_bs_json)
+    string(JSON ts_bs_url GET "${ts_bs_json}" data url)
+    string(JSON ts_bs_sha GET "${ts_bs_json}" data sha256)
     add_test(NAME fetch_braunschweig_14125
-             COMMAND ${CMAKE_COMMAND} -DURL=${tf_bs_url} -DSHA256=${tf_bs_sha}
-                     -DDEST=${TF_VALIDATION_CACHE}/braunschweig-14125
+             COMMAND ${CMAKE_COMMAND} -DURL=${ts_bs_url} -DSHA256=${ts_bs_sha}
+                     -DDEST=${TS_VALIDATION_CACHE}/braunschweig-14125
                      -P ${CMAKE_CURRENT_SOURCE_DIR}/validation/fetch.cmake)
     set_tests_properties(fetch_braunschweig_14125 PROPERTIES FIXTURES_SETUP braunschweig)
     add_test(NAME braunschweig_14125_agrees_with_testxpert
              COMMAND validate_braunschweig_14125
                      ${CMAKE_CURRENT_SOURCE_DIR}/validation/braunschweig-14125-agreed.json
-                     ${TF_VALIDATION_CACHE}/braunschweig-14125/data
+                     ${TS_VALIDATION_CACHE}/braunschweig-14125/data
                      ${CMAKE_BINARY_DIR}/braunschweig-14125-report.md)
     set_tests_properties(braunschweig_14125_agrees_with_testxpert PROPERTIES
         FIXTURES_REQUIRED braunschweig)
@@ -322,58 +328,58 @@ endif()
 # PMDco 3.1.2 and TTO 3.0.0 (CC BY 4.0), fetched as released, pinned by
 # SHA-256; a generated export's every class and property must be in them.
 find_package(Python3 COMPONENTS Interpreter)
-if(TF_VALIDATION_DOWNLOADS AND Python3_Interpreter_FOUND)
-    set(tf_pmd ${TF_VALIDATION_CACHE}/pmd)
+if(TS_VALIDATION_DOWNLOADS AND Python3_Interpreter_FOUND)
+    set(ts_pmd ${TS_VALIDATION_CACHE}/pmd)
     add_test(NAME fetch_pmd_ontologies
              COMMAND ${CMAKE_COMMAND}
                      -DURL=https://raw.githubusercontent.com/materialdigital/core-ontology/v3.1.2/pmdco-full.ttl
                      -DSHA256=bd5093e354c553b0fcca264c78d7048660ccd443637e1933cd7b6cffe779a862
-                     -DDEST=${tf_pmd}/pmdco-3.1.2-full.ttl
+                     -DDEST=${ts_pmd}/pmdco-3.1.2-full.ttl
                      -P ${CMAKE_CURRENT_SOURCE_DIR}/validation/fetch_file.cmake)
     add_test(NAME fetch_tto_ontology
              COMMAND ${CMAKE_COMMAND}
                      -DURL=https://raw.githubusercontent.com/materialdigital/tensile-test-ontology/v3.0.0/tto-full.ttl
                      -DSHA256=27fb9a790fca56c472ce65da1053438101145e765e7c75076d549bb1852d28ae
-                     -DDEST=${tf_pmd}/tto-3.0.0-full.ttl
+                     -DDEST=${ts_pmd}/tto-3.0.0-full.ttl
                      -P ${CMAKE_CURRENT_SOURCE_DIR}/validation/fetch_file.cmake)
     set_tests_properties(fetch_pmd_ontologies fetch_tto_ontology PROPERTIES FIXTURES_SETUP pmd)
     add_test(NAME pmd_export_writes_pmd_jsonld
-             COMMAND tf-analyse --profile iso-6892-1-2019 --area "120.64 mm2"
+             COMMAND ts-analyse --profile iso-6892-1-2019 --area "120.64 mm2"
                      --gauge-length "50 mm" --pmd ${CMAKE_BINARY_DIR}/pmd-export.jsonld
                      ${CMAKE_CURRENT_SOURCE_DIR}/fixtures/synthetic/discontinuous.csv)
     set_tests_properties(pmd_export_writes_pmd_jsonld PROPERTIES FIXTURES_SETUP pmd_export)
     add_test(NAME pmd_jsonld_uses_only_terms_of_the_released_ontologies
              COMMAND ${Python3_EXECUTABLE} -I ${CMAKE_CURRENT_SOURCE_DIR}/validation/check_pmd_iris.py
                      ${CMAKE_BINARY_DIR}/pmd-export.jsonld
-                     ${tf_pmd}/pmdco-3.1.2-full.ttl ${tf_pmd}/tto-3.0.0-full.ttl)
+                     ${ts_pmd}/pmdco-3.1.2-full.ttl ${ts_pmd}/tto-3.0.0-full.ttl)
     set_tests_properties(pmd_jsonld_uses_only_terms_of_the_released_ontologies
                          PROPERTIES FIXTURES_REQUIRED "pmd;pmd_export")
 endif()
 
 # --- Validation: BAM S355 (committed, CC BY 4.0) -----------------------------
 add_executable(validate_bam_s355 validate_bam_s355.cpp)
-target_link_libraries(validate_bam_s355 PRIVATE tf_core)
+target_link_libraries(validate_bam_s355 PRIVATE ts_core)
 target_compile_definitions(validate_bam_s355 PRIVATE
-    TF_FIXTURES="${CMAKE_CURRENT_SOURCE_DIR}/fixtures")
+    TS_FIXTURES="${CMAKE_CURRENT_SOURCE_DIR}/fixtures")
 add_test(NAME bam_s355_matches_reported_results COMMAND validate_bam_s355)
 
 # --- FreeCAD and CalculiX take TenSense's exports (Phase 4 exit) -------------
 # Runs only where FreeCAD's flatpak is installed (not in CI): an external
 # program cannot be a dependency of the suite, but where it is present the
 # check is real, end to end.
-find_program(TF_FLATPAK flatpak)
-set(tf_have_freecad FALSE)
-if(TF_FLATPAK)
-    execute_process(COMMAND ${TF_FLATPAK} info org.freecad.FreeCAD
-                    RESULT_VARIABLE tf_fc_rc OUTPUT_QUIET ERROR_QUIET)
-    if(tf_fc_rc EQUAL 0)
-        set(tf_have_freecad TRUE)
+find_program(TS_FLATPAK flatpak)
+set(ts_have_freecad FALSE)
+if(TS_FLATPAK)
+    execute_process(COMMAND ${TS_FLATPAK} info org.freecad.FreeCAD
+                    RESULT_VARIABLE ts_fc_rc OUTPUT_QUIET ERROR_QUIET)
+    if(ts_fc_rc EQUAL 0)
+        set(ts_have_freecad TRUE)
     endif()
 endif()
-if(tf_have_freecad)
+if(ts_have_freecad)
     add_test(NAME freecad_loads_the_card_and_calculix_runs_the_yield_points
              COMMAND ${CMAKE_COMMAND}
-                     -DTF_ANALYSE=$<TARGET_FILE:tf-analyse>
+                     -DTS_ANALYSE=$<TARGET_FILE:ts-analyse>
                      -DFIXTURE=${CMAKE_CURRENT_SOURCE_DIR}/fixtures/synthetic/ro-continuous.csv
                      -DSCRIPT=${CMAKE_CURRENT_SOURCE_DIR}/freecad/check_exports.py
                      -DWORK=${CMAKE_BINARY_DIR}/freecad-check
@@ -387,19 +393,19 @@ endif()
 
 # --- ParaView reads records with TenSense's plugin (Phase 4 exit) ----------
 # Only where ParaView's flatpak and xvfb-run are installed (not in CI).
-find_program(TF_XVFB_RUN xvfb-run)   # also found below; cached either way
-set(tf_have_paraview FALSE)
-if(TF_FLATPAK AND TF_XVFB_RUN)
-    execute_process(COMMAND ${TF_FLATPAK} info org.paraview.ParaView
-                    RESULT_VARIABLE tf_pv_rc OUTPUT_QUIET ERROR_QUIET)
-    if(tf_pv_rc EQUAL 0)
-        set(tf_have_paraview TRUE)
+find_program(TS_XVFB_RUN xvfb-run)   # also found below; cached either way
+set(ts_have_paraview FALSE)
+if(TS_FLATPAK AND TS_XVFB_RUN)
+    execute_process(COMMAND ${TS_FLATPAK} info org.paraview.ParaView
+                    RESULT_VARIABLE ts_pv_rc OUTPUT_QUIET ERROR_QUIET)
+    if(ts_pv_rc EQUAL 0)
+        set(ts_have_paraview TRUE)
     endif()
 endif()
-if(tf_have_paraview)
+if(ts_have_paraview)
     add_test(NAME paraview_opens_a_record_and_refuses_a_changed_one
              COMMAND ${CMAKE_COMMAND}
-                     -DTF_ANALYSE=$<TARGET_FILE:tf-analyse>
+                     -DTS_ANALYSE=$<TARGET_FILE:ts-analyse>
                      -DFIXTURE=${CMAKE_CURRENT_SOURCE_DIR}/fixtures/synthetic/discontinuous.csv
                      -DSCRIPT=${CMAKE_CURRENT_SOURCE_DIR}/paraview/check_record_reader.py
                      -DPLUGIN=${CMAKE_SOURCE_DIR}/tools/paraview/TenSenseRecordReader.py
@@ -413,9 +419,9 @@ endif()
 
 # --- The command line says what it is and what it cannot do yet -------------
 add_test(NAME cli_reports_its_version
-         COMMAND tf-analyse --version)
+         COMMAND ts-analyse --version)
 set_tests_properties(cli_reports_its_version PROPERTIES
-    PASS_REGULAR_EXPRESSION "^tf-analyse ${PROJECT_VERSION}")
+    PASS_REGULAR_EXPRESSION "^ts-analyse ${PROJECT_VERSION}")
 
 # The window's program answers --version with no display (packaging needs it).
 add_test(NAME gui_reports_its_version_without_a_display COMMAND TenSense --version)
@@ -425,35 +431,35 @@ set_tests_properties(gui_reports_its_version_without_a_display PROPERTIES
 
 # The analysis from the command line, on a committed synthetic curve with a
 # known answer (Rp0.2 = 300 MPa exactly, Rm = 500 MPa).
-set(TF_SYN ${CMAKE_CURRENT_SOURCE_DIR}/fixtures/synthetic)
+set(TS_SYN ${CMAKE_CURRENT_SOURCE_DIR}/fixtures/synthetic)
 add_test(NAME cli_analyses_a_file_with_a_shipped_profile
-         COMMAND tf-analyse --profile iso-6892-1-2019 --area "78.54 mm2"
-                 --gauge-length "50 mm" ${TF_SYN}/ro-continuous.csv)
+         COMMAND ts-analyse --profile iso-6892-1-2019 --area "78.54 mm2"
+                 --gauge-length "50 mm" ${TS_SYN}/ro-continuous.csv)
 set_tests_properties(cli_analyses_a_file_with_a_shipped_profile PROPERTIES
     PASS_REGULAR_EXPRESSION "Rp0\\.2 +300 MPa .*Rm +500 MPa")
 
 # Conformity is said on screen, not only in the file (tenet 9).
 add_test(NAME cli_says_the_results_are_aligned_not_to_standard
-         COMMAND tf-analyse --profile iso-6892-1-2019 --area "78.54 mm2"
-                 --gauge-length "50 mm" ${TF_SYN}/ro-continuous.csv)
+         COMMAND ts-analyse --profile iso-6892-1-2019 --area "78.54 mm2"
+                 --gauge-length "50 mm" ${TS_SYN}/ro-continuous.csv)
 set_tests_properties(cli_says_the_results_are_aligned_not_to_standard PROPERTIES
     PASS_REGULAR_EXPRESSION "Conformity: ALIGNED.*force calibration")
 
 add_test(NAME cli_writes_results_json_to_standard_output
-         COMMAND tf-analyse --profile iso-527-1-2019 --area "40 mm2"
-                 --gauge-length "75 mm" --json - ${TF_SYN}/polymer.csv)
+         COMMAND ts-analyse --profile iso-527-1-2019 --area "40 mm2"
+                 --gauge-length "75 mm" --json - ${TS_SYN}/polymer.csv)
 set_tests_properties(cli_writes_results_json_to_standard_output PROPERTIES
     PASS_REGULAR_EXPRESSION "\"format\": \"tensense-results\".*\"id\": \"Et\"")
 
-# tf-analyse --record writes a record a reader can open: its manifest lists
+# ts-analyse --record writes a record a reader can open: its manifest lists
 # the curve ParaView reads (checked in ParaView itself where it is installed).
 add_test(NAME cli_saves_a_record
          COMMAND ${CMAKE_COMMAND} -E rm -rf ${CMAKE_BINARY_DIR}/cli-record)
 add_test(NAME cli_saves_a_record_with_its_curve
-         COMMAND tf-analyse --profile iso-6892-1-2019 --area "78.54 mm2" --gauge-length "50 mm"
-                 --record ${CMAKE_BINARY_DIR}/cli-record ${TF_SYN}/ro-continuous.csv)
+         COMMAND ts-analyse --profile iso-6892-1-2019 --area "78.54 mm2" --gauge-length "50 mm"
+                 --record ${CMAKE_BINARY_DIR}/cli-record ${TS_SYN}/ro-continuous.csv)
 add_test(NAME cli_record_manifest_lists_the_curve
-         COMMAND ${CMAKE_COMMAND} -E cat ${CMAKE_BINARY_DIR}/cli-record/manifest.tfrec)
+         COMMAND ${CMAKE_COMMAND} -E cat ${CMAKE_BINARY_DIR}/cli-record/manifest.tsrec)
 set_tests_properties(cli_saves_a_record PROPERTIES FIXTURES_SETUP cli_record_clean)
 set_tests_properties(cli_saves_a_record_with_its_curve PROPERTIES
     FIXTURES_REQUIRED cli_record_clean FIXTURES_SETUP cli_record)
@@ -463,36 +469,36 @@ set_tests_properties(cli_record_manifest_lists_the_curve PROPERTIES
 # PASS_REGULAR_EXPRESSION ignores the exit code, so each refusal is checked
 # twice: once for what it says, once (WILL_FAIL) that it exits non-zero.
 add_test(NAME cli_without_a_profile_says_which_exist
-         COMMAND tf-analyse ${TF_SYN}/polymer.csv)
+         COMMAND ts-analyse ${TS_SYN}/polymer.csv)
 set_tests_properties(cli_without_a_profile_says_which_exist PROPERTIES
     PASS_REGULAR_EXPRESSION "--profile.*iso-527-1-2019")
 add_test(NAME cli_without_a_profile_exits_non_zero
-         COMMAND tf-analyse ${TF_SYN}/polymer.csv)
+         COMMAND ts-analyse ${TS_SYN}/polymer.csv)
 set_tests_properties(cli_without_a_profile_exits_non_zero PROPERTIES WILL_FAIL TRUE)
 
 add_test(NAME cli_without_an_area_names_what_is_missing
-         COMMAND tf-analyse --profile iso-527-1-2019 ${TF_SYN}/polymer.csv)
+         COMMAND ts-analyse --profile iso-527-1-2019 ${TS_SYN}/polymer.csv)
 set_tests_properties(cli_without_an_area_names_what_is_missing PROPERTIES
     PASS_REGULAR_EXPRESSION "give --area, or --width and --thickness")
 add_test(NAME cli_without_an_area_exits_non_zero
-         COMMAND tf-analyse --profile iso-527-1-2019 ${TF_SYN}/polymer.csv)
+         COMMAND ts-analyse --profile iso-527-1-2019 ${TS_SYN}/polymer.csv)
 set_tests_properties(cli_without_an_area_exits_non_zero PROPERTIES WILL_FAIL TRUE)
-set(TF_SBS ${CMAKE_CURRENT_SOURCE_DIR}/fixtures/shimadzu/trapezium-side-by-side.csv)
+set(TS_SBS ${CMAKE_CURRENT_SOURCE_DIR}/fixtures/shimadzu/trapezium-side-by-side.csv)
 add_test(NAME cli_asks_which_specimen_of_several_in_a_file
-         COMMAND tf-analyse --profile iso-527-1-2019 --area "20.4 mm2" ${TF_SBS})
+         COMMAND ts-analyse --profile iso-527-1-2019 --area "20.4 mm2" ${TS_SBS})
 set_tests_properties(cli_asks_which_specimen_of_several_in_a_file PROPERTIES
     PASS_REGULAR_EXPRESSION "give --specimen: .*1- 1, 1- 2, 1- 3")
 add_test(NAME cli_analyses_the_named_specimen_of_several
-         COMMAND tf-analyse --profile iso-527-1-2019 --area "20.4 mm2" --specimen "1- 3"
-                 --extension Strain --json - ${TF_SBS})
+         COMMAND ts-analyse --profile iso-527-1-2019 --area "20.4 mm2" --specimen "1- 3"
+                 --extension Strain --json - ${TS_SBS})
 set_tests_properties(cli_analyses_the_named_specimen_of_several PROPERTIES
     PASS_REGULAR_EXPRESSION "\"specimen_in_file\": \"1- 3\"")
 
 # --- Walkthrough: the real window -------------------------------------------
 add_executable(test_main_window_walkthrough test_main_window_walkthrough.cpp)
-target_link_libraries(test_main_window_walkthrough PRIVATE tf_gui Qt6::Test)
+target_link_libraries(test_main_window_walkthrough PRIVATE ts_gui Qt6::Test)
 target_compile_definitions(test_main_window_walkthrough PRIVATE
-    TF_FIXTURES="${CMAKE_CURRENT_SOURCE_DIR}/fixtures")
+    TS_FIXTURES="${CMAKE_CURRENT_SOURCE_DIR}/fixtures")
 vtk_module_autoinit(TARGETS test_main_window_walkthrough MODULES ${VTK_LIBRARIES})
 
 # HEADLESS BY CONSTRUCTION, not by how the suite is invoked (SurView's
@@ -500,15 +506,15 @@ vtk_module_autoinit(TARGETS test_main_window_walkthrough MODULES ${VTK_LIBRARIES
 # server. It cannot run offscreen: QT_QPA_PLATFORM=offscreen crashes VTK's
 # OpenGL widget. -a picks a free display; 24-bit because xvfb-run's default
 # depth is too shallow for the GL context.
-option(TF_TESTS_HEADLESS
+option(TS_TESTS_HEADLESS
        "Run the walkthrough tests on a private X server instead of your desktop" ON)
-find_program(TF_XVFB_RUN xvfb-run)
-if(TF_TESTS_HEADLESS AND TF_XVFB_RUN)
+find_program(TS_XVFB_RUN xvfb-run)
+if(TS_TESTS_HEADLESS AND TS_XVFB_RUN)
     add_test(NAME main_window_walkthrough
-             COMMAND ${TF_XVFB_RUN} -a -s "-screen 0 1600x1000x24"
+             COMMAND ${TS_XVFB_RUN} -a -s "-screen 0 1600x1000x24"
                      $<TARGET_FILE:test_main_window_walkthrough>)
 else()
-    if(TF_TESTS_HEADLESS)
+    if(TS_TESTS_HEADLESS)
         message(WARNING "xvfb-run not found: the walkthrough tests will open "
                         "windows on the current display. Install xvfb.")
     endif()
@@ -519,7 +525,7 @@ endif()
 # above rather than reaching past it to a compositor.
 # A file dialog nobody answers would wait for ever: the timeout ends it.
 set_tests_properties(main_window_walkthrough PROPERTIES TIMEOUT 120
-    ENVIRONMENT "LIBGL_ALWAYS_SOFTWARE=1;QT_QPA_PLATFORM=xcb;WAYLAND_DISPLAY=;TF_WALKTHROUGH_XVFB=1")
+    ENVIRONMENT "LIBGL_ALWAYS_SOFTWARE=1;QT_QPA_PLATFORM=xcb;WAYLAND_DISPLAY=;TS_WALKTHROUGH_XVFB=1")
 # The test binary also puts itself under xvfb-run when started any other
 # way (ensureHeadless() in the test), so a direct run never reaches the
 # desktop either.

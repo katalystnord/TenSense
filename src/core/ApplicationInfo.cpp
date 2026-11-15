@@ -1,6 +1,6 @@
 #include "core/ApplicationInfo.h"
 
-namespace tf::core {
+namespace ts::core {
 
 QString applicationName()
 {
@@ -14,12 +14,12 @@ QString applicationSubtitle()
 
 QString applicationVersion()
 {
-    return QStringLiteral(TF_VERSION);
+    return QStringLiteral(TS_VERSION);
 }
 
 QString applicationBuild()
 {
-    return QStringLiteral(TF_BUILD);
+    return QStringLiteral(TS_BUILD);
 }
 
-} // namespace tf::core
+} // namespace ts::core

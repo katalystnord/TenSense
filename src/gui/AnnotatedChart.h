@@ -15,7 +15,7 @@
 #include <utility>
 #include <vector>
 
-namespace tf::gui {
+namespace ts::gui {
 
 class AnnotatedChart : public vtkChartXY
 {
@@ -71,4 +71,4 @@ private:
     int m_dragging = 0;  // 0 none, 1 the start edge, 2 the end edge
 };
 
-} // namespace tf::gui
+} // namespace ts::gui

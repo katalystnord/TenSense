@@ -9,7 +9,7 @@
 #include <cmath>
 #include <map>
 
-namespace tf::core {
+namespace ts::core {
 
 namespace {
 
@@ -915,4 +915,4 @@ QStringList knownUnits(const QString &dimension)
     return out;
 }
 
-} // namespace tf::core
+} // namespace ts::core

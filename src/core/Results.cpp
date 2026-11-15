@@ -7,7 +7,7 @@
 #include <cmath>
 #include <map>
 
-namespace tf::core {
+namespace ts::core {
 
 namespace {
 
@@ -55,7 +55,7 @@ QString reportedText(double siValue, const ProfileResult &r)
     return QString::number(rounded, 'f', decimalsOf(r.rounding));
 }
 
-QJsonObject resultsJson(const Profile &profile, const tf::analysis::AnalysisResult &result,
+QJsonObject resultsJson(const Profile &profile, const ts::analysis::AnalysisResult &result,
                         const SourceInfo &source, const QDateTime &computedUtc,
                         const QJsonArray &validity)
 {
@@ -133,7 +133,7 @@ QJsonObject resultsJson(const Profile &profile, const tf::analysis::AnalysisResu
         o["unit"] = pr.unit;
         const auto it = result.results.find(pr.key.toStdString());
         const bool have = it != result.results.end();
-        const tf::analysis::Determination *d = have ? &it->second : nullptr;
+        const ts::analysis::Determination *d = have ? &it->second : nullptr;
         if (d && d->determined) {
             o["status"] = "determined";
             o["value"] = numberOrNull(d->value);
@@ -216,4 +216,4 @@ QString resultsCsv(const QJsonObject &root)
     return out;
 }
 
-} // namespace tf::core
+} // namespace ts::core

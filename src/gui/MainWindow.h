@@ -19,14 +19,14 @@ class QVTKOpenGLNativeWidget;
 class vtkChartXY;
 class vtkContextView;
 
-namespace tf::gui {
+namespace ts::gui {
 
 // The analysis window: choose a procedure, open a machine export, say which
 // columns are force and displacement, enter the specimen and fixture, read
 // the results, export a report, save a record. Tension, compression and
 // bending: the procedure's mode decides which fields are shown.
 //
-// All state and every decision live in tf::core::Session; the window shows
+// All state and every decision live in ts::core::Session; the window shows
 // it, writes the user's edits into it and asks it what to do next. The
 // banner at the top always says the one next step.
 class MainWindow : public QMainWindow
@@ -47,7 +47,7 @@ public:
     // turns that off so it can drive Qt's dialog like a user would.
     static void setNativeDialogs(bool on);
 
-    const tf::core::Session &session() const { return m_session; }
+    const ts::core::Session &session() const { return m_session; }
 
 public slots:
     void openData();
@@ -80,7 +80,7 @@ private:
     void readWindowFields();
     QByteArray chartSvg(QString *error = nullptr) const;
 
-    tf::core::Session m_session;
+    ts::core::Session m_session;
     bool m_updating = false;
 
     QLabel *m_next = nullptr;
@@ -128,4 +128,4 @@ private:
     QAction *m_addReference = nullptr, *m_clearReferences = nullptr, *m_exportPmd = nullptr;
 };
 
-} // namespace tf::gui
+} // namespace ts::gui

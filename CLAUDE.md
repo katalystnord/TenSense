@@ -4,8 +4,9 @@ Open universal testing software: tension, compression and bending, for any
 universal testing machine. Katalyst Nord. Licence LGPL-2.1-or-later.
 
 **Named TenSense on 2026-11-15** (David; it was TenForge): tension
-sensing, as SurView is surface view. The `tf` prefix (targets, `tf-analyse`,
-`manifest.tfrec`, test macros) stays. Readers also take the old
+sensing, as SurView is surface view. Everything followed, the prefix
+too: `ts_core`, `ts-analyse`, `ts::`, `TS_` macros, `manifest.tsrec`.
+Readers also take what was written before: `manifest.tfrec` and the
 `tenforge-*` format names; `tests/fixtures/profiles/` keep them on purpose.
 
 The full plan and roadmap: [ROADMAP.md](ROADMAP.md). The data contracts:
@@ -55,7 +56,7 @@ the rest of the file disagrees with a tenet, the tenet wins.
 - **Stack:** C++20, Qt 6 for the shell, VTK for everything drawn and for
   field data, Eigen for numerics, CMake. **Qt Charts and Qt Quick 3D are
   off-limits** (GPL-3.0-only); charts go through `vtkChartXY`.
-- **`tf_analysis` has no Qt.** Pure functions over arrays, Eigen only. A
+- **`ts_analysis` has no Qt.** Pure functions over arrays, Eigen only. A
   configure-time check and a test that compiles every public header with
   no Qt on the include path enforce it.
 - **Standards:** profile parameters carry their source and a confirmed or
@@ -123,18 +124,18 @@ Refuses a commit touching C++ or CMake that does not build and pass.
 ## Layout
 
 ```
-src/analysis/   tf_analysis  standards engine, Eigen only, no Qt
-src/core/       tf_core      record, profiles, calibration, sequencer, drivers API
-src/gui/        tf_gui       the application window
-src/cli/        tf-analyse   headless command line
-profiles/       shipped profiles (JSON), compiled into tf_core
+src/analysis/   ts_analysis  standards engine, Eigen only, no Qt
+src/core/       ts_core      record, profiles, calibration, sequencer, drivers API
+src/gui/        ts_gui       the application window
+src/cli/        ts-analyse   headless command line
+profiles/       shipped profiles (JSON), compiled into ts_core
 tests/          one executable per subject; fixtures/ committed data
 tests/validation/  agreed values and the fetch script for data that is
                 not committed (TENSTAND; Braunschweig ISO 14125, by size)
 docs/specs/     the file contracts: test record, profile, results
 docs/validation/  what each phase was validated against, with every number
 docs/manual/    the user manual; images/ come from the walkthrough
-                (TF_WALKTHROUGH_SHOTS=<dir>)
+                (TS_WALKTHROUGH_SHOTS=<dir>)
 docs/release-notes/  one file per tag, used by the release workflow
 packaging/      desktop entry and icon
 tools/          run-tests.sh, check-no-em-dashes.sh, sanitize.sh, make-appimage.sh,

@@ -5,7 +5,7 @@
 #include <algorithm>
 #include <cmath>
 
-namespace tf::analysis {
+namespace ts::analysis {
 
 namespace {
 
@@ -173,4 +173,4 @@ Outcome<CurvePoint> firstLocalMinimum(Samples x, Samples y, std::size_t from, st
     return Outcome<CurvePoint>::fail("the curve does not turn upwards again");
 }
 
-} // namespace tf::analysis
+} // namespace ts::analysis

@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Read a TenSense curve (.vtp, from File > Export curve for ParaView or
-tf-analyse --vtp) with PyVista: the arrays, the results stored with it,
+ts-analyse --vtp) with PyVista: the arrays, the results stored with it,
 and a plot.
 
     python pyvista_curve.py curve.vtp [plot.png]

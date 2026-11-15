@@ -5,7 +5,7 @@
 #include <cstdio>
 #include <optional>
 
-namespace tf::analysis {
+namespace ts::analysis {
 
 namespace {
 
@@ -310,4 +310,4 @@ AnalysisResult analyseCurve(const CurveInput &in, const CurveMethod &m)
     return out;
 }
 
-} // namespace tf::analysis
+} // namespace ts::analysis

@@ -4,7 +4,7 @@
 
 #include <cmath>
 
-namespace tf::core {
+namespace ts::core {
 
 namespace {
 
@@ -13,7 +13,7 @@ namespace {
 // clutter.
 constexpr double kSmallestToe = 1e-4;
 
-const tf::analysis::Determination *found(const Analysis &a, const QString &key)
+const ts::analysis::Determination *found(const Analysis &a, const QString &key)
 {
     const auto it = a.result.results.find(key.toStdString());
     return it != a.result.results.end() && it->second.determined ? &it->second : nullptr;
@@ -149,4 +149,4 @@ std::optional<std::vector<CurveNote>> curveNotesFromJson(const QJsonArray &a, QS
     return out;
 }
 
-} // namespace tf::core
+} // namespace ts::core

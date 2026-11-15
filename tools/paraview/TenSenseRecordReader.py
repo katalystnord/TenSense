@@ -2,7 +2,7 @@
 #
 # Load it once in ParaView (Tools > Manage Plugins > Load New, choose this
 # file; tick Auto Load to keep it), then File > Open a record's
-# manifest.tfrec. The output is the record's analysed curve
+# manifest.tsrec. The output is the record's analysed curve
 # (results/curve.vtp, exports-v1 section 3) with the specimen, procedure
 # and conformity as field data. Plot it in a Line Chart View: X array
 # strain_percent, Y stress_MPa.
@@ -32,7 +32,7 @@ def _strings(field_data, name, value):
 
 
 @smproxy.reader(name="TenSenseRecordReader", label="TenSense test record",
-                extensions="tfrec", file_description="TenSense test record")
+                extensions="tsrec tfrec", file_description="TenSense test record")
 class TenSenseRecordReader(VTKPythonAlgorithmBase):
     def __init__(self):
         super().__init__(nInputPorts=0, nOutputPorts=1, outputType="vtkPolyData")
@@ -40,7 +40,7 @@ class TenSenseRecordReader(VTKPythonAlgorithmBase):
 
     @smproperty.stringvector(name="FileName")
     @smdomain.filelist()
-    @smhint.filechooser(extensions="tfrec", file_description="TenSense test record")
+    @smhint.filechooser(extensions="tsrec tfrec", file_description="TenSense test record")
     def SetFileName(self, name):
         if self._filename != name:
             self._filename = name
@@ -48,7 +48,7 @@ class TenSenseRecordReader(VTKPythonAlgorithmBase):
 
     def RequestData(self, request, in_info, out_info):
         if not self._filename:
-            print("TenSense record: no manifest.tfrec given")
+            print("TenSense record: no manifest.tsrec given")
             return 0
         folder = os.path.dirname(os.path.abspath(self._filename))
         with open(self._filename, encoding="utf-8") as f:

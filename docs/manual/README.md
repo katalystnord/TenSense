@@ -14,7 +14,7 @@ yet is listed under [What 0.3 does not do](#what-03-does-not-do).
 9. [Test records](#test-records)
 10. [Into other tools: FreeCAD, CalculiX, ParaView, PyVista, PMD](#into-other-tools-freecad-calculix-paraview-pyvista-pmd)
 11. [Reference curves from PlotTracer](#reference-curves-from-plottracer)
-12. [Without a window: tf-analyse](#without-a-window-tf-analyse)
+12. [Without a window: ts-analyse](#without-a-window-ts-analyse)
 13. [What 0.3 does not do](#what-03-does-not-do)
 
 ## Installing
@@ -271,7 +271,7 @@ Anyone holding the same file can check that it is the one analysed.
 
 ```
 S355-07/
-  manifest.tfrec      every file below, with its SHA-256
+  manifest.tsrec      every file below, with its SHA-256
   test.json           specimen, fixture, procedure, where each channel came from
   channels/           force and extension (or deformation, or deflection),
                       the file's value beside the SI value
@@ -283,7 +283,7 @@ The format is open and described in
 [docs/specs/test-record-v1.md](../specs/test-record-v1.md); any tool can
 read it without TenSense.
 
-**File > Open record** opens a record by its `manifest.tfrec`. TenSense
+**File > Open record** opens a record by its `manifest.tsrec`. TenSense
 analyses it again and tells you, above the fields:
 
 - if a file in the record has changed or gone missing since it was saved;
@@ -329,7 +329,7 @@ scales both axes alike and squeezes the curve to a sliver. To open whole
 records, load TenSense's reader once (Tools > Manage Plugins > Load New,
 choose `TenSenseRecordReader.py`, attached to each release from 0.3 and
 in TenSense's sources under `tools/paraview/`,
-tick Auto Load); then File > Open a record's `manifest.tfrec` gives its
+tick Auto Load); then File > Open a record's `manifest.tsrec` gives its
 curve with the specimen, procedure and conformity. Like TenSense, the
 reader refuses a record whose curve changed after it was written.
 
@@ -347,28 +347,28 @@ does not record units; TenSense proposes them from the column names).
 It is drawn dashed and named, appears in exported figures and the report,
 is kept in the record with its file, and is never used by the analysis.
 
-## Without a window: tf-analyse
+## Without a window: ts-analyse
 
 The same analysis from the command line, for scripts:
 
 ```bash
-tf-analyse --list-profiles
-tf-analyse --profile iso-6892-1-2019 --area "120.6 mm2" --gauge-length "50 mm" export.csv
-tf-analyse --profile iso-527-1-2019 --area "40 mm2" --json results.json export.csv
-tf-analyse --profile iso-178-2019 --width "10 mm" --thickness "4 mm" --span "64 mm" export.csv
-tf-analyse --profile iso-14125-1998-four-point --loading-span "15 mm" \
+ts-analyse --list-profiles
+ts-analyse --profile iso-6892-1-2019 --area "120.6 mm2" --gauge-length "50 mm" export.csv
+ts-analyse --profile iso-527-1-2019 --area "40 mm2" --json results.json export.csv
+ts-analyse --profile iso-178-2019 --width "10 mm" --thickness "4 mm" --span "64 mm" export.csv
+ts-analyse --profile iso-14125-1998-four-point --loading-span "15 mm" \
            --deflection-at loading-points --force-unit N --extension-unit mm zwick.csv
-tf-analyse --profile iso-604-2002 --width "10 mm" --thickness "4 mm" \
+ts-analyse --profile iso-604-2002 --width "10 mm" --thickness "4 mm" \
            --gauge-length "10 mm" --compliance machine.csv export.csv
 ```
 
 `--freecad <name>`, `--vtp <file>` and `--pmd <file>` write the exports
 above; `--record <folder>` saves the test as a record.
 
-When something is missing, tf-analyse says what, in the window's words,
+When something is missing, ts-analyse says what, in the window's words,
 with the option that supplies it.
 
-`tf-analyse --help` lists every option.
+`ts-analyse --help` lists every option.
 
 ## What 0.3 does not do
 

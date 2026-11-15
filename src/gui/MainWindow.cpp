@@ -54,9 +54,9 @@
 
 #include <cmath>
 
-namespace tf::gui {
+namespace ts::gui {
 
-using tf::core::Specimen;
+using ts::core::Specimen;
 
 namespace {
 
@@ -105,7 +105,7 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
     setWindowTitle(QStringLiteral("%1 - %2")
-                       .arg(tf::core::applicationName(), tf::core::applicationSubtitle()));
+                       .arg(ts::core::applicationName(), ts::core::applicationSubtitle()));
 
     // --- Menus ----------------------------------------------------------------
     QMenu *file = menuBar()->addMenu(tr("&File"));
@@ -138,8 +138,8 @@ MainWindow::MainWindow(QWidget *parent)
             this, tr("About TenSense"),
             QStringLiteral("<h3>%1 %2</h3><p>%3</p><p>Build %4</p>"
                            "<p>Licensed under the GNU LGPL, version 2.1 or later.</p>")
-                .arg(tf::core::applicationName(), tf::core::applicationVersion(),
-                     tf::core::applicationSubtitle(), tf::core::applicationBuild()));
+                .arg(ts::core::applicationName(), ts::core::applicationVersion(),
+                     ts::core::applicationSubtitle(), ts::core::applicationBuild()));
     });
 
     // --- The window: the next step on top, inputs left, outcome right -----------
@@ -227,10 +227,10 @@ QWidget *MainWindow::buildInputs()
     m_readNotes->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Preferred);
     df->addRow(m_readNotes);
     m_forceUnit->addItem(tr("Choose..."), QString());
-    for (const QString &u : tf::core::knownUnits("force"))
+    for (const QString &u : ts::core::knownUnits("force"))
         m_forceUnit->addItem(u, u);
     m_extUnit->addItem(tr("Choose..."), QString());
-    for (const QString &u : tf::core::knownUnits("length") + tf::core::knownUnits("strain"))
+    for (const QString &u : ts::core::knownUnits("length") + ts::core::knownUnits("strain"))
         m_extUnit->addItem(u, u);
     // Optional: the machine's own compliance, taken out of the displacement.
     m_complianceButton = new QPushButton(tr("Machine compliance..."));
@@ -357,7 +357,7 @@ QWidget *MainWindow::buildInputs()
             return;
         const QString path = chooseFile(false, tr("Choose a profile file"),
                                         tr("TenSense profiles (*.json)"), {});
-        const auto p = path.isEmpty() ? tf::core::ProfileOrError{} : tf::core::loadProfile(path);
+        const auto p = path.isEmpty() ? ts::core::ProfileOrError{} : ts::core::loadProfile(path);
         if (p.profile) {
             m_profileFile = path;
             m_session.profile = path;
@@ -574,7 +574,7 @@ void MainWindow::showSession()
     showValue(m_span, m_session.fixture.span, 1e3);
     showValue(m_loadingSpan, m_session.fixture.loadingSpan, 1e3);
     select(m_deflectionAt, !m_session.fixture.deflectionAt ? QString()
-                           : *m_session.fixture.deflectionAt == tf::core::Fixture::DeflectionAt::Midspan
+                           : *m_session.fixture.deflectionAt == ts::core::Fixture::DeflectionAt::Midspan
                                ? QStringLiteral("mid-span")
                                : QStringLiteral("loading-points"));
     m_complianceFile->setText(tr("Machine compliance: %1")
@@ -584,8 +584,8 @@ void MainWindow::showSession()
 
     m_profile->clear();
     m_profile->addItem(tr("Choose a procedure..."), QString());
-    for (const QString &id : tf::core::shippedProfiles()) {
-        const auto p = tf::core::loadProfile(id);
+    for (const QString &id : ts::core::shippedProfiles()) {
+        const auto p = ts::core::loadProfile(id);
         m_profile->addItem(p.profile ? p.profile->displayName() : id, id);
     }
     if (!m_profileFile.isEmpty())
@@ -674,8 +674,8 @@ void MainWindow::readInputs()
     f.span = parsed(m_span, 1e-3);
     f.loadingSpan = parsed(m_loadingSpan, 1e-3);
     const QString at = m_deflectionAt->currentData().toString();
-    f.deflectionAt = at == "mid-span"         ? std::optional(tf::core::Fixture::DeflectionAt::Midspan)
-                     : at == "loading-points" ? std::optional(tf::core::Fixture::DeflectionAt::LoadingPoints)
+    f.deflectionAt = at == "mid-span"         ? std::optional(ts::core::Fixture::DeflectionAt::Midspan)
+                     : at == "loading-points" ? std::optional(ts::core::Fixture::DeflectionAt::LoadingPoints)
                                               : std::nullopt;
 
     const QString p = m_profile->currentData().toString();
@@ -687,7 +687,7 @@ void MainWindow::readInputs()
 void MainWindow::refresh()
 {
     m_session.analyse();
-    const tf::core::Step step = m_session.next();
+    const ts::core::Step step = m_session.next();
     m_next->setText(step.ready ? step.text : tr("Next: %1").arg(step.text));
 
     // The one field the next step is about is outlined.
@@ -706,7 +706,7 @@ void MainWindow::refresh()
         e->setStyleSheet(step.field == "specimen" && e->text().trimmed().isEmpty() ? wanted
                                                                                   : QString());
 
-    const auto area = tf::core::crossSection(m_session.specimen);
+    const auto area = ts::core::crossSection(m_session.specimen);
     m_s0->setText(area.area ? QString::number(*area.area * 1e6, 'g', 8) + " mm2" : tr("-"));
 
     m_saveRecord->setEnabled(m_session.analysis().has_value());
@@ -837,7 +837,7 @@ void MainWindow::showChart()
             {"uniform-elongation", {80, 130, 200}},
             {"necking", {210, 120, 40}},
             {"after-break", {120, 120, 120}}};
-        for (const tf::core::Region &r : tf::core::analysisRegions(*a)) {
+        for (const ts::core::Region &r : ts::core::analysisRegions(*a)) {
             vtkNew<vtkTable> t;
             vtkNew<vtkDoubleArray> rx, lo, hi;
             rx->SetName("x");
@@ -875,7 +875,7 @@ void MainWindow::showChart()
         // Reference curves (from PlotTracer): dashed, named, never analysed.
         const unsigned char refColour[3][3] = {{120, 60, 160}, {30, 130, 110}, {160, 110, 20}};
         for (std::size_t k = 0; k < m_session.references.size(); ++k) {
-            const tf::core::ReferenceCurve &r = m_session.references[k];
+            const ts::core::ReferenceCurve &r = m_session.references[k];
             vtkNew<vtkTable> rt;
             vtkNew<vtkDoubleArray> rx, ry;
             rx->SetName("x");
@@ -961,16 +961,16 @@ void MainWindow::showChart()
     std::vector<AnnotatedChart::Span> spans;
     std::optional<std::pair<double, double>> window;
     if (a) {
-        for (const tf::core::PointLabel &l : tf::core::resultLabels(*a))
+        for (const ts::core::PointLabel &l : ts::core::resultLabels(*a))
             labels.push_back({l.strain * 100.0, l.stress * 1e-6, l.text.toStdString()});
-        for (const tf::core::CurveNote &n : m_session.curveNotes) {
+        for (const ts::core::CurveNote &n : m_session.curveNotes) {
             if (n.to) {
                 spans.push_back({n.from * 100.0, *n.to * 100.0, n.text.toStdString()});
-            } else if (const auto y = tf::core::stressAtStrain(*a, n.from)) {
+            } else if (const auto y = ts::core::stressAtStrain(*a, n.from)) {
                 points.push_back({n.from * 100.0, *y * 1e-6, n.text.toStdString()});
             }
         }
-        for (const tf::core::Region &r : tf::core::analysisRegions(*a))
+        for (const ts::core::Region &r : ts::core::analysisRegions(*a))
             if (r.id == "modulus-fit")
                 window = std::make_pair(r.from * 100.0, r.to * 100.0);
         // A window the user set is shown as set, not as the samples in it.
@@ -988,7 +988,7 @@ void MainWindow::showChart()
 
 QByteArray MainWindow::chartSvg(QString *error) const
 {
-    return tf::gui::chartSvg(m_chart->renderWindow(), error);
+    return ts::gui::chartSvg(m_chart->renderWindow(), error);
 }
 
 // --- Notes on the curve and the modulus window ----------------------------------
@@ -1009,14 +1009,14 @@ void MainWindow::showNotes()
 
 void MainWindow::readNotes()
 {
-    std::vector<tf::core::CurveNote> notes;
+    std::vector<ts::core::CurveNote> notes;
     for (int i = 0; i < m_notesTable->rowCount(); ++i) {
         auto text = [&](int c) { return m_notesTable->item(i, c) ? m_notesTable->item(i, c)->text().trimmed() : QString(); };
         bool ok = false;
         const double from = QString(text(0)).replace(',', '.').toDouble(&ok) / 100.0;
         if (!ok)
             continue;  // a row being typed; kept in the table, not yet drawn
-        tf::core::CurveNote n{from, std::nullopt, text(2)};
+        ts::core::CurveNote n{from, std::nullopt, text(2)};
         bool ok2 = false;
         const double to = QString(text(1)).replace(',', '.').toDouble(&ok2) / 100.0;
         if (ok2 && to > from)
@@ -1039,8 +1039,8 @@ void MainWindow::addNote(bool span)
         if (std::isfinite(e))
             hi = std::max(hi, e);
     const double mid = (lo + hi) / 2.0;
-    m_session.curveNotes.push_back(span ? tf::core::CurveNote{mid - hi / 10.0, mid + hi / 10.0, tr("span")}
-                                        : tf::core::CurveNote{mid, std::nullopt, tr("note")});
+    m_session.curveNotes.push_back(span ? ts::core::CurveNote{mid - hi / 10.0, mid + hi / 10.0, tr("span")}
+                                        : ts::core::CurveNote{mid, std::nullopt, tr("note")});
     showNotes();
     showChart();
     m_tabs->setCurrentIndex(1);
@@ -1091,7 +1091,7 @@ void MainWindow::openData()
 void MainWindow::openRecord()
 {
     const QString path = chooseFile(false, tr("Open a TenSense record"),
-                                    tr("TenSense records (manifest.tfrec)"), {});
+                                    tr("TenSense records (manifest.tsrec manifest.tfrec)"), {});
     if (path.isEmpty())
         return;
     const QString err = m_session.openRecord(path);
@@ -1145,8 +1145,8 @@ void MainWindow::exportReport()
         QTextDocument doc;
         const QByteArray svg = chartSvg();
         if (!svg.isEmpty())
-            tf::gui::drawImageAsSvg(&doc, QStringLiteral("chart.svg"), svg);
-        doc.setHtml(tf::core::reportHtml(a->doc, m_session.specimen,
+            ts::gui::drawImageAsSvg(&doc, QStringLiteral("chart.svg"), svg);
+        doc.setHtml(ts::core::reportHtml(a->doc, m_session.specimen,
                                          svg.isEmpty() ? QString() : QStringLiteral("chart.svg"),
                                          m_session.fixture));
         QPdfWriter pdf(path);
@@ -1156,7 +1156,7 @@ void MainWindow::exportReport()
                               : a->profile.mode == "compression" ? tr("Compression")
                                                                  : tr("Tensile"),
                               m_session.specimen.id));
-        pdf.setCreator(tf::core::applicationName() + " " + tf::core::applicationVersion());
+        pdf.setCreator(ts::core::applicationName() + " " + ts::core::applicationVersion());
         doc.print(&pdf);
         if (!QFileInfo(path).exists() || QFileInfo(path).size() == 0)
             error = tr("the PDF could not be written");
@@ -1168,7 +1168,7 @@ void MainWindow::exportReport()
             const QString src = svg.isEmpty() ? QString()
                                               : "data:image/svg+xml;base64,"
                                                     + QString::fromLatin1(svg.toBase64());
-            f.write(tf::core::reportHtml(a->doc, m_session.specimen, src, m_session.fixture)
+            f.write(ts::core::reportHtml(a->doc, m_session.specimen, src, m_session.fixture)
                         .toUtf8());
         }
         else
@@ -1199,7 +1199,7 @@ void MainWindow::exportChart()
     QString error;
     const QByteArray svg = chartSvg(&error);
     if (error.isEmpty())
-        error = tf::gui::writeChart(svg, path);
+        error = ts::gui::writeChart(svg, path);
     if (!error.isEmpty()) {
         m_notices->setText(tr("The chart was not exported: %1").arg(error));
         m_notices->setVisible(true);
@@ -1215,8 +1215,8 @@ void MainWindow::exportFreecad()
         return;
     // Bending and the rest are refused with the reason, on screen.
     QString error;
-    const QString card = tf::core::freecadCard(*a, m_session.specimen, &error);
-    const tf::core::Hardening h = tf::core::hardeningCurve(*a);
+    const QString card = ts::core::freecadCard(*a, m_session.specimen, &error);
+    const ts::core::Hardening h = ts::core::hardeningCurve(*a);
     if (card.isEmpty()) {
         m_notices->setText(tr("Nothing to export for FreeCAD: %1.").arg(error));
         m_notices->setVisible(true);
@@ -1242,8 +1242,8 @@ void MainWindow::exportFreecad()
     };
     write(path + ".FCMat", card.toUtf8());
     if (h.error.isEmpty()) {
-        write(path + "-yieldpoints.txt", (tf::core::yieldPoints(h).join('\n') + '\n').toUtf8());
-        write(path + "-plastic.inp", tf::core::calculixPlastic(h, *a).toUtf8());
+        write(path + "-yieldpoints.txt", (ts::core::yieldPoints(h).join('\n') + '\n').toUtf8());
+        write(path + "-plastic.inp", ts::core::calculixPlastic(h, *a).toUtf8());
     } else {
         problems << tr("no hardening curve: %1").arg(h.error);
     }
@@ -1270,7 +1270,7 @@ void MainWindow::exportVtp()
     if (!path.endsWith(".vtp", Qt::CaseInsensitive))
         path += ".vtp";
     QFile f(path);
-    const QByteArray bytes = tf::core::curveVtp(*a).toUtf8();
+    const QByteArray bytes = ts::core::curveVtp(*a).toUtf8();
     if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate) || f.write(bytes) != bytes.size()) {
         m_notices->setText(tr("The curve was not exported: cannot write %1").arg(path));
         m_notices->setVisible(true);
@@ -1285,7 +1285,7 @@ void MainWindow::exportPmd()
     if (!a)
         return;
     QString error;
-    const QString ld = tf::core::pmdJsonLd(*a, m_session.specimen, &error);
+    const QString ld = ts::core::pmdJsonLd(*a, m_session.specimen, &error);
     if (ld.isEmpty()) {
         m_notices->setText(tr("Nothing to export for Platform MaterialDigital: %1.").arg(error));
         m_notices->setVisible(true);
@@ -1313,7 +1313,7 @@ void MainWindow::addReference()
     if (path.isEmpty())
         return;
     QString error;
-    const auto file = tf::core::readPlotTracer(path, &error);
+    const auto file = ts::core::readPlotTracer(path, &error);
     if (!file) {
         m_notices->setText(tr("%1 cannot be used: %2").arg(QFileInfo(path).fileName(), error));
         m_notices->setVisible(true);
@@ -1332,8 +1332,8 @@ void MainWindow::addReference()
     for (const auto &s : file->series)
         if (s.relation.isEmpty())
             series->addItem(s.name);
-    strainUnit->addItems(tf::core::referenceStrainUnits());
-    stressUnit->addItems(tf::core::referenceStressUnits());
+    strainUnit->addItems(ts::core::referenceStrainUnits());
+    stressUnit->addItems(ts::core::referenceStressUnits());
     form->addRow(tr("Curve"), series);
     form->addRow(tr("Strain column"), strainCol);
     form->addRow(tr("Strain unit"), strainUnit);
@@ -1347,7 +1347,7 @@ void MainWindow::addReference()
                 c->clear();
                 c->addItems(s.columns);
             }
-            const auto g = tf::core::guessReferenceColumns(s);
+            const auto g = ts::core::guessReferenceColumns(s);
             if (!g.strainColumn.isEmpty())
                 strainCol->setCurrentText(g.strainColumn);
             if (!g.stressColumn.isEmpty())
@@ -1401,7 +1401,7 @@ void MainWindow::chooseCompliance()
 void MainWindow::addUnlisted()
 {
     const QString dir = m_session.recordDir();
-    const QString err = tf::core::addUnlistedFiles(dir);
+    const QString err = ts::core::addUnlistedFiles(dir);
     if (err.isEmpty())
         m_session.openRecord(dir);
     showSession();
@@ -1412,4 +1412,4 @@ void MainWindow::addUnlisted()
     }
 }
 
-} // namespace tf::gui
+} // namespace ts::gui

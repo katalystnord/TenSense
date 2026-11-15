@@ -70,13 +70,13 @@ The [manual](docs/manual/) walks through it.
 From the command line:
 
 ```bash
-tf-analyse --list-profiles
-tf-analyse --profile iso-6892-1-2019 --area "120.6 mm2" --gauge-length "50 mm" export.csv
-tf-analyse --profile iso-527-1-2019 --area "40 mm2" --json results.json export.csv
-tf-analyse --profile iso-178-2019 --width "10 mm" --thickness "4 mm" --span "64 mm" export.csv
-tf-analyse --profile iso-14125-1998-four-point --loading-span "15 mm" \
+ts-analyse --list-profiles
+ts-analyse --profile iso-6892-1-2019 --area "120.6 mm2" --gauge-length "50 mm" export.csv
+ts-analyse --profile iso-527-1-2019 --area "40 mm2" --json results.json export.csv
+ts-analyse --profile iso-178-2019 --width "10 mm" --thickness "4 mm" --span "64 mm" export.csv
+ts-analyse --profile iso-14125-1998-four-point --loading-span "15 mm" \
            --deflection-at loading-points zwick-export.csv
-tf-analyse --profile iso-844-2021 --width "50 mm" --thickness "50 mm" --gauge-length "50 mm" \
+ts-analyse --profile iso-844-2021 --width "50 mm" --thickness "50 mm" --gauge-length "50 mm" \
            --compliance machine.csv foam.csv
 ```
 

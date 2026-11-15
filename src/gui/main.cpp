@@ -14,16 +14,16 @@ int main(int argc, char *argv[])
     // script can ask on a machine with no display.
     for (int i = 1; i < argc; ++i) {
         if (!std::strcmp(argv[i], "--version")) {
-            std::printf("%s %s (build %s)\n", qPrintable(tf::core::applicationName()),
-                        qPrintable(tf::core::applicationVersion()),
-                        qPrintable(tf::core::applicationBuild()));
+            std::printf("%s %s (build %s)\n", qPrintable(ts::core::applicationName()),
+                        qPrintable(ts::core::applicationVersion()),
+                        qPrintable(ts::core::applicationBuild()));
             return 0;
         }
         if (!std::strcmp(argv[i], "--help") || !std::strcmp(argv[i], "-h")) {
             std::printf("%s - %s\n\nUsage: TenSense [--version]\n\nThe window guides every step. "
-                        "For analysis without a window, use tf-analyse.\n",
-                        qPrintable(tf::core::applicationName()),
-                        qPrintable(tf::core::applicationSubtitle()));
+                        "For analysis without a window, use ts-analyse.\n",
+                        qPrintable(ts::core::applicationName()),
+                        qPrintable(ts::core::applicationSubtitle()));
             return 0;
         }
     }
@@ -33,12 +33,12 @@ int main(int argc, char *argv[])
     QSurfaceFormat::setDefaultFormat(QVTKOpenGLNativeWidget::defaultFormat());
 
     QApplication app(argc, argv);
-    QApplication::setApplicationName(tf::core::applicationName());
+    QApplication::setApplicationName(ts::core::applicationName());
     QApplication::setOrganizationName(QStringLiteral("Katalyst Nord"));
-    QApplication::setApplicationVersion(tf::core::applicationVersion());
+    QApplication::setApplicationVersion(ts::core::applicationVersion());
     QApplication::setDesktopFileName(QStringLiteral("tensense"));
 
-    tf::gui::MainWindow window;
+    ts::gui::MainWindow window;
     window.show();
     return app.exec();
 }

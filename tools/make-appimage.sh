@@ -44,7 +44,7 @@ fetch linuxdeploy/linuxdeploy "$LD_TAG" linuxdeploy-x86_64.AppImage "$LD_SHA"
 fetch linuxdeploy/linuxdeploy-plugin-qt "$QT_TAG" linuxdeploy-plugin-qt-x86_64.AppImage "$QT_SHA"
 
 cmake -S "$here" -B "$build" -G Ninja -DCMAKE_BUILD_TYPE=Release \
-      -DCMAKE_INSTALL_PREFIX=/usr -DTF_VALIDATION_DOWNLOADS=OFF >/dev/null
+      -DCMAKE_INSTALL_PREFIX=/usr -DTS_VALIDATION_DOWNLOADS=OFF >/dev/null
 cmake --build "$build"
 rm -rf "$build/AppDir"
 DESTDIR="$build/AppDir" cmake --install "$build" >/dev/null
@@ -69,7 +69,7 @@ mkdir -p "$out"
 cd "$out"
 "$tools/linuxdeploy-x86_64.AppImage" \
     --appdir "$build/AppDir" \
-    --executable "$build/AppDir/usr/bin/tf-analyse" \
+    --executable "$build/AppDir/usr/bin/ts-analyse" \
     --desktop-file "$build/AppDir/usr/share/applications/tensense.desktop" \
     --icon-file "$build/AppDir/usr/share/icons/hicolor/scalable/apps/tensense.svg" \
     --plugin qt \

@@ -26,7 +26,7 @@
 
 #include <optional>
 
-namespace tf::core {
+namespace ts::core {
 
 struct Step {
     bool ready = false;
@@ -54,7 +54,7 @@ struct CurveNote {
 struct Analysis {
     Profile profile;
     TensionImport imported;            // the file's columns in SI, signs as recorded
-    tf::analysis::AnalysisResult result;
+    ts::analysis::AnalysisResult result;
     // The curve the results were found on, as analysed: stress (Pa) and
     // strain (1) per sample, compression and bending taken as positive.
     std::vector<double> stress, strain;
@@ -69,7 +69,7 @@ public:
     // fileSpecimen: which of a file's specimens side by side (by its title);
     // when the file holds several and none is named, next() asks.
     QString openData(const QString &path, const QString &fileSpecimen = {});
-    // A test record (its folder or its manifest.tfrec). Analysed at once;
+    // A test record (its folder or its manifest.tsrec). Analysed at once;
     // notices() lists what changed in it and any stored result that a
     // fresh analysis does not reproduce.
     QString openRecord(const QString &dirOrManifest);
@@ -130,7 +130,7 @@ private:
     struct Prepared {
         QString error;
         TensionImport imported;
-        tf::analysis::CurveInput input;
+        ts::analysis::CurveInput input;
         QStringList notes;
     };
     Prepared prepareCurve(const Profile &p) const;
@@ -145,4 +145,4 @@ private:
     std::vector<double> m_complianceForce, m_complianceDisplacement;  // N, m
 };
 
-} // namespace tf::core
+} // namespace ts::core

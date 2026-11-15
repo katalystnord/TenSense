@@ -13,7 +13,7 @@
 #include <algorithm>
 #include <cmath>
 
-namespace tf::core {
+namespace ts::core {
 
 namespace {
 
@@ -143,7 +143,7 @@ QString Session::openData(const QString &path, const QString &fileSpecimen)
 
 QString Session::openRecord(const QString &dirOrManifest)
 {
-    const OpenedRecord o = tf::core::openRecord(dirOrManifest);
+    const OpenedRecord o = ts::core::openRecord(dirOrManifest);
     if (!o.error.isEmpty())
         return o.error;
     if (o.sourceFile.isEmpty())
@@ -454,7 +454,7 @@ Session::Prepared Session::prepareCurve(const Profile &p) const
                         + " column is a strain";
             return out;
         }
-        const auto c = tf::analysis::complianceCorrected(force, disp, m_complianceForce,
+        const auto c = ts::analysis::complianceCorrected(force, disp, m_complianceForce,
                                                          m_complianceDisplacement);
         if (!c) {
             out.error = QString::fromStdString(c.reason);
@@ -467,16 +467,16 @@ Session::Prepared Session::prepareCurve(const Profile &p) const
 
     double ks = 0, ke = 0;
     if (p.mode == "flexure") {
-        tf::analysis::FlexureGeometry g;
+        ts::analysis::FlexureGeometry g;
         g.width = specimen.width.value_or(0);
         g.thickness = specimen.thickness.value_or(0);
         g.span = fixture.span.value_or(0);
         g.loadingSpan = p.fixture == "four-point" ? fixture.loadingSpan.value_or(0) : 0.0;
         g.deflectionAt = fixture.deflectionAt == Fixture::DeflectionAt::Midspan
-                             ? tf::analysis::FlexureGeometry::DeflectionAt::Midspan
-                             : tf::analysis::FlexureGeometry::DeflectionAt::LoadingPoints;
-        const auto a = tf::analysis::flexureStressFactor(g);
-        const auto b = tf::analysis::flexureStrainFactor(g);
+                             ? ts::analysis::FlexureGeometry::DeflectionAt::Midspan
+                             : ts::analysis::FlexureGeometry::DeflectionAt::LoadingPoints;
+        const auto a = ts::analysis::flexureStressFactor(g);
+        const auto b = ts::analysis::flexureStrainFactor(g);
         if (!a || !b) {
             out.error = QString::fromStdString(!a ? a.reason : b.reason);
             return out;
@@ -485,7 +485,7 @@ Session::Prepared Session::prepareCurve(const Profile &p) const
         ke = out.imported.extensionIsStrain ? 1.0 : *b;
         if (p.fixture == "four-point" && !out.imported.extensionIsStrain)
             out.notes << QString("deflection taken as measured at the ")
-                             + (g.deflectionAt == tf::analysis::FlexureGeometry::DeflectionAt::Midspan
+                             + (g.deflectionAt == ts::analysis::FlexureGeometry::DeflectionAt::Midspan
                                     ? "mid-span"
                                     : "loading points");
     } else {
@@ -562,10 +562,10 @@ bool Session::analyse()
     if (modulusWindow) {
         // The user's window replaces the procedure's, on the strain as
         // plotted.
-        a.profile.method.modulusAxis = tf::analysis::TensionMethod::Axis::Strain;
+        a.profile.method.modulusAxis = ts::analysis::TensionMethod::Axis::Strain;
         a.profile.method.modulusFrom = modulusWindow->first;
         a.profile.method.modulusTo = modulusWindow->second;
-        a.profile.curve.modulus = tf::analysis::CurveMethod::Modulus::StrainWindow;
+        a.profile.curve.modulus = ts::analysis::CurveMethod::Modulus::StrainWindow;
         a.profile.curve.modulusFrom = modulusWindow->first;
         a.profile.curve.modulusTo = modulusWindow->second;
         a.profile.curve.windowOnRecordedStrain = true;
@@ -574,7 +574,7 @@ bool Session::analyse()
         a.imported = toTension(*m_table, tensionMapping());
         if (!a.imported.error.isEmpty())
             return false;
-        a.result = tf::analysis::analyseTension(a.imported.input, a.profile.method);
+        a.result = ts::analysis::analyseTension(a.imported.input, a.profile.method);
         const auto &in = a.imported.input;
         for (std::size_t i = 0; i < in.force.size(); ++i) {
             a.stress.push_back(in.force[i] / in.area);
@@ -586,26 +586,26 @@ bool Session::analyse()
         if (!pr.error.isEmpty())
             return false;
         a.imported = std::move(pr.imported);
-        tf::analysis::CurveMethod m = a.profile.curve;
+        ts::analysis::CurveMethod m = a.profile.curve;
         // A stress at a deflection (ISO 178's 1.5 h) becomes a strain for
         // this specimen: the model's strain per deflection times the
         // deflection.
         for (const ProfileResult &r : a.profile.results) {
             if (r.deflectionPerThickness <= 0)
                 continue;
-            tf::analysis::FlexureGeometry g;
+            ts::analysis::FlexureGeometry g;
             g.width = specimen.width.value_or(0);
             g.thickness = specimen.thickness.value_or(0);
             g.span = fixture.span.value_or(0);
             g.loadingSpan = a.profile.fixture == "four-point" ? fixture.loadingSpan.value_or(0) : 0.0;
             if (fixture.deflectionAt == Fixture::DeflectionAt::Midspan)
-                g.deflectionAt = tf::analysis::FlexureGeometry::DeflectionAt::Midspan;
-            const auto k = tf::analysis::flexureStrainFactor(g);
+                g.deflectionAt = ts::analysis::FlexureGeometry::DeflectionAt::Midspan;
+            const auto k = ts::analysis::flexureStrainFactor(g);
             for (auto &q : m.requests)
                 if (q.id == r.id.toStdString() && k)
                     q.at = *k * r.deflectionPerThickness * g.thickness;
         }
-        a.result = tf::analysis::analyseCurve(pr.input, m);
+        a.result = ts::analysis::analyseCurve(pr.input, m);
         a.stress = pr.input.stress;
         a.strain = pr.input.strain;
         notes += a.imported.notes + pr.notes;
@@ -668,4 +668,4 @@ QString Session::saveRecord(const QString &dir) const
                        references, curveVtp(*m_analysis));
 }
 
-} // namespace tf::core
+} // namespace ts::core

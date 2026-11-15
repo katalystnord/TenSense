@@ -21,8 +21,8 @@ at maximum eps_fM; and the maximum flexural stress sigma_fM to three
 decimals from each export's own header. Transcribed into
 `tests/validation/braunschweig-14125-agreed.json`.
 
-**Analysis.** Each export goes through `tf::core::Session`, the same path
-as the window and `tf-analyse`, with the shipped profile: width,
+**Analysis.** Each export goes through `ts::core::Session`, the same path
+as the window and `ts-analyse`, with the shipped profile: width,
 thickness and span read from the export's own header; the units (N, mm),
 the loading span and the deflection position entered as a person would
 from the protocol. Nothing is tuned per file.

@@ -31,7 +31,7 @@ self-describing without TenSense (tenets 6 and 10).
 
 ```
 my-test/
-  manifest.tfrec            the index: format, version, files, hashes, provenance
+  manifest.tsrec            the index: format, version, files, hashes, provenance
   test.json                 specimen, fixture, profile, machine, calibration
   channels/
     force.csv               one file per channel, each at its own rate
@@ -64,7 +64,7 @@ per channel, because channels arrive at different rates (0.5 Hz to kHz)
 and a single table would force a shared tick or a sea of empty cells:
 either is a conversion the record must not make (tenet 10).
 
-## 3. `manifest.tfrec`
+## 3. `manifest.tsrec`
 
 JSON. Its own extension so a ParaView reader plugin and the file manager
 can recognise a record by one file.
@@ -85,6 +85,9 @@ can recognise a record by one file.
 ```
 
 - `start.host_utc` is the instant all `t_*_s` columns count from.
+- The manifest was `manifest.tfrec` before the rename; a reader takes
+  either, and a writer adding files to an older record writes them into
+  its `manifest.tfrec`.
 - `format` was `tenforge-record` before the application was renamed
   TenSense (2026-11-15). A reader takes both; a writer writes
   `tensense-record`. Likewise `tenforge-analysis` and `tenforge-results`.

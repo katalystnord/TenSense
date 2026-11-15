@@ -23,7 +23,7 @@
 #include <optional>
 #include <vector>
 
-namespace tf::core {
+namespace ts::core {
 
 struct Region {
     QString id;      // "modulus-fit", "toe", "uniform-elongation", "necking", "after-break"
@@ -47,4 +47,4 @@ std::optional<double> stressAtStrain(const Analysis &a, double strain);
 QJsonArray curveNotesJson(const std::vector<CurveNote> &notes);
 std::optional<std::vector<CurveNote>> curveNotesFromJson(const QJsonArray &a, QString *error);
 
-} // namespace tf::core
+} // namespace ts::core

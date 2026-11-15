@@ -62,9 +62,9 @@ jobs:
 
       - name: Configure
         run: |
-          extra="-DTF_VALIDATION_CACHE=$PWD/validation-data"
+          extra="-DTS_VALIDATION_CACHE=$PWD/validation-data"
           if [ "${{ matrix.variant }}" = "sanitized" ]; then
-            cmake -S . -B build -G Ninja -DTF_SANITIZE=ON $extra
+            cmake -S . -B build -G Ninja -DTS_SANITIZE=ON $extra
           else
             cmake -S . -B build -G Ninja $extra
           fi

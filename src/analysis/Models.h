@@ -5,14 +5,14 @@
 // compliance correction that may come before them (item 1).
 //
 // Axial models (tension, compression) are a division by the area and by the
-// length the displacement is measured over; tf_core does those inline. The
+// length the displacement is measured over; ts_core does those inline. The
 // bending model has geometry worth a function of its own.
 
 #include "analysis/Primitives.h"
 
 #include <vector>
 
-namespace tf::analysis {
+namespace ts::analysis {
 
 // A beam on two supports, loaded at mid-span (three-point) or at two points
 // symmetric about mid-span (four-point). Lengths in metres.
@@ -51,4 +51,4 @@ Outcome<std::vector<double>> complianceCorrected(Samples force, Samples displace
                                                  Samples tableForce,
                                                  Samples tableDisplacement);
 
-} // namespace tf::analysis
+} // namespace ts::analysis

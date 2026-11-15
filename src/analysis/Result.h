@@ -12,7 +12,7 @@
 #include <utility>
 #include <vector>
 
-namespace tf::analysis {
+namespace ts::analysis {
 
 // What a single result is and how it was found.
 struct Determination {
@@ -34,4 +34,4 @@ struct AnalysisResult {
     double strainOrigin = 0;     // the zero point used, as strain
 };
 
-} // namespace tf::analysis
+} // namespace ts::analysis

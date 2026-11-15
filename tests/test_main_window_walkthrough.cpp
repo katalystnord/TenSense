@@ -45,13 +45,13 @@
 #include <unistd.h>
 #include <vector>
 
-#ifndef TF_FIXTURES
-#error "TF_FIXTURES must point at tests/fixtures"
+#ifndef TS_FIXTURES
+#error "TS_FIXTURES must point at tests/fixtures"
 #endif
 
 namespace {
 
-QString fixture(const char *rel) { return QString(TF_FIXTURES) + "/" + rel; }
+QString fixture(const char *rel) { return QString(TS_FIXTURES) + "/" + rel; }
 
 QString banner(QWidget *w)
 {
@@ -114,12 +114,12 @@ void answerFileDialog(const QString &path)
     QTimer::singleShot(0, [attempt] { (*attempt)(60); });
 }
 
-// With TF_WALKTHROUGH_SHOTS=<dir>, the window as the user sees it at each
+// With TS_WALKTHROUGH_SHOTS=<dir>, the window as the user sees it at each
 // step is saved there (for a person to look at, and for the manual). It is
 // never compared: a screenshot proves nothing a test can name.
 void shot(QWidget *w, const char *name)
 {
-    const QString dir = qEnvironmentVariable("TF_WALKTHROUGH_SHOTS");
+    const QString dir = qEnvironmentVariable("TS_WALKTHROUGH_SHOTS");
     if (dir.isEmpty())
         return;
     QDir().mkpath(dir);
@@ -194,7 +194,7 @@ void chooseProcedure(QWidget *w, const QStringList &words)
 // Follows the banner through ISO 6892-1 on the synthetic Ramberg-Osgood
 // curve: a rectangular 15.708 mm x 5 mm specimen (S0 78.54 mm2, the
 // fixture's), Le 50 mm.
-void followToAnalysis(tf::gui::MainWindow &w)
+void followToAnalysis(ts::gui::MainWindow &w)
 {
     shot(&w, "1-start");
     chooseProcedure(&w, {"ISO 6892-1"});
@@ -233,11 +233,11 @@ class MainWindowWalkthrough : public QObject
     Q_OBJECT
 
 private slots:
-    void initTestCase() { tf::gui::MainWindow::setNativeDialogs(false); }
+    void initTestCase() { ts::gui::MainWindow::setNativeDialogs(false); }
 
     void the_window_names_the_application_and_what_it_is()
     {
-        tf::gui::MainWindow window;
+        ts::gui::MainWindow window;
         window.show();
         QVERIFY(QTest::qWaitForWindowExposed(&window));
         QVERIFY2(window.windowTitle().contains(QStringLiteral("TenSense")),
@@ -249,7 +249,7 @@ private slots:
 
     void the_first_screen_asks_for_the_procedure_and_says_where_results_will_appear()
     {
-        tf::gui::MainWindow window;
+        ts::gui::MainWindow window;
         window.show();
         QVERIFY(QTest::qWaitForWindowExposed(&window));
         QVERIFY2(banner(&window).contains("Choose the procedure"), qPrintable(banner(&window)));
@@ -264,7 +264,7 @@ private slots:
 
     void the_chart_area_renders_vtk_inside_qt()
     {
-        tf::gui::MainWindow window;
+        ts::gui::MainWindow window;
         window.show();
         QVERIFY(QTest::qWaitForWindowExposed(&window));
         QVTKOpenGLNativeWidget *chart = window.chartWidget();
@@ -284,7 +284,7 @@ private slots:
     void open_a_csv_and_export_a_report_following_the_screen()
     {
         QTemporaryDir tmp;
-        tf::gui::MainWindow w;
+        ts::gui::MainWindow w;
         w.show();
         QVERIFY(QTest::qWaitForWindowExposed(&w));
         followToAnalysis(w);
@@ -308,8 +308,8 @@ private slots:
         answerFileDialog(pdf);
         report->trigger();
         QVERIFY2(bytesOf(pdf).startsWith("%PDF"), "no PDF written");
-        if (!qEnvironmentVariable("TF_WALKTHROUGH_SHOTS").isEmpty())
-            QFile::copy(pdf, qEnvironmentVariable("TF_WALKTHROUGH_SHOTS") + "/report.pdf");
+        if (!qEnvironmentVariable("TS_WALKTHROUGH_SHOTS").isEmpty())
+            QFile::copy(pdf, qEnvironmentVariable("TS_WALKTHROUGH_SHOTS") + "/report.pdf");
 
         const QString html = tmp.path() + "/RO-1.html";
         answerFileDialog(html);
@@ -325,7 +325,7 @@ private slots:
         QTemporaryDir tmp;
         const QString dir = tmp.path() + "/RO-1";
         {
-            tf::gui::MainWindow w;
+            ts::gui::MainWindow w;
             w.show();
             QVERIFY(QTest::qWaitForWindowExposed(&w));
             followToAnalysis(w);
@@ -335,12 +335,12 @@ private slots:
             QVERIFY(save && save->isEnabled());
             answerFileDialog(dir);
             save->trigger();
-            QVERIFY(QFile::exists(dir + "/manifest.tfrec"));
+            QVERIFY(QFile::exists(dir + "/manifest.tsrec"));
         }
-        tf::gui::MainWindow w;
+        ts::gui::MainWindow w;
         w.show();
         QVERIFY(QTest::qWaitForWindowExposed(&w));
-        answerFileDialog(dir + "/manifest.tfrec");
+        answerFileDialog(dir + "/manifest.tsrec");
         menuItem(&w, "File", "Open record...")->trigger();
         QVERIFY2(banner(&w).startsWith("Analysed"), qPrintable(banner(&w)));
         QCOMPARE(cell(resultsTable(&w), "Rp0.2", 1), QStringLiteral("300"));
@@ -353,7 +353,7 @@ private slots:
         QTemporaryDir tmp;
         const QString dir = tmp.path() + "/RO-1";
         {
-            tf::gui::MainWindow w;
+            ts::gui::MainWindow w;
             w.show();
             QVERIFY(QTest::qWaitForWindowExposed(&w));
             followToAnalysis(w);
@@ -368,10 +368,10 @@ private slots:
         f.write("print(1)\n");
         f.close();
 
-        tf::gui::MainWindow w;
+        ts::gui::MainWindow w;
         w.show();
         QVERIFY(QTest::qWaitForWindowExposed(&w));
-        answerFileDialog(dir + "/manifest.tfrec");
+        answerFileDialog(dir + "/manifest.tsrec");
         menuItem(&w, "File", "Open record...")->trigger();
         bool said = false;
         for (QLabel *l : w.findChildren<QLabel *>())
@@ -380,13 +380,13 @@ private slots:
         QAbstractButton *add = button(&w, "Add them to the record's manifest");
         QVERIFY(add);
         QTest::mouseClick(add, Qt::LeftButton);
-        QVERIFY(bytesOf(dir + "/manifest.tfrec").contains("analyses/fit/fit.py"));
+        QVERIFY(bytesOf(dir + "/manifest.tsrec").contains("analyses/fit/fit.py"));
         QVERIFY(!button(&w, "Add them to the record's manifest"));
     }
 
     void a_file_that_is_not_a_table_is_refused_on_screen_without_a_dialog()
     {
-        tf::gui::MainWindow w;
+        ts::gui::MainWindow w;
         w.show();
         QVERIFY(QTest::qWaitForWindowExposed(&w));
         answerFileDialog(fixture("profiles/user-polymer.json"));
@@ -406,7 +406,7 @@ private slots:
     void bend_a_real_beam_and_export_a_report_following_the_screen()
     {
         QTemporaryDir tmp;
-        tf::gui::MainWindow w;
+        ts::gui::MainWindow w;
         w.show();
         QVERIFY(QTest::qWaitForWindowExposed(&w));
         chooseProcedure(&w, {"ISO 14125", "four-point"});
@@ -472,7 +472,7 @@ private slots:
     void annotate_the_curve_move_the_modulus_window_and_export_the_figure()
     {
         QTemporaryDir tmp;
-        tf::gui::MainWindow w;
+        ts::gui::MainWindow w;
         w.show();
         QVERIFY(QTest::qWaitForWindowExposed(&w));
         followToAnalysis(w);
@@ -578,8 +578,8 @@ private slots:
         QVERIFY2(!page.contains("#Circle\""), "markers are still <use> of a symbol");
         QVERIFY2(!page.contains("text-anchor=\"right\""), "text-anchor right is not SVG");
         QVERIFY2(!page.contains("alignment-baseline"), "alignment-baseline left in");
-        if (!qEnvironmentVariable("TF_WALKTHROUGH_SHOTS").isEmpty())
-            QFile::copy(svg, qEnvironmentVariable("TF_WALKTHROUGH_SHOTS") + "/figure.svg");
+        if (!qEnvironmentVariable("TS_WALKTHROUGH_SHOTS").isEmpty())
+            QFile::copy(svg, qEnvironmentVariable("TS_WALKTHROUGH_SHOTS") + "/figure.svg");
 
         const QString pdf = tmp.path() + "/fig.pdf";
         answerFileDialog(pdf);
@@ -600,8 +600,8 @@ private slots:
         menuItem(&w, "File", "Export report...")->trigger();
         QVERIFY2(bytesOf(report).startsWith("%PDF"), "no report written");
         QVERIFY2(!bytesOf(report).contains("/Subtype /Image"), "the report's chart is a picture");
-        if (!qEnvironmentVariable("TF_WALKTHROUGH_SHOTS").isEmpty())
-            QFile::copy(report, qEnvironmentVariable("TF_WALKTHROUGH_SHOTS") + "/report-annotated.pdf");
+        if (!qEnvironmentVariable("TS_WALKTHROUGH_SHOTS").isEmpty())
+            QFile::copy(report, qEnvironmentVariable("TS_WALKTHROUGH_SHOTS") + "/report-annotated.pdf");
     }
 
     // Phase 4: the material card, yield points and CalculiX block, and the
@@ -609,7 +609,7 @@ private slots:
     void export_for_freecad_calculix_and_paraview_from_the_menu()
     {
         QTemporaryDir tmp;
-        tf::gui::MainWindow w;
+        ts::gui::MainWindow w;
         w.show();
         QVERIFY(QTest::qWaitForWindowExposed(&w));
         followToAnalysis(w);
@@ -646,7 +646,7 @@ private slots:
     // TenSense's, set apart, as Bluehill wrote them.
     void open_an_instron_export_and_see_its_own_results_set_apart()
     {
-        tf::gui::MainWindow w;
+        ts::gui::MainWindow w;
         w.show();
         QVERIFY(QTest::qWaitForWindowExposed(&w));
         chooseProcedure(&w, {"ISO 527-1"});
@@ -680,7 +680,7 @@ private slots:
 
     void open_a_file_of_specimens_side_by_side_and_choose_one()
     {
-        tf::gui::MainWindow w;
+        ts::gui::MainWindow w;
         w.show();
         QVERIFY(QTest::qWaitForWindowExposed(&w));
         chooseProcedure(&w, {"ISO 527-1"});
@@ -720,7 +720,7 @@ private slots:
         QTemporaryDir tmp;
         const QString rec = tmp.path() + "/RO-ref";
         {
-            tf::gui::MainWindow w;
+            ts::gui::MainWindow w;
             w.show();
             QVERIFY(QTest::qWaitForWindowExposed(&w));
             followToAnalysis(w);
@@ -754,10 +754,10 @@ private slots:
             answerFileDialog(rec);
             menuItem(&w, "File", "Save record...")->trigger();
         }
-        tf::gui::MainWindow w;
+        ts::gui::MainWindow w;
         w.show();
         QVERIFY(QTest::qWaitForWindowExposed(&w));
-        answerFileDialog(rec + "/manifest.tfrec");
+        answerFileDialog(rec + "/manifest.tsrec");
         menuItem(&w, "File", "Open record...")->trigger();
         QStringList plots;
         for (vtkIdType i = 0; i < w.chart()->GetNumberOfPlots(); ++i)
@@ -773,13 +773,13 @@ private slots:
 // user's screen (it did, 2026-11-13, during this file's own negative
 // checks). So unless it is already on its private X server, the test
 // restarts itself under xvfb-run with Wayland cleared and software GL.
-// TF_WALKTHROUGH_ON_DESKTOP=1 is the one way to watch it on purpose.
+// TS_WALKTHROUGH_ON_DESKTOP=1 is the one way to watch it on purpose.
 static void ensureHeadless(char *argv[])
 {
-    if (qEnvironmentVariableIsSet("TF_WALKTHROUGH_XVFB")
-        || qEnvironmentVariable("TF_WALKTHROUGH_ON_DESKTOP") == "1")
+    if (qEnvironmentVariableIsSet("TS_WALKTHROUGH_XVFB")
+        || qEnvironmentVariable("TS_WALKTHROUGH_ON_DESKTOP") == "1")
         return;
-    qputenv("TF_WALKTHROUGH_XVFB", "1");
+    qputenv("TS_WALKTHROUGH_XVFB", "1");
     qputenv("QT_QPA_PLATFORM", "xcb");
     qputenv("LIBGL_ALWAYS_SOFTWARE", "1");
     qunsetenv("WAYLAND_DISPLAY");
@@ -793,7 +793,7 @@ static void ensureHeadless(char *argv[])
     // Only reached when xvfb-run cannot be started: refuse rather than
     // fall back to the desktop.
     std::perror("walkthrough: cannot start xvfb-run (install xvfb, or set "
-                "TF_WALKTHROUGH_ON_DESKTOP=1 to run on your screen)");
+                "TS_WALKTHROUGH_ON_DESKTOP=1 to run on your screen)");
     std::exit(2);
 }
 

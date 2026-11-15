@@ -4,7 +4,7 @@
 //   validate_braunschweig_14125 <agreed.json> <data dir> [report.md]
 //
 // Every file is analysed with the shipped ISO 14125 method B profile
-// through tf::core::Session, the path the window and the CLI take: the
+// through ts::core::Session, the path the window and the CLI take: the
 // width, thickness and span are read from each file's own header; the units
 // (N, mm), the loading span (15 mm) and that the crosshead moves the loading
 // points come from the archive's test protocols, as a person would enter
@@ -34,7 +34,7 @@
 #include <cmath>
 #include <cstdio>
 
-using namespace tf::core;
+using namespace ts::core;
 
 namespace {
 
@@ -124,12 +124,12 @@ int main(int argc, char *argv[])
         ++analysed;
 
         // The stresses at the modulus window's ends, from the same curve.
-        tf::analysis::CurveMethod m;
-        m.requests = {{"f1", tf::analysis::CurveQuantity::StressAtStrain, 0.0005},
-                      {"f2", tf::analysis::CurveQuantity::StressAtStrain, 0.0025}};
+        ts::analysis::CurveMethod m;
+        m.requests = {{"f1", ts::analysis::CurveQuantity::StressAtStrain, 0.0005},
+                      {"f2", ts::analysis::CurveQuantity::StressAtStrain, 0.0025}};
         // (Only the break rule reads the force, and stress is proportional
         // to it, so stress stands in for force here.)
-        const auto ends = tf::analysis::analyseCurve({a.stress, a.stress, a.strain}, m);
+        const auto ends = ts::analysis::analyseCurve({a.stress, a.stress, a.strain}, m);
         const auto &ef = a.result.results.at("Ef");
 
         auto add = [&](const QString &q, const QString &printed, double ours) {

@@ -2,7 +2,7 @@
 // buildSeriesJSON, so the importer is tested on the real format. Run from a
 // PlotTracer checkout (it needs PlotTracer's engine and vitest):
 //   cd plottracer && PLOTTRACER=$PWD \
-//     TF_OUT=<TenSense>/tests/fixtures/plottracer/curve-export.json \
+//     TS_OUT=<TenSense>/tests/fixtures/plottracer/curve-export.json \
 //     node_modules/.bin/vitest run --root <TenSense>/tools/fixtures --dir <TenSense>/tools/fixtures
 import { test } from 'vitest';
 import { writeFileSync } from 'node:fs';
@@ -21,5 +21,5 @@ test('write', async () => {
     ],
     ['Strain (%)', 'Stress (MPa)'],
   );
-  writeFileSync(process.env.TF_OUT!, json + '\n');
+  writeFileSync(process.env.TS_OUT!, json + '\n');
 });

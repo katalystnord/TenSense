@@ -8,7 +8,7 @@ every run: `tenstand_within_en10002_annex_a5` and
 
 ## How the comparison is made
 
-Each file is analysed exactly as `tf-analyse --profile iso-6892-1-2019`
+Each file is analysed exactly as `ts-analyse --profile iso-6892-1-2019`
 would: columns found by name, S0 and Le from the file (TENSTAND) or BAM's
 measured S0, nothing tuned per file.
 

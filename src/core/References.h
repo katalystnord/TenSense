@@ -16,7 +16,7 @@
 #include <optional>
 #include <vector>
 
-namespace tf::core {
+namespace ts::core {
 
 struct PlotTracerSeries {
     QString name;
@@ -58,4 +58,4 @@ std::optional<ReferenceCurve> readReferenceCurve(const QString &path, const QStr
                                                  const QString &stressColumn,
                                                  const QString &stressUnit, QString *error);
 
-} // namespace tf::core
+} // namespace ts::core

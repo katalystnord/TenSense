@@ -12,8 +12,8 @@ set(CMAKE_AUTOMOC ON)
 # assertion can reach (an access one past the end changes nothing a test can
 # see). Off by default and built in its own directory by tools/sanitize.sh,
 # because the instrumentation changes the object code.
-option(TF_SANITIZE "Build with address and undefined-behaviour sanitizers" OFF)
-if(TF_SANITIZE)
+option(TS_SANITIZE "Build with address and undefined-behaviour sanitizers" OFF)
+if(TS_SANITIZE)
     add_compile_options(-fsanitize=address,undefined -fno-sanitize-recover=all
                         -fno-omit-frame-pointer -g)
     add_link_options(-fsanitize=address,undefined)

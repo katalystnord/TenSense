@@ -15,7 +15,7 @@
 class QTextDocument;
 class vtkRenderWindow;
 
-namespace tf::gui {
+namespace ts::gui {
 
 // The chart in the render window as SVG. Empty, with why, if it cannot be
 // written (e.g. the window was never drawn).
@@ -31,4 +31,4 @@ QString writeChart(const QByteArray &svg, const QString &path, int pngWidthPx = 
 // whatever it prints to.
 void drawImageAsSvg(QTextDocument *doc, const QString &name, const QByteArray &svg);
 
-} // namespace tf::gui
+} // namespace ts::gui

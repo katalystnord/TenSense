@@ -6,7 +6,7 @@
 #include <QJsonArray>
 #include <QStringList>
 
-namespace tf::core {
+namespace ts::core {
 
 namespace {
 
@@ -218,4 +218,4 @@ QString reportHtml(const QJsonObject &doc, const Specimen &sp, const QString &ch
     return h;
 }
 
-} // namespace tf::core
+} // namespace ts::core

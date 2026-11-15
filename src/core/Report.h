@@ -10,7 +10,7 @@
 #include <QJsonObject>
 #include <QString>
 
-namespace tf::core {
+namespace ts::core {
 
 // chartSrc: the chart image's src (a data: URI, or a resource name the
 // printer resolves); empty for no chart. The fixture is shown for the
@@ -18,4 +18,4 @@ namespace tf::core {
 QString reportHtml(const QJsonObject &results, const Specimen &specimen, const QString &chartSrc,
                    const Fixture &fixture = {});
 
-} // namespace tf::core
+} // namespace ts::core

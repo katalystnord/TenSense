@@ -10,13 +10,13 @@ Headless core, thin GUI (engineering principle 5).
 
 | Target | Depends on | Holds |
 |---|---|---|
-| `tf_analysis` | Eigen | Standards engine, pure functions over arrays, no Qt. |
-| `tf_core` | QtCore, VTK data model, `tf_analysis` | Test record, profiles, calibration, sequencer, safety, driver API, importers and exporters. |
-| `tf_drivers/*` | `tf_core` | Simulator, Klipper, open protocol, MMTK, Open-Pull, GRBL, LabJack, Phidgets. |
-| `tf_gui` | Qt Widgets, VTK rendering | The application. |
-| `tf-analyse` | `tf_core` | Headless CLI: analyse a CSV or record with a profile, print or write results. For scripting and for tests. |
+| `ts_analysis` | Eigen | Standards engine, pure functions over arrays, no Qt. |
+| `ts_core` | QtCore, VTK data model, `ts_analysis` | Test record, profiles, calibration, sequencer, safety, driver API, importers and exporters. |
+| `ts_drivers/*` | `ts_core` | Simulator, Klipper, open protocol, MMTK, Open-Pull, GRBL, LabJack, Phidgets. |
+| `ts_gui` | Qt Widgets, VTK rendering | The application. |
+| `ts-analyse` | `ts_core` | Headless CLI: analyse a CSV or record with a profile, print or write results. For scripting and for tests. |
 
-### 3.1 Analysis engine (`tf_analysis`)
+### 3.1 Analysis engine (`ts_analysis`)
 
 Primitives, shared across modes; every standard is a declarative profile
 on top.
@@ -94,8 +94,8 @@ load and strain-rate control through it is scoped in Phase 5.
 
 | With | Contract |
 |---|---|
-| SurView | TF writes frames + `frames.csv`; SurView measures; TF imports its series CSV, joined by frame identity. |
-| OpenCorr directly | TF imports per-image `saveTable2D` CSVs, reads a two-point extensometer; TF's frames are usable from OpenCorr scripts. |
+| SurView | TenSense writes frames + `frames.csv`; SurView measures; TenSense imports its series CSV, joined by frame identity. |
+| OpenCorr directly | TenSense imports per-image `saveTable2D` CSVs, reads a two-point extensometer; TenSense's frames are usable from OpenCorr scripts. |
 | ParaView, PyVista | The record opens as is; a one-file Python reader plugin adds the channels as a time-aware table. |
 | FreeCAD | `.FCMat` YAML card into the user library (path resolved at runtime); `YieldPoints` and `*PLASTIC` hardening data; DIC fields with FreeCAD array names. |
 | PlotTracer | Import digitised literature curves as reference overlays. |
@@ -137,10 +137,10 @@ criteria met and verified by driving the real thing.
 
 ### Phase 1: Tension analysis core, headless (M)
 
-- `tf_analysis` primitives 1, 3 to 6, 8; tension models.
+- `ts_analysis` primitives 1, 3 to 6, 8; tension models.
 - Profiles: ISO 6892-1 (Rp0.2, ReH, ReL, Rm, Ag, Agt, A, At, E), ISO 527-1/2
   (Et, sigma_m, epsilon_b).
-- `tf-analyse` CLI.
+- `ts-analyse` CLI.
 - Fixtures: synthetic with exact answers (committed), BAM S355 (CC BY,
   committed), TENSTAND fetched at test time.
 - Exit: all TENSTAND files within EN 10002-1 A.5 tolerances; BAM results
@@ -227,7 +227,7 @@ that keeps a record of tests and materials.
 - **Series statistics.** A series file (results-v1 section 4, still to be
   specified and approved) naming the test records of one series; the
   window shows per-result mean, standard deviation, ISO 2602 confidence
-  interval and Weibull parameters (all already in `tf_analysis`), the
+  interval and Weibull parameters (all already in `ts_analysis`), the
   curves overlaid, a table per specimen, outliers flagged rather than
   dropped; a series report and figure.
 - **Materials record.** A library of materials (name, grade, supplier,

@@ -4,7 +4,7 @@
 //
 // Standard-neutral. Which properties are wanted, and every number that
 // steers how they are found, arrive in TensionMethod, filled from a profile
-// by tf_core. The defaults below are only there so a test can state what it
+// by ts_core. The defaults below are only there so a test can state what it
 // changes; a profile always sets them, and says where each came from.
 
 #include "analysis/Primitives.h"
@@ -16,7 +16,7 @@
 #include <utility>
 #include <vector>
 
-namespace tf::analysis {
+namespace ts::analysis {
 
 struct TensionInput {
     std::vector<double> force;      // N, one per sample
@@ -74,4 +74,4 @@ std::string proofId(double offset);
 
 TensionResult analyseTension(const TensionInput &in, const TensionMethod &m);
 
-} // namespace tf::analysis
+} // namespace ts::analysis

@@ -1,10 +1,10 @@
 #include "analysis/Version.h"
 
-namespace tf::analysis {
+namespace ts::analysis {
 
 const char *version()
 {
-    return TF_VERSION;
+    return TS_VERSION;
 }
 
-} // namespace tf::analysis
+} // namespace ts::analysis

@@ -6,7 +6,7 @@
 #include <cmath>
 #include <numbers>
 
-namespace tf::core {
+namespace ts::core {
 
 namespace {
 
@@ -162,4 +162,4 @@ Fixture fixtureFromJson(const QJsonObject &o)
     return f;
 }
 
-} // namespace tf::core
+} // namespace ts::core

@@ -1,7 +1,7 @@
 # Runs inside FreeCAD (FreeCADCmd): TenSense's FreeCAD exports, used as a
 # FreeCAD user would use them (ROADMAP Phase 4 exit criterion).
 #
-#   TF_CARD=<name>.FCMat  TF_YIELD=<name>-yieldpoints.txt  TF_OUT=<result.json>
+#   TS_CARD=<name>.FCMat  TS_YIELD=<name>-yieldpoints.txt  TS_OUT=<result.json>
 #   FREECAD_USER_HOME=<an empty folder>  FreeCADCmd check_exports.py
 #
 # FREECAD_USER_HOME keeps FreeCAD's settings and user material library in a
@@ -31,8 +31,8 @@ try:
     import re
     import shutil
 
-    card = os.environ["TF_CARD"]
-    yields = [l.strip() for l in open(os.environ["TF_YIELD"]) if l.strip()]
+    card = os.environ["TS_CARD"]
+    yields = [l.strip() for l in open(os.environ["TS_YIELD"]) if l.strip()]
     # Installed as a user installs a card: copied into the user library.
     home = os.environ["FREECAD_USER_HOME"]
     if not os.path.realpath(FreeCAD.getUserAppDataDir()).startswith(os.path.realpath(home)):
@@ -64,7 +64,7 @@ try:
 
     analysis = doc.getObject("Analysis")
     solver = doc.getObject("CalculiXCcxTools")
-    work = os.path.join(os.path.dirname(os.environ["TF_OUT"]), "ccx")
+    work = os.path.join(os.path.dirname(os.environ["TS_OUT"]), "ccx")
     os.makedirs(work, exist_ok=True)
     solver.WorkingDir = work
     fea = ccxtools.FemToolsCcx(analysis, solver)
@@ -93,6 +93,6 @@ try:
 except Exception:
     out["error"] = traceback.format_exc()
 
-with open(os.environ["TF_OUT"], "w") as f:
+with open(os.environ["TS_OUT"], "w") as f:
     json.dump(out, f, indent=2)
 print(json.dumps(out, indent=2))

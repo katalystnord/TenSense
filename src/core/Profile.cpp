@@ -10,7 +10,7 @@
 
 #include <map>
 
-namespace tf::core {
+namespace ts::core {
 
 namespace {
 
@@ -134,7 +134,7 @@ QString readValidity(const QJsonObject &root, Profile &p, Reader &rd)
 // Compression and flexure: the curve model's quantities.
 QString readCurve(const QJsonObject &root, Profile &p, Reader &rd)
 {
-    using Q = tf::analysis::CurveQuantity;
+    using Q = ts::analysis::CurveQuantity;
     struct Kind {
         Q q;
         QStringList primitives;
@@ -162,7 +162,7 @@ QString readCurve(const QJsonObject &root, Profile &p, Reader &rd)
         return "profile " + p.id + " names the fixture \"" + p.fixture + "\"; for " + p.mode
                + " it must be " + fixtures.join(" or ");
 
-    tf::analysis::CurveMethod &m = p.curve;
+    ts::analysis::CurveMethod &m = p.curve;
     for (const QJsonValue &c : root.value("conditioning").toArray()) {
         const QJsonObject step = c.toObject();
         if (step.value("step").toString() != "zero-point")
@@ -170,9 +170,9 @@ QString readCurve(const QJsonObject &root, Profile &p, Reader &rd)
                    + "\" is not one the engine has";
         const QString how = step.value("method").toString();
         if (how == "elastic-line")
-            m.zero = tf::analysis::CurveMethod::Zero::ElasticLine;
+            m.zero = ts::analysis::CurveMethod::Zero::ElasticLine;
         else if (how == "as-recorded")
-            m.zero = tf::analysis::CurveMethod::Zero::AsRecorded;
+            m.zero = ts::analysis::CurveMethod::Zero::AsRecorded;
         else
             return "conditioning zero-point method \"" + how + "\" is not one the engine has";
     }
@@ -206,7 +206,7 @@ QString readCurve(const QJsonObject &root, Profile &p, Reader &rd)
             if (other.id == pr.id)
                 return "two results have the id " + pr.id;
 
-        tf::analysis::CurveRequest q{pr.id.toStdString(), k->second.q, 0.0};
+        ts::analysis::CurveRequest q{pr.id.toStdString(), k->second.q, 0.0};
         QString err;
         switch (k->second.q) {
         case Q::Modulus: {
@@ -221,14 +221,14 @@ QString readCurve(const QJsonObject &root, Profile &p, Reader &rd)
                 const auto to = rd.number(w, "to", base + ".window.to");
                 if (!from || !to)
                     return rd.error;
-                m.modulus = tf::analysis::CurveMethod::Modulus::StrainWindow;
+                m.modulus = ts::analysis::CurveMethod::Modulus::StrainWindow;
                 m.modulusFrom = *from;
                 m.modulusTo = *to;
             } else {
                 const auto w = rd.number(method, "width", base + ".width");
                 if (!w)
                     return rd.error;
-                m.modulus = tf::analysis::CurveMethod::Modulus::MaxSlope;
+                m.modulus = ts::analysis::CurveMethod::Modulus::MaxSlope;
                 m.maxSlopeWidth = *w;
             }
             break;
@@ -294,7 +294,7 @@ QString readCurve(const QJsonObject &root, Profile &p, Reader &rd)
     }
     if (p.results.empty())
         return "profile " + p.id + " asks for no results";
-    if (m.zero == tf::analysis::CurveMethod::Zero::ElasticLine && !haveModulus)
+    if (m.zero == ts::analysis::CurveMethod::Zero::ElasticLine && !haveModulus)
         return "profile " + p.id + " counts strain from the elastic line but asks for no modulus, "
                "which that line is";
     return {};
@@ -369,7 +369,7 @@ ProfileOrError loadProfile(const QString &pathOrId)
     }
     p.fixture = "grips";
 
-    tf::analysis::TensionMethod &m = p.method;
+    ts::analysis::TensionMethod &m = p.method;
     m.proofOffsets.clear();
     m.yieldPoint = false;
 
@@ -418,10 +418,10 @@ ProfileOrError loadProfile(const QString &pathOrId)
             const QJsonObject w = method.value("window").toObject();
             const QString axis = w.value("axis").toString();
             if (axis == "stress") {
-                m.modulusAxis = tf::analysis::TensionMethod::Axis::Stress;
+                m.modulusAxis = ts::analysis::TensionMethod::Axis::Stress;
                 modulusReference = w.value("reference").toString();
             } else if (axis == "strain") {
-                m.modulusAxis = tf::analysis::TensionMethod::Axis::Strain;
+                m.modulusAxis = ts::analysis::TensionMethod::Axis::Strain;
             } else {
                 return fail("result " + pr.id + ": modulus window axis \"" + axis
                             + "\" is not stress or strain");
@@ -438,7 +438,7 @@ ProfileOrError loadProfile(const QString &pathOrId)
                 return fail(rd.error);
             m.proofOffsets.push_back(*o);
             proofById[pr.id] = *o;
-            if (tf::analysis::proofId(*o) != pr.quantity)
+            if (ts::analysis::proofId(*o) != pr.quantity)
                 return fail("result " + pr.id + ": offset " + QString::number(*o)
                             + " does not match quantity " + pr.quantity);
         } else if (pr.quantity == "ReH") {
@@ -482,7 +482,7 @@ ProfileOrError loadProfile(const QString &pathOrId)
 
     if (p.results.empty())
         return fail("profile " + p.id + " asks for no results");
-    if (m.modulusAxis == tf::analysis::TensionMethod::Axis::Stress) {
+    if (m.modulusAxis == ts::analysis::TensionMethod::Axis::Stress) {
         const auto it = proofById.find(modulusReference);
         if (it == proofById.end())
             return fail("the modulus window refers to \"" + modulusReference
@@ -508,4 +508,4 @@ ProfileOrError loadProfile(const QString &pathOrId)
     return {p, {}};
 }
 
-} // namespace tf::core
+} // namespace ts::core

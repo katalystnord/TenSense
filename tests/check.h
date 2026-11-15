@@ -1,10 +1,10 @@
 #pragma once
 
 // A minimal check harness for the engine's tests: no Qt, no framework, so
-// the tf_analysis tests build with exactly what tf_analysis builds with.
+// the ts_analysis tests build with exactly what ts_analysis builds with.
 //
-//   TF_CASE(name_of_the_case) { TF_REQUIRE(p); TF_CHECK(x == 3); TF_NEAR(a, b, tol); }
-//   int main() { return tf::test::run(); }
+//   TS_CASE(name_of_the_case) { TS_REQUIRE(p); TS_CHECK(x == 3); TS_NEAR(a, b, tol); }
+//   int main() { return ts::test::run(); }
 
 #include <cmath>
 #include <cstdio>
@@ -12,7 +12,7 @@
 #include <string>
 #include <vector>
 
-namespace tf::test {
+namespace ts::test {
 
 struct Case {
     const char *name;
@@ -59,38 +59,38 @@ inline int run()
     return failedCases == 0 ? 0 : 1;
 }
 
-} // namespace tf::test
+} // namespace ts::test
 
-#define TF_CASE(name)                                                         \
+#define TS_CASE(name)                                                         \
     static void name();                                                       \
-    static tf::test::Register name##_reg(#name, name);                        \
+    static ts::test::Register name##_reg(#name, name);                        \
     static void name()
 
-#define TF_CHECK(cond)                                                        \
+#define TS_CHECK(cond)                                                        \
     do {                                                                      \
         if (!(cond))                                                          \
-            tf::test::fail(__FILE__, __LINE__, #cond);                        \
+            ts::test::fail(__FILE__, __LINE__, #cond);                        \
     } while (0)
 
-// Like TF_CHECK, but ends the case on failure: for a precondition the rest
+// Like TS_CHECK, but ends the case on failure: for a precondition the rest
 // of the case depends on (an Outcome about to be dereferenced).
-#define TF_REQUIRE(cond)                                                      \
+#define TS_REQUIRE(cond)                                                      \
     do {                                                                      \
         if (!(cond)) {                                                        \
-            tf::test::fail(__FILE__, __LINE__, #cond);                        \
+            ts::test::fail(__FILE__, __LINE__, #cond);                        \
             return;                                                           \
         }                                                                     \
     } while (0)
 
 // |actual - expected| <= tol, with both values printed on failure.
-#define TF_NEAR(actual, expected, tol)                                        \
+#define TS_NEAR(actual, expected, tol)                                        \
     do {                                                                      \
-        const double tf_a_ = (actual), tf_e_ = (expected), tf_t_ = (tol);     \
-        if (!(std::fabs(tf_a_ - tf_e_) <= tf_t_)) {                           \
-            char tf_buf_[256];                                                \
-            std::snprintf(tf_buf_, sizeof tf_buf_,                            \
+        const double ts_a_ = (actual), ts_e_ = (expected), ts_t_ = (tol);     \
+        if (!(std::fabs(ts_a_ - ts_e_) <= ts_t_)) {                           \
+            char ts_buf_[256];                                                \
+            std::snprintf(ts_buf_, sizeof ts_buf_,                            \
                           "%s = %.10g, expected %.10g within %.3g",           \
-                          #actual, tf_a_, tf_e_, tf_t_);                      \
-            tf::test::fail(__FILE__, __LINE__, tf_buf_);                      \
+                          #actual, ts_a_, ts_e_, ts_t_);                      \
+            ts::test::fail(__FILE__, __LINE__, ts_buf_);                      \
         }                                                                     \
     } while (0)

@@ -19,7 +19,7 @@
 #include <optional>
 #include <vector>
 
-namespace tf::core {
+namespace ts::core {
 
 struct ParameterUse {
     QString path;      // e.g. "results.E.method.window.from"
@@ -67,8 +67,8 @@ struct Profile {
     QString path;          // where it was read from (":/profiles/..." when shipped)
     bool shipped = false;
     QByteArray sha256;     // of the file's bytes, hex
-    tf::analysis::TensionMethod method;   // mode "tension"
-    tf::analysis::CurveMethod curve;      // modes "compression" and "flexure"
+    ts::analysis::TensionMethod method;   // mode "tension"
+    ts::analysis::CurveMethod curve;      // modes "compression" and "flexure"
     std::vector<ValidityCheck> validity;
     std::vector<ProfileResult> results;
     std::vector<ParameterUse> parameters;
@@ -85,4 +85,4 @@ ProfileOrError loadProfile(const QString &pathOrId);
 // Ids of the profiles shipped with TenSense.
 QStringList shippedProfiles();
 
-} // namespace tf::core
+} // namespace ts::core

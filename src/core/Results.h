@@ -16,7 +16,7 @@
 #include <QString>
 #include <QStringList>
 
-namespace tf::core {
+namespace ts::core {
 
 struct SourceInfo {
     QString path;
@@ -35,11 +35,11 @@ QString reportedText(double siValue, const ProfileResult &r);
 // each {"id", "status": "met" | "not-met" | "not-checked", "detail"}. A
 // check not met, or not checked, is a reason the results are not to the
 // standard.
-QJsonObject resultsJson(const Profile &profile, const tf::analysis::AnalysisResult &result,
+QJsonObject resultsJson(const Profile &profile, const ts::analysis::AnalysisResult &result,
                         const SourceInfo &source, const QDateTime &computedUtc,
                         const QJsonArray &validity = {});
 
 // The spreadsheet view: one row per result.
 QString resultsCsv(const QJsonObject &results);
 
-} // namespace tf::core
+} // namespace ts::core

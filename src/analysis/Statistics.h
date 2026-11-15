@@ -11,7 +11,7 @@
 
 #include <cstddef>
 
-namespace tf::analysis {
+namespace ts::analysis {
 
 struct Summary {
     std::size_t n = 0;
@@ -43,4 +43,4 @@ Outcome<Weibull> weibullMle(Samples values);
 // work, when y is force in N and x extension in m.
 double energy(Samples x, Samples y, std::size_t first, std::size_t last);
 
-} // namespace tf::analysis
+} // namespace ts::analysis

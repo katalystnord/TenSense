@@ -4,7 +4,7 @@
 #include <cmath>
 #include <cstdio>
 
-namespace tf::analysis {
+namespace ts::analysis {
 
 std::string proofId(double offset)
 {
@@ -287,4 +287,4 @@ TensionResult analyseTension(const TensionInput &in, const TensionMethod &m)
     return out;
 }
 
-} // namespace tf::analysis
+} // namespace ts::analysis

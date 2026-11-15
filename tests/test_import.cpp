@@ -14,122 +14,122 @@
 
 #include <cmath>
 
-using namespace tf::core;
+using namespace ts::core;
 
-#ifndef TF_FIXTURES
-#error "TF_FIXTURES must point at tests/fixtures"
+#ifndef TS_FIXTURES
+#error "TS_FIXTURES must point at tests/fixtures"
 #endif
 
-static QString fixture(const char *rel) { return QString(TF_FIXTURES) + "/" + rel; }
+static QString fixture(const char *rel) { return QString(TS_FIXTURES) + "/" + rel; }
 
-TF_CASE(quoted_preamble_layout_reads_names_units_preamble_and_rows)
+TS_CASE(quoted_preamble_layout_reads_names_units_preamble_and_rows)
 {
     const auto r = readTable(fixture("import/quoted-preamble.txt"));
-    TF_REQUIRE(r.table.has_value());
+    TS_REQUIRE(r.table.has_value());
     const Table &t = *r.table;
-    TF_CHECK(t.delimiter == ';');
-    TF_CHECK(t.decimal == '.');
-    TF_CHECK(t.names == QStringList({"time", "crosshead", "extensometer", "force"}));
-    TF_CHECK(t.units == QStringList({"s", "mm", "mm", "kN"}));
-    TF_REQUIRE(t.columns.size() == 4);
-    TF_CHECK(t.columns[3].size() == 4);
-    TF_NEAR(t.columns[3][2], 2.9, 1e-12);
+    TS_CHECK(t.delimiter == ';');
+    TS_CHECK(t.decimal == '.');
+    TS_CHECK(t.names == QStringList({"time", "crosshead", "extensometer", "force"}));
+    TS_CHECK(t.units == QStringList({"s", "mm", "mm", "kN"}));
+    TS_REQUIRE(t.columns.size() == 4);
+    TS_CHECK(t.columns[3].size() == 4);
+    TS_NEAR(t.columns[3][2], 2.9, 1e-12);
     bool so = false;
     for (const auto &p : t.preamble)
         if (p.key == "So" && p.value == "78.5" && p.unit == "mm2")
             so = true;
-    TF_CHECK(so);
+    TS_CHECK(so);
 }
 
-TF_CASE(decimal_comma_layout_reads_bracketed_units_and_keeps_empty_cells_empty)
+TS_CASE(decimal_comma_layout_reads_bracketed_units_and_keeps_empty_cells_empty)
 {
     const auto r = readTable(fixture("import/decimal-comma.csv"));
-    TF_REQUIRE(r.table.has_value());
+    TS_REQUIRE(r.table.has_value());
     const Table &t = *r.table;
-    TF_CHECK(t.decimal == ',');
-    TF_CHECK(t.units == QStringList({"sec", "mm", "kN", "%"}));
-    TF_NEAR(t.columns[2][2], 2.75, 1e-12);
-    TF_CHECK(std::isnan(t.columns[3][3]));  // empty, not zero
+    TS_CHECK(t.decimal == ',');
+    TS_CHECK(t.units == QStringList({"sec", "mm", "kN", "%"}));
+    TS_NEAR(t.columns[2][2], 2.75, 1e-12);
+    TS_CHECK(std::isnan(t.columns[3][3]));  // empty, not zero
 }
 
-TF_CASE(the_file_hash_is_of_the_bytes_read)
+TS_CASE(the_file_hash_is_of_the_bytes_read)
 {
     const QString path = fixture("import/decimal-comma.csv");
     const auto r = readTable(path);
-    TF_REQUIRE(r.table.has_value());
+    TS_REQUIRE(r.table.has_value());
     QFile f(path);
-    TF_REQUIRE(f.open(QIODevice::ReadOnly));
-    TF_CHECK(r.table->sha256
+    TS_REQUIRE(f.open(QIODevice::ReadOnly));
+    TS_CHECK(r.table->sha256
              == QCryptographicHash::hash(f.readAll(), QCryptographicHash::Sha256).toHex());
 }
 
-TF_CASE(unit_in_the_column_name_is_found)
+TS_CASE(unit_in_the_column_name_is_found)
 {
     const auto r = readTable(fixture("synthetic/ro-continuous.csv"));
-    TF_REQUIRE(r.table.has_value());
+    TS_REQUIRE(r.table.has_value());
     const auto imp = toTension(*r.table, TensionMapping{{}, {}, {}, {},
                                                         78.54e-6, 50e-3});
-    TF_REQUIRE(imp.error.isEmpty());
-    TF_CHECK(imp.forceColumn == "force_kN");
-    TF_NEAR(imp.input.force[2], 2 * 0.5 * 78.54, 1e-6);  // 1 MPa * 78.54 mm2 = 78.54 N
+    TS_REQUIRE(imp.error.isEmpty());
+    TS_CHECK(imp.forceColumn == "force_kN");
+    TS_NEAR(imp.input.force[2], 2 * 0.5 * 78.54, 1e-6);  // 1 MPa * 78.54 mm2 = 78.54 N
 }
 
-TF_CASE(tension_mapping_takes_geometry_from_the_preamble_in_si)
+TS_CASE(tension_mapping_takes_geometry_from_the_preamble_in_si)
 {
     const auto r = readTable(fixture("import/quoted-preamble.txt"));
-    TF_REQUIRE(r.table.has_value());
+    TS_REQUIRE(r.table.has_value());
     const auto imp = toTension(*r.table, TensionMapping{});
-    TF_REQUIRE(imp.error.isEmpty());
-    TF_CHECK(imp.forceColumn == "force");
-    TF_CHECK(imp.extensionColumn == "extensometer");  // not the crosshead
-    TF_NEAR(imp.input.area, 78.5e-6, 1e-15);
-    TF_NEAR(imp.input.gaugeLength, 0.05, 1e-15);
-    TF_NEAR(imp.input.force[1], 1500.0, 1e-9);
-    TF_NEAR(imp.input.extension[3], 15e-6, 1e-15);
+    TS_REQUIRE(imp.error.isEmpty());
+    TS_CHECK(imp.forceColumn == "force");
+    TS_CHECK(imp.extensionColumn == "extensometer");  // not the crosshead
+    TS_NEAR(imp.input.area, 78.5e-6, 1e-15);
+    TS_NEAR(imp.input.gaugeLength, 0.05, 1e-15);
+    TS_NEAR(imp.input.force[1], 1500.0, 1e-9);
+    TS_NEAR(imp.input.extension[3], 15e-6, 1e-15);
 }
 
-TF_CASE(percent_strain_column_is_taken_as_strain_with_a_note)
+TS_CASE(percent_strain_column_is_taken_as_strain_with_a_note)
 {
     const auto r = readTable(fixture("import/decimal-comma.csv"));
-    TF_REQUIRE(r.table.has_value());
+    TS_REQUIRE(r.table.has_value());
     TensionMapping m;
     m.area = 120.6e-6;
     const auto imp = toTension(*r.table, m);
-    TF_REQUIRE(imp.error.isEmpty());
-    TF_CHECK(imp.extensionColumn == "Extensometer elongation");
+    TS_REQUIRE(imp.error.isEmpty());
+    TS_CHECK(imp.extensionColumn == "Extensometer elongation");
     // 0.07 % strain: with the gauge length set to 1, extension is the strain.
-    TF_NEAR(imp.input.extension[2] / imp.input.gaugeLength, 0.0007, 1e-15);
-    TF_CHECK(std::isnan(imp.input.extension[3]));
-    TF_CHECK(!imp.notes.filter("strain").isEmpty());
+    TS_NEAR(imp.input.extension[2] / imp.input.gaugeLength, 0.0007, 1e-15);
+    TS_CHECK(std::isnan(imp.input.extension[3]));
+    TS_CHECK(!imp.notes.filter("strain").isEmpty());
 }
 
-TF_CASE(missing_area_is_an_error_that_names_it)
+TS_CASE(missing_area_is_an_error_that_names_it)
 {
     const auto r = readTable(fixture("import/decimal-comma.csv"));
-    TF_REQUIRE(r.table.has_value());
+    TS_REQUIRE(r.table.has_value());
     const auto imp = toTension(*r.table, TensionMapping{});
-    TF_CHECK(imp.error.contains("area"));
+    TS_CHECK(imp.error.contains("area"));
 }
 
-TF_CASE(unknown_column_is_an_error_that_lists_the_columns)
+TS_CASE(unknown_column_is_an_error_that_lists_the_columns)
 {
     const auto r = readTable(fixture("import/decimal-comma.csv"));
-    TF_REQUIRE(r.table.has_value());
+    TS_REQUIRE(r.table.has_value());
     TensionMapping m;
     m.force = "Kraft";
     m.area = 1e-4;
     const auto imp = toTension(*r.table, m);
-    TF_CHECK(imp.error.contains("Kraft"));
-    TF_CHECK(imp.error.contains("Load"));
+    TS_CHECK(imp.error.contains("Kraft"));
+    TS_CHECK(imp.error.contains("Load"));
 }
 
-TF_CASE(quantities_parse_with_their_units)
+TS_CASE(quantities_parse_with_their_units)
 {
-    TF_NEAR(parseQuantity("120.6 mm2", "area").value_or(NAN), 120.6e-6, 1e-15);
-    TF_NEAR(parseQuantity("50mm", "length").value_or(NAN), 0.05, 1e-15);
-    TF_NEAR(parseQuantity("1,5 kN", "force").value_or(NAN), 1500, 1e-9);
-    TF_CHECK(!parseQuantity("50", "length"));       // a unit is required
-    TF_CHECK(!parseQuantity("50 kN", "length"));    // and must fit the dimension
+    TS_NEAR(parseQuantity("120.6 mm2", "area").value_or(NAN), 120.6e-6, 1e-15);
+    TS_NEAR(parseQuantity("50mm", "length").value_or(NAN), 0.05, 1e-15);
+    TS_NEAR(parseQuantity("1,5 kN", "force").value_or(NAN), 1500, 1e-9);
+    TS_CHECK(!parseQuantity("50", "length"));       // a unit is required
+    TS_CHECK(!parseQuantity("50 kN", "length"));    // and must fit the dimension
 }
 
 // --- Real exports from compression and bending machines (Phase 3) ------------
@@ -140,61 +140,61 @@ TF_CASE(quantities_parse_with_their_units)
 static const char *kZwick =
     "braunschweig-14125/4PB_DIN14125_NFK_Osten_19122024_Hemp80_Cdry_reference_class3_1.CSV";
 
-TF_CASE(zwick_export_reads_its_whitespace_preamble_and_columns)
+TS_CASE(zwick_export_reads_its_whitespace_preamble_and_columns)
 {
     const auto r = readTable(fixture(kZwick));
-    TF_REQUIRE(r.table.has_value());
+    TS_REQUIRE(r.table.has_value());
     const Table &t = *r.table;
-    TF_CHECK(t.delimiter == ';');
-    TF_CHECK(t.decimal == ',');
-    TF_CHECK(t.names == QStringList({"Verformung", "Standardkraft", "Zeit", "Traversenweg",
+    TS_CHECK(t.delimiter == ';');
+    TS_CHECK(t.decimal == ',');
+    TS_CHECK(t.names == QStringList({"Verformung", "Standardkraft", "Zeit", "Traversenweg",
                                      QString::fromUtf8("Prüfzeit")}));
-    TF_REQUIRE(t.columns.size() == 5);
-    TF_CHECK(t.columns[1].size() == 1549);
-    TF_NEAR(t.columns[1][0], 0.1256414204836, 1e-15);
-    TF_NEAR(*preambleQuantity(t, {"Probenbreite"}, "length"), 14.85e-3, 1e-15);
-    TF_NEAR(*preambleQuantity(t, {"Probendicke"}, "length"), 2.52e-3, 1e-15);
-    TF_NEAR(*preambleQuantity(t, {QString::fromUtf8("Stützweite")}, "length"), 45e-3, 1e-15);
+    TS_REQUIRE(t.columns.size() == 5);
+    TS_CHECK(t.columns[1].size() == 1549);
+    TS_NEAR(t.columns[1][0], 0.1256414204836, 1e-15);
+    TS_NEAR(*preambleQuantity(t, {"Probenbreite"}, "length"), 14.85e-3, 1e-15);
+    TS_NEAR(*preambleQuantity(t, {"Probendicke"}, "length"), 2.52e-3, 1e-15);
+    TS_NEAR(*preambleQuantity(t, {QString::fromUtf8("Stützweite")}, "length"), 45e-3, 1e-15);
 }
 
-TF_CASE(a_named_deformation_is_preferred_over_the_crosshead)
+TS_CASE(a_named_deformation_is_preferred_over_the_crosshead)
 {
     const auto r = readTable(fixture(kZwick));
-    TF_REQUIRE(r.table.has_value());
-    TF_CHECK(guessForceColumn(*r.table) == "Standardkraft");
-    TF_CHECK(guessExtensionColumn(*r.table) == "Verformung");
+    TS_REQUIRE(r.table.has_value());
+    TS_CHECK(guessForceColumn(*r.table) == "Standardkraft");
+    TS_CHECK(guessExtensionColumn(*r.table) == "Verformung");
 }
 
-TF_CASE(french_compression_export_reads_quoted_names_and_units)
+TS_CASE(french_compression_export_reads_quoted_names_and_units)
 {
     // Universidade de Sao Paulo, PU foam to ASTM D1621 (CC BY 4.0).
     const auto r = readTable(fixture("puf-d1621/1BAT-DIR1-1.TRA"));
-    TF_REQUIRE(r.table.has_value());
+    TS_REQUIRE(r.table.has_value());
     const Table &t = *r.table;
-    TF_CHECK(t.units == QStringList({"s", "mm", "N"}));
-    TF_CHECK(guessForceColumn(t) == "Force standard");
-    TF_CHECK(guessExtensionColumn(t) == QString::fromUtf8("Déformation nominale"));
-    TF_CHECK(t.columns[0].size() == 3991);
+    TS_CHECK(t.units == QStringList({"s", "mm", "N"}));
+    TS_CHECK(guessForceColumn(t) == "Force standard");
+    TS_CHECK(guessExtensionColumn(t) == QString::fromUtf8("Déformation nominale"));
+    TS_CHECK(t.columns[0].size() == 3991);
 }
 
-TF_CASE(deflection_and_crosshead_columns_are_recognised)
+TS_CASE(deflection_and_crosshead_columns_are_recognised)
 {
     for (const char *name : {"deflection", "Durchbiegung", "compression", "Stauchung"}) {
         Table t;
         t.names = {"time", name, "force"};
         if (guessExtensionColumn(t) != name)
-            tf::test::fail(__FILE__, __LINE__, std::string("not found: ") + name);
+            ts::test::fail(__FILE__, __LINE__, std::string("not found: ") + name);
     }
     // A crosshead counts only when nothing better is there.
     Table t;
     t.names = {"time", "crosshead", "force"};
-    TF_CHECK(guessExtensionColumn(t) == "crosshead");
+    TS_CHECK(guessExtensionColumn(t) == "crosshead");
     t.names = {"time", "crosshead", "deflection", "force"};
-    TF_CHECK(guessExtensionColumn(t) == "deflection");
+    TS_CHECK(guessExtensionColumn(t) == "deflection");
     t.names = {"time", "deflection", "Durchbiegung", "force"};
     QString why;
-    TF_CHECK(guessExtensionColumn(t, &why).isEmpty());
-    TF_CHECK(why.contains("2"));
+    TS_CHECK(guessExtensionColumn(t, &why).isEmpty());
+    TS_CHECK(why.contains("2"));
 }
 
 // --- Instron's exports (tests/fixtures/instron/SOURCE.md) -----------------------
@@ -211,37 +211,37 @@ static bool hasPreambleKey(const Table &t, const QString &key)
     return false;
 }
 
-TF_CASE(bluehill_flexure_export_reads_imperial_units_and_its_header_result)
+TS_CASE(bluehill_flexure_export_reads_imperial_units_and_its_header_result)
 {
     // Bluehill's header: "Maximum Load : Maximum Load","131.18347",lbf and
     // the extension there, 1.50294 in. Its curve's maximum is that row.
     const auto r = readTable(instron("bluehill2-flexure.csv"));
-    TF_REQUIRE(r.table.has_value());
+    TS_REQUIRE(r.table.has_value());
     const Table &t = *r.table;
-    TF_CHECK(t.names == QStringList({"Time", "Extension", "Load"}));
-    TF_CHECK(t.units == QStringList({"s", "in", "lbf"}));
-    TF_CHECK(guessForceColumn(t) == "Load");
-    TF_CHECK(guessExtensionColumn(t) == "Extension");
+    TS_CHECK(t.names == QStringList({"Time", "Extension", "Load"}));
+    TS_CHECK(t.units == QStringList({"s", "in", "lbf"}));
+    TS_CHECK(guessForceColumn(t) == "Load");
+    TS_CHECK(guessExtensionColumn(t) == "Extension");
     // A key is found behind Bluehill's "Section : " prefix.
-    TF_NEAR(preambleQuantity(t, {"Maximum Load"}, "force").value_or(NAN), 131.18347 * 4.4482216152605,
+    TS_NEAR(preambleQuantity(t, {"Maximum Load"}, "force").value_or(NAN), 131.18347 * 4.4482216152605,
             1e-9);
 
     TensionMapping m;
     m.needsGeometry = false;
     const auto imp = toTension(t, m);
-    TF_REQUIRE(imp.error.isEmpty());
+    TS_REQUIRE(imp.error.isEmpty());
     std::size_t k = 0;
     for (std::size_t i = 0; i < imp.input.force.size(); ++i)
         if (imp.input.force[i] > imp.input.force[k])
             k = i;
-    TF_NEAR(imp.input.force[k], 131.18347 * 4.4482216152605, 1e-9);
-    TF_NEAR(imp.input.extension[k], 1.50294 * 0.0254, 1e-12);
+    TS_NEAR(imp.input.force[k], 131.18347 * 4.4482216152605, 1e-9);
+    TS_NEAR(imp.input.extension[k], 1.50294 * 0.0254, 1e-12);
 }
 
-TF_CASE(bluehill_universal_results_table_is_kept_as_the_files_own_results)
+TS_CASE(bluehill_universal_results_table_is_kept_as_the_files_own_results)
 {
     const auto r = readTable(instron("bluehill-universal-results.csv"));
-    TF_REQUIRE(r.table.has_value());
+    TS_REQUIRE(r.table.has_value());
     const Table &t = *r.table;
     auto find = [&](const QString &name) -> const FileResult * {
         for (const FileResult &f : t.results)
@@ -250,94 +250,94 @@ TF_CASE(bluehill_universal_results_table_is_kept_as_the_files_own_results)
         return nullptr;
     };
     const FileResult *fm = find("Maximum Force");
-    TF_REQUIRE(fm != nullptr);
-    TF_CHECK(fm->table == "Results Table 1");
-    TF_CHECK(fm->row == "1");
-    TF_CHECK(fm->unit == "N");
-    TF_CHECK(fm->value == "285.30");
+    TS_REQUIRE(fm != nullptr);
+    TS_CHECK(fm->table == "Results Table 1");
+    TS_CHECK(fm->row == "1");
+    TS_CHECK(fm->unit == "N");
+    TS_CHECK(fm->value == "285.30");
     const FileResult *e = find("Modulus (Automatic Young's)");
-    TF_REQUIRE(e != nullptr);
-    TF_CHECK(e->unit == "MPa" && e->value == "143.72");
+    TS_REQUIRE(e != nullptr);
+    TS_CHECK(e->unit == "MPa" && e->value == "143.72");
     const FileResult *nu = find("Poisson's ratio (Chord)");
-    TF_REQUIRE(nu != nullptr);
-    TF_CHECK(nu->value == "-----");  // kept as written: not a number, not a zero
-    TF_NEAR(fileResultQuantity(t, {"Maximum Force"}, "force").value_or(NAN), 285.30, 1e-9);
-    TF_CHECK(!fileResultQuantity(t, {"Poisson's ratio (Chord)"}, "strain"));
+    TS_REQUIRE(nu != nullptr);
+    TS_CHECK(nu->value == "-----");  // kept as written: not a number, not a zero
+    TS_NEAR(fileResultQuantity(t, {"Maximum Force"}, "force").value_or(NAN), 285.30, 1e-9);
+    TS_CHECK(!fileResultQuantity(t, {"Poisson's ratio (Chord)"}, "strain"));
 
     // The results row is not header data, and the curve below is read whole.
-    TF_CHECK(!hasPreambleKey(t, "1"));
-    TF_CHECK(t.names == QStringList({"Time", "Displacement", "Force", "Tensile displacement",
+    TS_CHECK(!hasPreambleKey(t, "1"));
+    TS_CHECK(t.names == QStringList({"Time", "Displacement", "Force", "Tensile displacement",
                                      "Tensile strain (Displacement)", "Tensile stress"}));
-    TF_CHECK(t.units == QStringList({"s", "mm", "kN", "mm", "%", "MPa"}));
+    TS_CHECK(t.units == QStringList({"s", "mm", "kN", "mm", "%", "MPa"}));
     // Bluehill's leading column is empty in every row: left out, and said.
-    TF_CHECK(!t.notes.filter("empty").isEmpty());
-    TF_CHECK(t.columns[0].size() == 340);
+    TS_CHECK(!t.notes.filter("empty").isEmpty());
+    TS_CHECK(t.columns[0].size() == 340);
     // Bluehill's maximum force is on the curve: 0.2853 kN at 6.74 s.
     std::size_t k = 0;
     for (std::size_t i = 0; i < t.columns[2].size(); ++i)
         if (t.columns[2][i] > t.columns[2][k])
             k = i;
-    TF_NEAR(t.columns[2][k], 0.2853, 1e-12);
-    TF_NEAR(t.columns[0][k], 6.74, 1e-12);
+    TS_NEAR(t.columns[2][k], 0.2853, 1e-12);
+    TS_NEAR(t.columns[0][k], 6.74, 1e-12);
 }
 
-TF_CASE(bluehill_universal_header_with_the_unit_before_the_value)
+TS_CASE(bluehill_universal_header_with_the_unit_before_the_value)
 {
     // "Specimen properties : Width,(in),"0.39"": unit, then value.
     const auto r = readTable(instron("bluehill-universal-composite.csv"));
-    TF_REQUIRE(r.table.has_value());
+    TS_REQUIRE(r.table.has_value());
     const Table &t = *r.table;
-    TF_NEAR(preambleQuantity(t, {"Width"}, "length").value_or(NAN), 0.39 * 0.0254, 1e-12);
-    TF_NEAR(preambleQuantity(t, {"Thickness"}, "length").value_or(NAN), 0.04 * 0.0254, 1e-12);
-    TF_NEAR(fileResultQuantity(t, {"Area"}, "area").value_or(NAN), 30.42e-6, 1e-15);
-    TF_CHECK(t.names == QStringList({"Time", "Displacement", "Force", "Bonded Strain Gage",
+    TS_NEAR(preambleQuantity(t, {"Width"}, "length").value_or(NAN), 0.39 * 0.0254, 1e-12);
+    TS_NEAR(preambleQuantity(t, {"Thickness"}, "length").value_or(NAN), 0.04 * 0.0254, 1e-12);
+    TS_NEAR(fileResultQuantity(t, {"Area"}, "area").value_or(NAN), 30.42e-6, 1e-15);
+    TS_CHECK(t.names == QStringList({"Time", "Displacement", "Force", "Bonded Strain Gage",
                                      "Tensile stress"}));
-    TF_CHECK(t.columns[0].size() == 3682);
+    TS_CHECK(t.columns[0].size() == 3682);
 }
 
-TF_CASE(italian_bluehill_export_is_read_by_its_column_names)
+TS_CASE(italian_bluehill_export_is_read_by_its_column_names)
 {
     const auto r = readTable(instron("bluehill2-italian.csv"));
-    TF_REQUIRE(r.table.has_value());
+    TS_REQUIRE(r.table.has_value());
     const Table &t = *r.table;
-    TF_CHECK(t.delimiter == ';');
-    TF_CHECK(t.decimal == '.');
-    TF_CHECK(t.names == QStringList({"Tempo", "Corsa", "Carico"}));
-    TF_CHECK(guessForceColumn(t) == "Carico");
-    TF_CHECK(guessExtensionColumn(t) == "Corsa");
+    TS_CHECK(t.delimiter == ';');
+    TS_CHECK(t.decimal == '.');
+    TS_CHECK(t.names == QStringList({"Tempo", "Corsa", "Carico"}));
+    TS_CHECK(guessForceColumn(t) == "Carico");
+    TS_CHECK(guessExtensionColumn(t) == "Corsa");
 }
 
-TF_CASE(merlin_export_states_units_inside_its_column_names)
+TS_CASE(merlin_export_states_units_inside_its_column_names)
 {
     const auto r = readTable(instron("merlin-compression.raw"));
-    TF_REQUIRE(r.table.has_value());
+    TS_REQUIRE(r.table.has_value());
     const Table &t = *r.table;
-    TF_CHECK(columnUnit(t, "Time sec") == "sec");
-    TF_CHECK(columnUnit(t, "Extension mm") == "mm");
-    TF_CHECK(columnUnit(t, "Load N") == "N");
-    TF_CHECK(columnUnit(t, "Strain [Exten.] %") == "%");
-    TF_CHECK(columnUnit(t, "Cycle Count").isEmpty());
-    TF_CHECK(guessForceColumn(t) == "Load N");
+    TS_CHECK(columnUnit(t, "Time sec") == "sec");
+    TS_CHECK(columnUnit(t, "Extension mm") == "mm");
+    TS_CHECK(columnUnit(t, "Load N") == "N");
+    TS_CHECK(columnUnit(t, "Strain [Exten.] %") == "%");
+    TS_CHECK(columnUnit(t, "Cycle Count").isEmpty());
+    TS_CHECK(guessForceColumn(t) == "Load N");
     // "Area:",9.677400,"mm*mm"
-    TF_NEAR(preambleQuantity(t, {"Area"}, "area").value_or(NAN), 9.6774e-6, 1e-15);
+    TS_NEAR(preambleQuantity(t, {"Area"}, "area").value_or(NAN), 9.6774e-6, 1e-15);
     TensionMapping m;
     m.force = "Load N";
     m.extension = "Extension mm";
     m.needsGeometry = false;
     const auto imp = toTension(t, m);
-    TF_REQUIRE(imp.error.isEmpty());
-    TF_CHECK(imp.forceUnit == "N" && imp.extensionUnit == "mm");
-    TF_NEAR(imp.input.force[0], -2.130933, 1e-12);
+    TS_REQUIRE(imp.error.isEmpty());
+    TS_CHECK(imp.forceUnit == "N" && imp.extensionUnit == "mm");
+    TS_NEAR(imp.input.force[0], -2.130933, 1e-12);
 }
 
-TF_CASE(bluehill_dimension_header_gives_the_area)
+TS_CASE(bluehill_dimension_header_gives_the_area)
 {
     const auto r = readTable(instron("bluehill2-dimensions.csv"));
-    TF_REQUIRE(r.table.has_value());
-    TF_NEAR(preambleQuantity(*r.table, {"Area"}, "area").value_or(NAN), 181.1716e-6, 1e-15);
+    TS_REQUIRE(r.table.has_value());
+    TS_NEAR(preambleQuantity(*r.table, {"Area"}, "area").value_or(NAN), 181.1716e-6, 1e-15);
 }
 
-TF_CASE(force_and_displacement_names_in_other_languages_are_recognised)
+TS_CASE(force_and_displacement_names_in_other_languages_are_recognised)
 {
     const std::vector<std::pair<const char *, const char *>> pairs{
         {"Carico", "Allungamento"}, {"Forza", "Deformazione"}, {"Fuerza", "Alargamiento"},
@@ -346,9 +346,9 @@ TF_CASE(force_and_displacement_names_in_other_languages_are_recognised)
         Table t;
         t.names = {"time", QString::fromUtf8(f), QString::fromUtf8(e)};
         if (guessForceColumn(t) != QString::fromUtf8(f))
-            tf::test::fail(__FILE__, __LINE__, std::string("force not found: ") + f);
+            ts::test::fail(__FILE__, __LINE__, std::string("force not found: ") + f);
         if (guessExtensionColumn(t) != QString::fromUtf8(e))
-            tf::test::fail(__FILE__, __LINE__, std::string("extension not found: ") + e);
+            ts::test::fail(__FILE__, __LINE__, std::string("extension not found: ") + e);
     }
     // A crosshead in Italian, Spanish and Portuguese counts only when nothing
     // better is there.
@@ -356,7 +356,7 @@ TF_CASE(force_and_displacement_names_in_other_languages_are_recognised)
         Table t;
         t.names = {"time", c, "Carico"};
         if (guessExtensionColumn(t) != c)
-            tf::test::fail(__FILE__, __LINE__, std::string("crosshead not found: ") + c);
+            ts::test::fail(__FILE__, __LINE__, std::string("crosshead not found: ") + c);
     }
 }
 
@@ -377,183 +377,183 @@ static QString entry(const Table &t, const QString &key)
     return "(none)";
 }
 
-TF_CASE(mts793_export_written_in_chunks_is_read_whole_and_in_order)
+TS_CASE(mts793_export_written_in_chunks_is_read_whole_and_in_order)
 {
     // MTS 793 writes its data in blocks of 1024 rows, each under the same
     // header again; reading only the first block silently lost 221 rows.
     const auto r = readTable(fixture("mts/mts793-chunked.dat"));
-    TF_REQUIRE(r.table.has_value());
+    TS_REQUIRE(r.table.has_value());
     const Table &t = *r.table;
-    TF_CHECK(t.delimiter == '\t');
-    TF_CHECK(t.decimal == '.');
-    TF_CHECK(t.names == QStringList({"Time", "Ch 1 LVDT", "Ch 1 Force"}));
-    TF_CHECK(t.units == QStringList({"s", "mm", "N"}));
-    TF_REQUIRE(t.columns.size() == 3);
-    TF_CHECK(t.columns[0].size() == 1245);
-    TF_NEAR(t.columns[0][0], 0.11035156, 1e-12);
-    TF_NEAR(t.columns[0][1023], 102.01074, 1e-12);  // the first block's last row
-    TF_NEAR(t.columns[0][1024], 102.11035, 1e-12);  // the second block's first
-    TF_NEAR(t.columns[2][1244], -0.22730324, 1e-12);
-    TF_CHECK(t.results.empty());
-    TF_CHECK(t.notes.join("\n").contains("2 blocks"));
-    TF_CHECK(guessForceColumn(t) == "Ch 1 Force");
-    TF_CHECK(guessExtensionColumn(t) == "Ch 1 LVDT");
+    TS_CHECK(t.delimiter == '\t');
+    TS_CHECK(t.decimal == '.');
+    TS_CHECK(t.names == QStringList({"Time", "Ch 1 LVDT", "Ch 1 Force"}));
+    TS_CHECK(t.units == QStringList({"s", "mm", "N"}));
+    TS_REQUIRE(t.columns.size() == 3);
+    TS_CHECK(t.columns[0].size() == 1245);
+    TS_NEAR(t.columns[0][0], 0.11035156, 1e-12);
+    TS_NEAR(t.columns[0][1023], 102.01074, 1e-12);  // the first block's last row
+    TS_NEAR(t.columns[0][1024], 102.11035, 1e-12);  // the second block's first
+    TS_NEAR(t.columns[2][1244], -0.22730324, 1e-12);
+    TS_CHECK(t.results.empty());
+    TS_CHECK(t.notes.join("\n").contains("2 blocks"));
+    TS_CHECK(guessForceColumn(t) == "Ch 1 Force");
+    TS_CHECK(guessExtensionColumn(t) == "Ch 1 LVDT");
 }
 
-TF_CASE(german_mts793_export_keeps_its_other_block_as_the_files_own_values)
+TS_CASE(german_mts793_export_keeps_its_other_block_as_the_files_own_values)
 {
     // Latin-1, decimal comma, an operator block of key-value lines, the data,
     // then a second block of other columns and two rows.
     const auto r = readTable(fixture("mts/mts793-german.dat"));
-    TF_REQUIRE(r.table.has_value());
+    TS_REQUIRE(r.table.has_value());
     const Table &t = *r.table;
-    TF_CHECK(t.decimal == ',');
-    TF_CHECK(t.names == QStringList({"Datum", "Laufzeit", "Ch 1 Kraft Sollwert", "Ch 1 Kraft",
+    TS_CHECK(t.decimal == ',');
+    TS_CHECK(t.names == QStringList({"Datum", "Laufzeit", "Ch 1 Kraft Sollwert", "Ch 1 Kraft",
                                      "Ch 1 Weg", "1944 B", "1281068", "2157"}));
-    TF_CHECK(t.units == QStringList({"d", "s", "kN", "kN", "mm", "mm", "mm", "mm"}));
-    TF_REQUIRE(t.columns.size() == 8);
-    TF_CHECK(t.columns[3].size() == 572);
-    TF_NEAR(t.columns[3][0], -1.0232348, 1e-12);
-    TF_CHECK(entry(t, QString::fromUtf8("Prüfer")) == "Kh");
-    TF_CHECK(entry(t, "Durchmesser") == "98,6");
+    TS_CHECK(t.units == QStringList({"d", "s", "kN", "kN", "mm", "mm", "mm", "mm"}));
+    TS_REQUIRE(t.columns.size() == 8);
+    TS_CHECK(t.columns[3].size() == 572);
+    TS_NEAR(t.columns[3][0], -1.0232348, 1e-12);
+    TS_CHECK(entry(t, QString::fromUtf8("Prüfer")) == "Kh");
+    TS_CHECK(entry(t, "Durchmesser") == "98,6");
     // The second block: 5 columns by 2 rows, values as written.
-    TF_CHECK(t.results.size() == 10);
+    TS_CHECK(t.results.size() == 10);
     const FileResult *low = nullptr;
     for (const auto &f : t.results)
         if (f.name == "Ch 1 Kraft" && f.row == "2")
             low = &f;
-    TF_REQUIRE(low != nullptr);
-    TF_CHECK(low->value == "-147,20456");
-    TF_CHECK(low->unit == "kN");
-    TF_CHECK(low->table.startsWith("Datenerfassung"));
+    TS_REQUIRE(low != nullptr);
+    TS_CHECK(low->value == "-147,20456");
+    TS_CHECK(low->unit == "kN");
+    TS_CHECK(low->table.startsWith("Datenerfassung"));
     // The set point is a command, not a measured force.
-    TF_CHECK(guessForceColumn(t) == "Ch 1 Kraft");
-    TF_CHECK(guessExtensionColumn(t) == "Ch 1 Weg");
+    TS_CHECK(guessForceColumn(t) == "Ch 1 Kraft");
+    TS_CHECK(guessExtensionColumn(t) == "Ch 1 Weg");
 }
 
-TF_CASE(testsuite_export_reads_its_key_colon_value_header)
+TS_CASE(testsuite_export_reads_its_key_colon_value_header)
 {
     const auto r = readTable(fixture("mts/testsuite-quoted.csv"));
-    TF_REQUIRE(r.table.has_value());
+    TS_REQUIRE(r.table.has_value());
     const Table &t = *r.table;
-    TF_CHECK(t.delimiter == ',');
-    TF_CHECK(t.names == QStringList({"Crosshead", "Load", "Time"}));
-    TF_CHECK(t.units == QStringList({"mm", "N", "sec"}));
-    TF_CHECK(t.columns[0].size() == 681);
-    TF_NEAR(t.columns[1][680], -85.9580993652344, 1e-12);
+    TS_CHECK(t.delimiter == ',');
+    TS_CHECK(t.names == QStringList({"Crosshead", "Load", "Time"}));
+    TS_CHECK(t.units == QStringList({"mm", "N", "sec"}));
+    TS_CHECK(t.columns[0].size() == 681);
+    TS_NEAR(t.columns[1][680], -85.9580993652344, 1e-12);
     QStringList keys;
     for (const auto &p : t.preamble)
         keys << p.key;
-    TF_CHECK(keys == QStringList({"File Path", "Test", "Test Run", "Date"}));
-    TF_CHECK(entry(t, "Test Run") == "BMA_01TS55_01_20211122");
-    TF_CHECK(guessForceColumn(t) == "Load");
-    TF_CHECK(guessExtensionColumn(t) == "Crosshead");
+    TS_CHECK(keys == QStringList({"File Path", "Test", "Test Run", "Date"}));
+    TS_CHECK(entry(t, "Test Run") == "BMA_01TS55_01_20211122");
+    TS_CHECK(guessForceColumn(t) == "Load");
+    TS_CHECK(guessExtensionColumn(t) == "Crosshead");
 }
 
-TF_CASE(testsuite_export_with_a_decimal_comma_and_exponents)
+TS_CASE(testsuite_export_with_a_decimal_comma_and_exponents)
 {
     const auto r = readTable(fixture("mts/testsuite-decimal-comma.txt"));
-    TF_REQUIRE(r.table.has_value());
+    TS_REQUIRE(r.table.has_value());
     const Table &t = *r.table;
-    TF_CHECK(t.delimiter == '\t');
-    TF_CHECK(t.decimal == ',');
-    TF_CHECK(t.names == QStringList({"CycleCount", "Axial Displacement", "Axial Force"}));
-    TF_CHECK(t.columns[1].size() == 1856);
-    TF_NEAR(t.columns[1][0], 6.97374318292532e-05, 1e-18);
-    TF_NEAR(t.columns[2][1], 2.47375440597534, 1e-12);
-    TF_CHECK(entry(t, "Test") == "Quasi static tensile");
-    TF_CHECK(guessExtensionColumn(t) == "Axial Displacement");
+    TS_CHECK(t.delimiter == '\t');
+    TS_CHECK(t.decimal == ',');
+    TS_CHECK(t.names == QStringList({"CycleCount", "Axial Displacement", "Axial Force"}));
+    TS_CHECK(t.columns[1].size() == 1856);
+    TS_NEAR(t.columns[1][0], 6.97374318292532e-05, 1e-18);
+    TS_NEAR(t.columns[2][1], 2.47375440597534, 1e-12);
+    TS_CHECK(entry(t, "Test") == "Quasi static tensile");
+    TS_CHECK(guessExtensionColumn(t) == "Axial Displacement");
 }
 
-TF_CASE(french_testsuite_export_asks_which_of_its_deformations_to_use)
+TS_CASE(french_testsuite_export_asks_which_of_its_deformations_to_use)
 {
     // Two extensometer readings and the crosshead's deformation: TenSense
     // cannot know which the person wants, so it asks.
     const auto r = readTable(fixture("mts/testsuite-french.txt"));
-    TF_REQUIRE(r.table.has_value());
+    TS_REQUIRE(r.table.has_value());
     const Table &t = *r.table;
-    TF_CHECK(t.decimal == '.');
-    TF_CHECK(t.columns[0].size() == 120);
-    TF_CHECK(t.names.value(3) == QString::fromUtf8("Déformation_Traverse"));
-    TF_CHECK(entry(t, "Essai") == "Traction_MOE_Dopamics");
-    TF_CHECK(guessForceColumn(t) == "Force");
-    TF_CHECK(guessExtensionColumn(t).isEmpty());
+    TS_CHECK(t.decimal == '.');
+    TS_CHECK(t.columns[0].size() == 120);
+    TS_CHECK(t.names.value(3) == QString::fromUtf8("Déformation_Traverse"));
+    TS_CHECK(entry(t, "Essai") == "Traction_MOE_Dopamics");
+    TS_CHECK(guessForceColumn(t) == "Force");
+    TS_CHECK(guessExtensionColumn(t).isEmpty());
     const TensionImport ti = toTension(t, TensionMapping{});
-    TF_CHECK(ti.error.contains("3 candidates"));
+    TS_CHECK(ti.error.contains("3 candidates"));
 }
 
 // --- Shimadzu ------------------------------------------------------------------
 // Real exports, unchanged (tests/fixtures/shimadzu/SOURCE.md); expected values
 // read with iconv and awk.
 
-TF_CASE(japanese_trapezium_export_is_read_from_shift_jis)
+TS_CASE(japanese_trapezium_export_is_read_from_shift_jis)
 {
     // Shift-JIS, half-width katakana in the names, a trailing comma on every
     // line (an empty last column), ".335" with no leading zero.
     const auto r = readTable(fixture("shimadzu/trapezium-japanese.csv"));
-    TF_REQUIRE(r.table.has_value());
+    TS_REQUIRE(r.table.has_value());
     const Table &t = *r.table;
-    TF_CHECK(t.names == QStringList({QString::fromUtf8("時間"), QString::fromUtf8("試験力"),
+    TS_CHECK(t.names == QStringList({QString::fromUtf8("時間"), QString::fromUtf8("試験力"),
                                      QString::fromUtf8("ｽﾄﾛｰｸ")}));
-    TF_CHECK(t.units == QStringList({"sec", "N", "mm"}));
-    TF_REQUIRE(t.columns.size() == 3);
-    TF_CHECK(t.columns[1].size() == 2012);
-    TF_NEAR(t.columns[1][0], 3.125, 1e-15);
-    TF_NEAR(t.columns[2][2011], 0.335, 1e-15);
-    TF_CHECK(entry(t, QString::fromUtf8("試験名")) == QString::fromUtf8("試験ﾓｰﾄﾞ"));
-    TF_CHECK(t.notes.join("\n").contains("Shift-JIS"));
-    TF_CHECK(guessForceColumn(t) == QString::fromUtf8("試験力"));
-    TF_CHECK(guessExtensionColumn(t) == QString::fromUtf8("ｽﾄﾛｰｸ"));
+    TS_CHECK(t.units == QStringList({"sec", "N", "mm"}));
+    TS_REQUIRE(t.columns.size() == 3);
+    TS_CHECK(t.columns[1].size() == 2012);
+    TS_NEAR(t.columns[1][0], 3.125, 1e-15);
+    TS_NEAR(t.columns[2][2011], 0.335, 1e-15);
+    TS_CHECK(entry(t, QString::fromUtf8("試験名")) == QString::fromUtf8("試験ﾓｰﾄﾞ"));
+    TS_CHECK(t.notes.join("\n").contains("Shift-JIS"));
+    TS_CHECK(guessForceColumn(t) == QString::fromUtf8("試験力"));
+    TS_CHECK(guessExtensionColumn(t) == QString::fromUtf8("ｽﾄﾛｰｸ"));
 }
 
-TF_CASE(specimens_side_by_side_are_read_one_at_a_time)
+TS_CASE(specimens_side_by_side_are_read_one_at_a_time)
 {
     const QString path = fixture("shimadzu/trapezium-side-by-side.csv");
     const QStringList six{"Time", "Force", "Stroke", "Force", "Stress", "Strain"};
     const auto first = readTable(path);
-    TF_REQUIRE(first.table.has_value());
-    TF_CHECK(first.table->fileSpecimens == QStringList({"1- 1", "1- 2", "1- 3"}));
-    TF_CHECK(first.table->fileSpecimen == "1- 1");
-    TF_CHECK(first.table->names == six);
-    TF_CHECK(first.table->units == QStringList({"sec", "kN", "mm", "N", "N/mm2", "%"}));
+    TS_REQUIRE(first.table.has_value());
+    TS_CHECK(first.table->fileSpecimens == QStringList({"1- 1", "1- 2", "1- 3"}));
+    TS_CHECK(first.table->fileSpecimen == "1- 1");
+    TS_CHECK(first.table->names == six);
+    TS_CHECK(first.table->units == QStringList({"sec", "kN", "mm", "N", "N/mm2", "%"}));
     // Each specimen's own rows, its blank cells below its end left out.
-    TF_CHECK(first.table->columns[0].size() == 1724);
-    TF_NEAR(first.table->columns[0].back(), 86.15, 1e-12);
-    TF_CHECK(first.table->notes.join("\n").contains("3 specimens"));
+    TS_CHECK(first.table->columns[0].size() == 1724);
+    TS_NEAR(first.table->columns[0].back(), 86.15, 1e-12);
+    TS_CHECK(first.table->notes.join("\n").contains("3 specimens"));
 
     const auto second = readTable(path, "1- 2");
-    TF_REQUIRE(second.table.has_value());
-    TF_CHECK(second.table->fileSpecimen == "1- 2");
-    TF_CHECK(second.table->names == six);
-    TF_CHECK(second.table->columns[0].size() == 4579);
-    TF_NEAR(second.table->columns[4].back(), 0.273284314, 1e-12);
+    TS_REQUIRE(second.table.has_value());
+    TS_CHECK(second.table->fileSpecimen == "1- 2");
+    TS_CHECK(second.table->names == six);
+    TS_CHECK(second.table->columns[0].size() == 4579);
+    TS_NEAR(second.table->columns[4].back(), 0.273284314, 1e-12);
 
     const auto third = readTable(path, "1- 3");
-    TF_REQUIRE(third.table.has_value());
-    TF_CHECK(third.table->columns[0].size() == 1690);
-    TF_NEAR(third.table->columns[5].back(), 0.039390486, 1e-12);
+    TS_REQUIRE(third.table.has_value());
+    TS_CHECK(third.table->columns[0].size() == 1690);
+    TS_NEAR(third.table->columns[5].back(), 0.039390486, 1e-12);
 
     const auto none = readTable(path, "2- 1");
-    TF_CHECK(!none.table.has_value());
-    TF_CHECK(none.error.contains("1- 1, 1- 2, 1- 3"));
+    TS_CHECK(!none.table.has_value());
+    TS_CHECK(none.error.contains("1- 1, 1- 2, 1- 3"));
 }
 
-TF_CASE(two_columns_of_one_name_are_one_choice)
+TS_CASE(two_columns_of_one_name_are_one_choice)
 {
     // "Force" in kN and again in N: the same quantity, so not a question;
     // the first is the one a name finds.
     const auto r = readTable(fixture("shimadzu/trapezium-side-by-side.csv"));
-    TF_REQUIRE(r.table.has_value());
-    TF_CHECK(guessForceColumn(*r.table) == "Force");
-    TF_CHECK(columnUnit(*r.table, "Force") == "kN");
+    TS_REQUIRE(r.table.has_value());
+    TS_CHECK(guessForceColumn(*r.table) == "Force");
+    TS_CHECK(columnUnit(*r.table, "Force") == "kN");
 }
 
-TF_CASE(a_file_of_one_specimen_names_none)
+TS_CASE(a_file_of_one_specimen_names_none)
 {
     const auto r = readTable(fixture("mts/testsuite-quoted.csv"));
-    TF_REQUIRE(r.table.has_value());
-    TF_CHECK(r.table->fileSpecimens.isEmpty());
-    TF_CHECK(r.table->fileSpecimen.isEmpty());
+    TS_REQUIRE(r.table.has_value());
+    TS_CHECK(r.table->fileSpecimens.isEmpty());
+    TS_CHECK(r.table->fileSpecimen.isEmpty());
 }
 
-int main() { return tf::test::run(); }
+int main() { return ts::test::run(); }

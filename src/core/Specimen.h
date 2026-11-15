@@ -10,7 +10,7 @@
 
 #include <optional>
 
-namespace tf::core {
+namespace ts::core {
 
 struct Specimen {
     enum class Shape { Rectangular, Round, Tube, GivenArea };
@@ -53,4 +53,4 @@ QString shapeName(Specimen::Shape shape);
 QJsonObject specimenJson(const Specimen &s);
 std::optional<Specimen> specimenFromJson(const QJsonObject &o, QString *error);
 
-} // namespace tf::core
+} // namespace ts::core

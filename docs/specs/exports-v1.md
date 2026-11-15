@@ -91,7 +91,7 @@ alone made the curve look right when opened; opened in ParaView 6.1, the
 
 - ParaView reads whole records with TenSense's reader plugin
   (`tools/paraview/TenSenseRecordReader.py`, plain Python): it opens
-  `manifest.tfrec`, checks `results/curve.vtp` against the manifest's
+  `manifest.tsrec`, checks `results/curve.vtp` against the manifest's
   SHA-256 and refuses it if changed, and outputs the curve with the
   specimen, mode, procedure and conformity as field data. Where ParaView's
   flatpak is installed, the suite opens a record with it and has a changed

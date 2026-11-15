@@ -14,11 +14,11 @@
 #include <cmath>
 #include <optional>
 
-namespace tf::core {
+namespace ts::core {
 
 namespace {
 
-const tf::analysis::Determination *found(const Analysis &a, const std::string &key)
+const ts::analysis::Determination *found(const Analysis &a, const std::string &key)
 {
     const auto it = a.result.results.find(key);
     return it != a.result.results.end() && it->second.determined ? &it->second : nullptr;
@@ -439,4 +439,4 @@ QString pmdJsonLd(const Analysis &a, const Specimen &s, QString *error)
     return QString::fromUtf8(QJsonDocument(doc).toJson(QJsonDocument::Indented));
 }
 
-} // namespace tf::core
+} // namespace ts::core

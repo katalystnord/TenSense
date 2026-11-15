@@ -49,7 +49,7 @@ carry the manifest's hash. There `manifest_sha256` is `null` and
 `record.inputs` lists the record files the analysis read, each with its
 path and SHA-256 (`test.json` and the channel files). `source.path` is
 then relative to the record (`source/<file>`). For results written
-outside a record (tf-analyse), `record` is `null`.
+outside a record (ts-analyse), `record` is `null`.
 
 ### 2.1 Conformity
 

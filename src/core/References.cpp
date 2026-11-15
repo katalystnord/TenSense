@@ -9,7 +9,7 @@
 
 #include <map>
 
-namespace tf::core {
+namespace ts::core {
 
 namespace {
 
@@ -176,4 +176,4 @@ std::optional<ReferenceCurve> readReferenceCurve(const QString &path, const QStr
     return fail("the file has no series named \"" + series + "\"; it has: " + names.join(", "));
 }
 
-} // namespace tf::core
+} // namespace ts::core

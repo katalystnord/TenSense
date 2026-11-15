@@ -2,7 +2,7 @@
 //
 // Ten specimens tested to DIN EN ISO 6892-1 by BAM, with the raw machine
 // exports and BAM's own evaluated results (tests/fixtures/bam-s355/,
-// SOURCE.md there). Each export is analysed exactly as tf-analyse would,
+// SOURCE.md there). Each export is analysed exactly as ts-analyse would,
 // with the shipped ISO 6892-1 profile and BAM's measured S0, and compared
 // with what BAM reported:
 //  - ReH and Rm within EN 10002-1 Annex A.5 (relative or absolute limit,
@@ -21,10 +21,10 @@
 
 #include <cmath>
 
-using namespace tf::core;
+using namespace ts::core;
 
-#ifndef TF_FIXTURES
-#error "TF_FIXTURES must point at tests/fixtures"
+#ifndef TS_FIXTURES
+#error "TS_FIXTURES must point at tests/fixtures"
 #endif
 
 namespace {
@@ -32,7 +32,7 @@ namespace {
 struct Specimen {
     QString id;
     QJsonObject reported;
-    tf::analysis::TensionResult result;
+    ts::analysis::TensionResult result;
     QString error;
 };
 
@@ -40,7 +40,7 @@ std::vector<Specimen> &specimens()
 {
     static std::vector<Specimen> all = [] {
         std::vector<Specimen> out;
-        const QString dir = QString(TF_FIXTURES) + "/bam-s355/";
+        const QString dir = QString(TS_FIXTURES) + "/bam-s355/";
         QFile jf(dir + "reported.json");
         if (!jf.open(QIODevice::ReadOnly))
             return out;
@@ -59,7 +59,7 @@ std::vector<Specimen> &specimens()
             else if (!prof.profile)
                 s.error = prof.error;
             else
-                s.result = tf::analysis::analyseTension(imp.input, prof.profile->method);
+                s.result = ts::analysis::analyseTension(imp.input, prof.profile->method);
             out.push_back(s);
         }
         return out;
@@ -67,7 +67,7 @@ std::vector<Specimen> &specimens()
     return all;
 }
 
-const tf::analysis::Determination *find(const Specimen &s, const char *id)
+const ts::analysis::Determination *find(const Specimen &s, const char *id)
 {
     const auto it = s.result.results.find(id);
     return it == s.result.results.end() ? nullptr : &it->second;
@@ -81,25 +81,25 @@ void within(const Specimen &s, const char *id, double ours, double theirs, doubl
     std::printf("  %s %-3s TenSense %10.3f  BAM %10.3f %-3s  diff %+7.3f  limit %.3f\n",
                 qPrintable(s.id), id, ours, theirs, unit, dev, limit);
     if (!(std::fabs(dev) <= limit))
-        tf::test::fail(__FILE__, __LINE__, (s.id + " " + id + " outside its limit").toStdString());
+        ts::test::fail(__FILE__, __LINE__, (s.id + " " + id + " outside its limit").toStdString());
 }
 
 } // namespace
 
-TF_CASE(all_ten_bam_specimens_are_read_and_analysed)
+TS_CASE(all_ten_bam_specimens_are_read_and_analysed)
 {
-    TF_CHECK(specimens().size() == 10);
+    TS_CHECK(specimens().size() == 10);
     for (const auto &s : specimens())
         if (!s.error.isEmpty())
-            tf::test::fail(__FILE__, __LINE__, (s.id + ": " + s.error).toStdString());
+            ts::test::fail(__FILE__, __LINE__, (s.id + ": " + s.error).toStdString());
 }
 
-TF_CASE(upper_yield_strength_matches_bam_within_annex_a5)
+TS_CASE(upper_yield_strength_matches_bam_within_annex_a5)
 {
     for (const auto &s : specimens()) {
         const auto *d = find(s, "ReH");
         if (!d || !d->determined) {
-            tf::test::fail(__FILE__, __LINE__,
+            ts::test::fail(__FILE__, __LINE__,
                            (s.id + " ReH not determined: " + (d ? QString::fromStdString(d->reason) : ""))
                                .toStdString());
             continue;
@@ -109,13 +109,13 @@ TF_CASE(upper_yield_strength_matches_bam_within_annex_a5)
     }
 }
 
-TF_CASE(tensile_strength_and_maximum_force_match_bam)
+TS_CASE(tensile_strength_and_maximum_force_match_bam)
 {
     for (const auto &s : specimens()) {
         const auto *rm = find(s, "Rm");
         const auto *fm = find(s, "Fm");
         if (!rm || !rm->determined || !fm || !fm->determined) {
-            tf::test::fail(__FILE__, __LINE__, (s.id + " Rm or Fm not determined").toStdString());
+            ts::test::fail(__FILE__, __LINE__, (s.id + " Rm or Fm not determined").toStdString());
             continue;
         }
         const double fmBam = s.reported.value("Fm_kN").toDouble();
@@ -125,18 +125,18 @@ TF_CASE(tensile_strength_and_maximum_force_match_bam)
     }
 }
 
-TF_CASE(elongations_past_the_extensometer_are_refused_with_the_reason)
+TS_CASE(elongations_past_the_extensometer_are_refused_with_the_reason)
 {
     for (const auto &s : specimens())
         for (const char *id : {"Agt", "Ag", "At", "A"}) {
             const auto *d = find(s, id);
             if (!d || d->determined || d->reason.find("extension") == std::string::npos)
-                tf::test::fail(__FILE__, __LINE__,
+                ts::test::fail(__FILE__, __LINE__,
                                (s.id + " " + id + " should be refused: the extensometer was removed").toStdString());
         }
 }
 
-TF_CASE(modulus_beside_bam_for_the_record_without_a_limit)
+TS_CASE(modulus_beside_bam_for_the_record_without_a_limit)
 {
     for (const auto &s : specimens()) {
         const auto *e = find(s, "E");
@@ -145,4 +145,4 @@ TF_CASE(modulus_beside_bam_for_the_record_without_a_limit)
     }
 }
 
-int main() { return tf::test::run(); }
+int main() { return ts::test::run(); }

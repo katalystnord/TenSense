@@ -4,7 +4,7 @@
 #include <cstdio>
 #include <string>
 
-namespace tf::analysis {
+namespace ts::analysis {
 
 namespace {
 
@@ -98,4 +98,4 @@ Outcome<std::vector<double>> complianceCorrected(Samples force, Samples displace
     return Out::ok(std::move(out));
 }
 
-} // namespace tf::analysis
+} // namespace ts::analysis

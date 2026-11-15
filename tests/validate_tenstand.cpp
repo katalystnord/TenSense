@@ -3,7 +3,7 @@
 //   validate_tenstand <agreed.json> <directory with 01.txt .. 63.txt> [report.md]
 //
 // Every file is analysed with the shipped ISO 6892-1 profile, exactly as
-// tf-analyse would, and compared with the agreed values NPL's working group
+// ts-analyse would, and compared with the agreed values NPL's working group
 // published (tests/validation/tenstand-agreed.json, transcribed from NPL
 // Report DEPC MPE 015, Table 9).
 //
@@ -31,7 +31,7 @@
 #include <cmath>
 #include <cstdio>
 
-using namespace tf::core;
+using namespace ts::core;
 
 namespace {
 
@@ -74,7 +74,7 @@ int main(int argc, char *argv[])
         std::fprintf(stderr, "%s\n", qPrintable(prof.error));
         return 2;
     }
-    tf::analysis::TensionMethod method = prof.profile->method;
+    ts::analysis::TensionMethod method = prof.profile->method;
     method.proofOffsets.push_back(0.001);  // Rp0.1: in the agreed table, not in the profile
 
     std::vector<Row> rows;
@@ -97,7 +97,7 @@ int main(int argc, char *argv[])
             ++failures;
             continue;
         }
-        const auto res = tf::analysis::analyseTension(imp.input, method);
+        const auto res = ts::analysis::analyseTension(imp.input, method);
 
         // A yield point exactly where the agreed table has one, or where
         // some labs reported one (file 38): then within A.5 of theirs.

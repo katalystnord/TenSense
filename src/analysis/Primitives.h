@@ -13,7 +13,7 @@
 #include <span>
 #include <string>
 
-namespace tf::analysis {
+namespace ts::analysis {
 
 using Samples = std::span<const double>;
 
@@ -103,4 +103,4 @@ Outcome<CurvePoint> sustainedPeak(Samples x, Samples y, double minDropFraction,
 Outcome<CurvePoint> firstLocalMinimum(Samples x, Samples y, std::size_t from,
                                       std::size_t end);
 
-} // namespace tf::analysis
+} // namespace ts::analysis

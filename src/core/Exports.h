@@ -18,7 +18,7 @@
 
 #include <vector>
 
-namespace tf::core {
+namespace ts::core {
 
 struct HardeningPoint {
     double trueStress = 0;     // Pa
@@ -60,4 +60,4 @@ QString curveVtp(const Analysis &a);
 // compression or bending results); empty with why otherwise.
 QString pmdJsonLd(const Analysis &a, const Specimen &s, QString *error);
 
-} // namespace tf::core
+} // namespace ts::core

@@ -24,7 +24,7 @@
 #include <vtkRenderWindow.h>
 #include <vtkSVGExporter.h>
 
-namespace tf::gui {
+namespace ts::gui {
 
 namespace {
 
@@ -488,6 +488,6 @@ void drawImageAsSvg(QTextDocument *doc, const QString &name, const QByteArray &s
                                            new SvgImageHandler(doc, name, svg));
 }
 
-} // namespace tf::gui
+} // namespace ts::gui
 
 #include "ChartExport.moc"

@@ -16,10 +16,10 @@
 #include <sstream>
 #include <string>
 
-using namespace tf::analysis;
+using namespace ts::analysis;
 
-#ifndef TF_FIXTURES
-#error "TF_FIXTURES must point at tests/fixtures"
+#ifndef TS_FIXTURES
+#error "TS_FIXTURES must point at tests/fixtures"
 #endif
 
 namespace {
@@ -46,7 +46,7 @@ struct Fixture {
 
 Fixture load(const std::string &name)
 {
-    const std::string dir = std::string(TF_FIXTURES) + "/modes/";
+    const std::string dir = std::string(TS_FIXTURES) + "/modes/";
     Fixture fx;
     std::ifstream j(dir + name + ".json");
     std::stringstream ss;
@@ -79,8 +79,8 @@ CurveInput bend(const Fixture &fx, const FlexureGeometry &g)
     return in;
 }
 
-// Axial compression. The fixture may be recorded negative; tf_core turns
-// the signs, so here the test does it to hand the engine what tf_core
+// Axial compression. The fixture may be recorded negative; ts_core turns
+// the signs, so here the test does it to hand the engine what ts_core
 // would.
 CurveInput squeeze(const Fixture &fx, double area, double length, double sign)
 {
@@ -123,7 +123,7 @@ CurveMethod flexureMethod()
 
 // --- The bending model, by hand ---------------------------------------------
 
-TF_CASE(three_point_bending_stress_and_strain_by_hand)
+TS_CASE(three_point_bending_stress_and_strain_by_hand)
 {
     // b = 10 mm, h = 4 mm, L = 64 mm. sigma = 3 F L / (2 b h^2):
     // 3 * 0.064 / (2 * 0.01 * 1.6e-5) = 0.192 / 3.2e-7 = 600000 Pa per N.
@@ -132,15 +132,15 @@ TF_CASE(three_point_bending_stress_and_strain_by_hand)
     g.width = 0.010;
     g.thickness = 0.004;
     g.span = 0.064;
-    TF_REQUIRE(flexureStressFactor(g).value.has_value());
-    TF_NEAR(*flexureStressFactor(g), 600000.0, 1e-6);
-    TF_NEAR(*flexureStrainFactor(g), 5.859375, 1e-12);
+    TS_REQUIRE(flexureStressFactor(g).value.has_value());
+    TS_NEAR(*flexureStressFactor(g), 600000.0, 1e-6);
+    TS_NEAR(*flexureStrainFactor(g), 5.859375, 1e-12);
     // Three-point: where the deflection is taken does not matter.
     g.deflectionAt = FlexureGeometry::DeflectionAt::Midspan;
-    TF_NEAR(*flexureStrainFactor(g), 5.859375, 1e-12);
+    TS_NEAR(*flexureStrainFactor(g), 5.859375, 1e-12);
 }
 
-TF_CASE(four_point_bending_strain_depends_on_where_deflection_is_measured)
+TS_CASE(four_point_bending_strain_depends_on_where_deflection_is_measured)
 {
     // L = 90 mm, loading span 30 mm (a = 30 mm), h = 2.3 mm, b = 15 mm.
     // sigma = 3 F a / (b h^2) = 0.09 / (0.015 * 5.29e-6) = 1134215.5 Pa per N.
@@ -151,52 +151,52 @@ TF_CASE(four_point_bending_strain_depends_on_where_deflection_is_measured)
     g.thickness = 0.0023;
     g.span = 0.090;
     g.loadingSpan = 0.030;
-    TF_NEAR(*flexureStressFactor(g), 0.09 / (0.015 * 5.29e-6), 1e-6);
+    TS_NEAR(*flexureStressFactor(g), 0.09 / (0.015 * 5.29e-6), 1e-6);
     g.deflectionAt = FlexureGeometry::DeflectionAt::Midspan;
-    TF_NEAR(*flexureStrainFactor(g), 4.0 / 3.0, 1e-12);
+    TS_NEAR(*flexureStrainFactor(g), 4.0 / 3.0, 1e-12);
     g.deflectionAt = FlexureGeometry::DeflectionAt::LoadingPoints;
-    TF_NEAR(*flexureStrainFactor(g), 23.0 / 15.0, 1e-12);
+    TS_NEAR(*flexureStrainFactor(g), 23.0 / 15.0, 1e-12);
 }
 
-TF_CASE(a_geometry_that_is_not_a_beam_is_refused_with_why)
+TS_CASE(a_geometry_that_is_not_a_beam_is_refused_with_why)
 {
     FlexureGeometry g;
     g.width = 0.010;
     g.thickness = 0.004;
     g.span = 0.064;
     g.loadingSpan = 0.064;  // loading points on the supports
-    TF_CHECK(!flexureStressFactor(g));
-    TF_CHECK(!flexureStressFactor(g).reason.empty());
+    TS_CHECK(!flexureStressFactor(g));
+    TS_CHECK(!flexureStressFactor(g).reason.empty());
     g.loadingSpan = 0;
     g.thickness = 0;
-    TF_CHECK(!flexureStrainFactor(g));
-    TF_CHECK(!flexureStrainFactor(g).reason.empty());
+    TS_CHECK(!flexureStrainFactor(g));
+    TS_CHECK(!flexureStrainFactor(g).reason.empty());
 }
 
 // --- Machine compliance --------------------------------------------------------
 
-TF_CASE(compliance_takes_the_machine_out_and_never_extrapolates)
+TS_CASE(compliance_takes_the_machine_out_and_never_extrapolates)
 {
     // Machine: 0.1 mm at 1 kN, 0.3 mm at 2 kN, linear between.
     const std::vector<double> tf{0, 1000, 2000}, td{0, 1e-4, 3e-4};
     const std::vector<double> f{500, 1500}, d{1e-3, 2e-3};
     const auto c = complianceCorrected(f, d, tf, td);
-    TF_REQUIRE(c.value.has_value());
-    TF_NEAR((*c)[0], 1e-3 - 0.5e-4, 1e-15);
-    TF_NEAR((*c)[1], 2e-3 - 2e-4, 1e-15);
+    TS_REQUIRE(c.value.has_value());
+    TS_NEAR((*c)[0], 1e-3 - 0.5e-4, 1e-15);
+    TS_NEAR((*c)[1], 2e-3 - 2e-4, 1e-15);
 
     const std::vector<double> beyond{500, 2500}, d2{1e-3, 3e-3};
     const auto out = complianceCorrected(beyond, d2, tf, td);
-    TF_CHECK(!out);
-    TF_CHECK(out.reason.find("2500") != std::string::npos);
+    TS_CHECK(!out);
+    TS_CHECK(out.reason.find("2500") != std::string::npos);
 
     const std::vector<double> unsorted{0, 2000, 1000};
-    TF_CHECK(!complianceCorrected(f, d, unsorted, td));
+    TS_CHECK(!complianceCorrected(f, d, unsorted, td));
 }
 
 // --- The curve model on the synthetic curves ------------------------------------
 
-TF_CASE(three_point_beam_gives_its_planted_results)
+TS_CASE(three_point_beam_gives_its_planted_results)
 {
     const Fixture fx = load("beam-3pt");
     FlexureGeometry g;
@@ -204,20 +204,20 @@ TF_CASE(three_point_beam_gives_its_planted_results)
     g.thickness = fx.mm("thickness_mm");
     g.span = fx.mm("span_mm");
     const AnalysisResult r = analyseCurve(bend(fx, g), flexureMethod());
-    TF_NEAR(get(r, "Ef").value, fx.answer("Ef_Pa"), 1e-6 * fx.answer("Ef_Pa"));
-    TF_NEAR(get(r, "sigma_fM").value, fx.answer("sigma_fM_Pa"), 1e-6 * fx.answer("sigma_fM_Pa"));
-    TF_NEAR(get(r, "epsilon_fM").value, fx.answer("epsilon_fM_1"), 1e-8);
-    TF_NEAR(get(r, "Fm").value, fx.answer("Fm_N"), 1e-6 * fx.answer("Fm_N"));
-    TF_NEAR(get(r, "sigma_fB").value, fx.answer("sigma_fB_Pa"), 1e-6 * fx.answer("sigma_fB_Pa"));
-    TF_NEAR(get(r, "epsilon_fB").value, fx.answer("epsilon_fB_1"), 1e-8);
-    TF_NEAR(get(r, "sigma_fC").value, fx.answer("sigma_fC_Pa"), 1e-6 * fx.answer("sigma_fC_Pa"));
+    TS_NEAR(get(r, "Ef").value, fx.answer("Ef_Pa"), 1e-6 * fx.answer("Ef_Pa"));
+    TS_NEAR(get(r, "sigma_fM").value, fx.answer("sigma_fM_Pa"), 1e-6 * fx.answer("sigma_fM_Pa"));
+    TS_NEAR(get(r, "epsilon_fM").value, fx.answer("epsilon_fM_1"), 1e-8);
+    TS_NEAR(get(r, "Fm").value, fx.answer("Fm_N"), 1e-6 * fx.answer("Fm_N"));
+    TS_NEAR(get(r, "sigma_fB").value, fx.answer("sigma_fB_Pa"), 1e-6 * fx.answer("sigma_fB_Pa"));
+    TS_NEAR(get(r, "epsilon_fB").value, fx.answer("epsilon_fB_1"), 1e-8);
+    TS_NEAR(get(r, "sigma_fC").value, fx.answer("sigma_fC_Pa"), 1e-6 * fx.answer("sigma_fC_Pa"));
     // The modulus says how it was found: a regression over the window.
-    TF_REQUIRE(get(r, "Ef").fit.has_value());
-    TF_CHECK(get(r, "Ef").fit->r2 > 0.999999);
-    TF_CHECK(get(r, "Ef").windowAxis == "strain");
+    TS_REQUIRE(get(r, "Ef").fit.has_value());
+    TS_CHECK(get(r, "Ef").fit->r2 > 0.999999);
+    TS_CHECK(get(r, "Ef").windowAxis == "strain");
 }
 
-TF_CASE(four_point_beam_without_a_break_refuses_the_break_results)
+TS_CASE(four_point_beam_without_a_break_refuses_the_break_results)
 {
     const Fixture fx = load("beam-4pt");
     FlexureGeometry g;
@@ -227,24 +227,24 @@ TF_CASE(four_point_beam_without_a_break_refuses_the_break_results)
     g.loadingSpan = fx.mm("loading_span_mm");
     g.deflectionAt = FlexureGeometry::DeflectionAt::LoadingPoints;
     const AnalysisResult r = analyseCurve(bend(fx, g), flexureMethod());
-    TF_NEAR(get(r, "Ef").value, fx.answer("Ef_Pa"), 1e-6 * fx.answer("Ef_Pa"));
-    TF_NEAR(get(r, "sigma_fM").value, fx.answer("sigma_fM_Pa"), 1e-6 * fx.answer("sigma_fM_Pa"));
-    TF_NEAR(get(r, "epsilon_fM").value, fx.answer("epsilon_fM_1"), 1e-8);
-    TF_NEAR(get(r, "Fm").value, fx.answer("Fm_N"), 1e-6 * fx.answer("Fm_N"));
+    TS_NEAR(get(r, "Ef").value, fx.answer("Ef_Pa"), 1e-6 * fx.answer("Ef_Pa"));
+    TS_NEAR(get(r, "sigma_fM").value, fx.answer("sigma_fM_Pa"), 1e-6 * fx.answer("sigma_fM_Pa"));
+    TS_NEAR(get(r, "epsilon_fM").value, fx.answer("epsilon_fM_1"), 1e-8);
+    TS_NEAR(get(r, "Fm").value, fx.answer("Fm_N"), 1e-6 * fx.answer("Fm_N"));
     for (const char *id : {"sigma_fB", "epsilon_fB"}) {
         const auto it = r.results.find(id);
-        TF_REQUIRE(it != r.results.end());
-        TF_CHECK(!it->second.determined);
-        TF_CHECK(it->second.reason.find("break") != std::string::npos);
+        TS_REQUIRE(it != r.results.end());
+        TS_CHECK(!it->second.determined);
+        TS_CHECK(it->second.reason.find("break") != std::string::npos);
     }
     // The curve stops at 2 % strain, before 3.5 %: refused, not guessed.
     const auto c = r.results.find("sigma_fC");
-    TF_REQUIRE(c != r.results.end());
-    TF_CHECK(!c->second.determined);
-    TF_CHECK(!c->second.reason.empty());
+    TS_REQUIRE(c != r.results.end());
+    TS_CHECK(!c->second.determined);
+    TS_CHECK(!c->second.reason.empty());
 }
 
-TF_CASE(the_same_beam_read_at_mid_span_gives_a_different_modulus)
+TS_CASE(the_same_beam_read_at_mid_span_gives_a_different_modulus)
 {
     // Guards the model's choice of deflection position: the fixture was
     // written with deflection at the loading points, so reading it as
@@ -257,10 +257,10 @@ TF_CASE(the_same_beam_read_at_mid_span_gives_a_different_modulus)
     g.loadingSpan = fx.mm("loading_span_mm");
     g.deflectionAt = FlexureGeometry::DeflectionAt::Midspan;
     const AnalysisResult r = analyseCurve(bend(fx, g), flexureMethod());
-    TF_CHECK(std::fabs(get(r, "Ef").value - fx.answer("Ef_Pa")) > 0.05 * fx.answer("Ef_Pa"));
+    TS_CHECK(std::fabs(get(r, "Ef").value - fx.answer("Ef_Pa")) > 0.05 * fx.answer("Ef_Pa"));
 }
 
-TF_CASE(foam_counts_strain_from_the_steepest_line_and_finds_its_strength)
+TS_CASE(foam_counts_strain_from_the_steepest_line_and_finds_its_strength)
 {
     const Fixture fx = load("foam");
     const double area = fx.mm("width_mm") * fx.mm("thickness_mm");
@@ -273,14 +273,14 @@ TF_CASE(foam_counts_strain_from_the_steepest_line_and_finds_its_strength)
                   {"epsilon_m", CurveQuantity::StrainAtPeak, 0.10},
                   {"sigma_10", CurveQuantity::StressAtStrain, 0.10}};
     const AnalysisResult r = analyseCurve(squeeze(fx, area, fx.mm("height_mm"), 1.0), m);
-    TF_NEAR(get(r, "E").value, fx.answer("E_Pa"), 1e-6 * fx.answer("E_Pa"));
-    TF_NEAR(r.strainOrigin, fx.answer("zero_point_1"), 1e-8);
-    TF_NEAR(get(r, "sigma_m").value, fx.answer("sigma_m_Pa"), 1e-6 * fx.answer("sigma_m_Pa"));
-    TF_NEAR(get(r, "epsilon_m").value, fx.answer("epsilon_m_1"), 1e-8);
-    TF_NEAR(get(r, "sigma_10").value, fx.answer("sigma_10_Pa"), 1e-6 * fx.answer("sigma_10_Pa"));
+    TS_NEAR(get(r, "E").value, fx.answer("E_Pa"), 1e-6 * fx.answer("E_Pa"));
+    TS_NEAR(r.strainOrigin, fx.answer("zero_point_1"), 1e-8);
+    TS_NEAR(get(r, "sigma_m").value, fx.answer("sigma_m_Pa"), 1e-6 * fx.answer("sigma_m_Pa"));
+    TS_NEAR(get(r, "epsilon_m").value, fx.answer("epsilon_m_1"), 1e-8);
+    TS_NEAR(get(r, "sigma_10").value, fx.answer("sigma_10_Pa"), 1e-6 * fx.answer("sigma_10_Pa"));
 }
 
-TF_CASE(a_curve_still_rising_at_ten_percent_has_no_strength_before_it)
+TS_CASE(a_curve_still_rising_at_ten_percent_has_no_strength_before_it)
 {
     // Straight, then flattening, still rising through 10 % and beyond.
     CurveInput in;
@@ -298,15 +298,15 @@ TF_CASE(a_curve_still_rising_at_ten_percent_has_no_strength_before_it)
     const AnalysisResult r = analyseCurve(in, m);
     for (const char *id : {"sigma_m", "epsilon_m"}) {
         const auto it = r.results.find(id);
-        TF_REQUIRE(it != r.results.end());
-        TF_CHECK(!it->second.determined);
-        TF_CHECK(it->second.reason.find("10 %") != std::string::npos);
+        TS_REQUIRE(it != r.results.end());
+        TS_CHECK(!it->second.determined);
+        TS_CHECK(it->second.reason.find("10 %") != std::string::npos);
     }
     // 2e5 + 1e6 * 0.08 = 280000 Pa, on a straight stretch.
-    TF_NEAR(get(r, "sigma_10").value, 280000.0, 1e-6);
+    TS_NEAR(get(r, "sigma_10").value, 280000.0, 1e-6);
 }
 
-TF_CASE(compression_finds_yield_strength_and_break)
+TS_CASE(compression_finds_yield_strength_and_break)
 {
     const Fixture fx = load("compression");
     const double area = fx.mm("width_mm") * fx.mm("thickness_mm");
@@ -320,13 +320,13 @@ TF_CASE(compression_finds_yield_strength_and_break)
                   {"epsilon_B", CurveQuantity::BreakStrain}};
     const AnalysisResult r = analyseCurve(squeeze(fx, area, fx.mm("length_mm"), -1.0), m);
     for (const char *k : {"Ec", "sigma_y", "sigma_M", "sigma_B"})
-        TF_NEAR(get(r, k).value, fx.answer(std::string(k) + "_Pa"),
+        TS_NEAR(get(r, k).value, fx.answer(std::string(k) + "_Pa"),
                 1e-6 * fx.answer(std::string(k) + "_Pa"));
     for (const char *k : {"epsilon_y", "epsilon_M", "epsilon_B"})
-        TF_NEAR(get(r, k).value, fx.answer(std::string(k) + "_1"), 1e-8);
+        TS_NEAR(get(r, k).value, fx.answer(std::string(k) + "_1"), 1e-8);
 }
 
-TF_CASE(a_curve_without_a_sustained_fall_has_no_yield)
+TS_CASE(a_curve_without_a_sustained_fall_has_no_yield)
 {
     // The four-point beam falls 2.4 % after its maximum for only 0.2 %
     // strain: no yield under a 0.5 % span rule.
@@ -341,13 +341,13 @@ TF_CASE(a_curve_without_a_sustained_fall_has_no_yield)
     const AnalysisResult r = analyseCurve(bend(fx, g), m);
     for (const char *id : {"sigma_y", "epsilon_y"}) {
         const auto it = r.results.find(id);
-        TF_REQUIRE(it != r.results.end());
-        TF_CHECK(!it->second.determined);
-        TF_CHECK(!it->second.reason.empty());
+        TS_REQUIRE(it != r.results.end());
+        TS_CHECK(!it->second.determined);
+        TS_CHECK(!it->second.reason.empty());
     }
 }
 
-TF_CASE(too_few_samples_refuse_every_result)
+TS_CASE(too_few_samples_refuse_every_result)
 {
     CurveInput in;
     for (int k = 0; k < 5; ++k) {
@@ -356,11 +356,11 @@ TF_CASE(too_few_samples_refuse_every_result)
         in.strain.push_back(k * 1e-3);
     }
     const AnalysisResult r = analyseCurve(in, flexureMethod());
-    TF_CHECK(r.results.size() == flexureMethod().requests.size());
+    TS_CHECK(r.results.size() == flexureMethod().requests.size());
     for (const auto &[id, d] : r.results) {
-        TF_CHECK(!d.determined);
-        TF_CHECK(!d.reason.empty());
+        TS_CHECK(!d.determined);
+        TS_CHECK(!d.reason.empty());
     }
 }
 
-int main() { return tf::test::run(); }
+int main() { return ts::test::run(); }

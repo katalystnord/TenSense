@@ -5,7 +5,7 @@
 #include <limits>
 #include <vector>
 
-namespace tf::analysis {
+namespace ts::analysis {
 
 namespace {
 
@@ -171,4 +171,4 @@ double energy(Samples x, Samples y, std::size_t first, std::size_t last)
     return area;
 }
 
-} // namespace tf::analysis
+} // namespace ts::analysis

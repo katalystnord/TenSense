@@ -11,7 +11,7 @@
 #include <algorithm>
 #include <cmath>
 
-namespace tf::gui {
+namespace ts::gui {
 
 vtkStandardNewMacro(AnnotatedChart);
 
@@ -171,4 +171,4 @@ bool AnnotatedChart::MouseButtonReleaseEvent(const vtkContextMouseEvent &mouse)
     return true;
 }
 
-} // namespace tf::gui
+} // namespace ts::gui

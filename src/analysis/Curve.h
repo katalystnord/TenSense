@@ -6,7 +6,7 @@
 // Standard-neutral, like the tension model. The stress and strain arrive
 // already computed by a mode's model (Models.h, or force over area); which
 // results are wanted and every number that steers how they are found come
-// in CurveMethod, filled from a profile by tf_core.
+// in CurveMethod, filled from a profile by ts_core.
 
 #include "analysis/Primitives.h"
 #include "analysis/Result.h"
@@ -14,7 +14,7 @@
 #include <string>
 #include <vector>
 
-namespace tf::analysis {
+namespace ts::analysis {
 
 struct CurveInput {
     std::vector<double> force;   // N, positive in the direction of the test
@@ -83,4 +83,4 @@ struct CurveMethod {
 
 AnalysisResult analyseCurve(const CurveInput &in, const CurveMethod &m);
 
-} // namespace tf::analysis
+} // namespace ts::analysis

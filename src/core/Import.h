@@ -18,7 +18,7 @@
 #include <optional>
 #include <vector>
 
-namespace tf::core {
+namespace ts::core {
 
 struct PreambleEntry {
     QString key;
@@ -85,7 +85,7 @@ struct TensionMapping {
 };
 
 struct TensionImport {
-    tf::analysis::TensionInput input;
+    ts::analysis::TensionInput input;
     QString forceColumn, extensionColumn;
     QString forceUnit, extensionUnit;  // as used, from the file or the mapping
     bool extensionIsStrain = false;    // the column was a strain (%): gauge length 1
@@ -116,4 +116,4 @@ std::optional<double> fileResultQuantity(const Table &table, const QStringList &
 // most common first.
 QStringList knownUnits(const QString &dimension);
 
-} // namespace tf::core
+} // namespace ts::core

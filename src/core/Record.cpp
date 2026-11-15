@@ -18,11 +18,23 @@
 #include <cmath>
 #include <map>
 
-namespace tf::core {
+namespace ts::core {
 
 namespace {
 
-const QString kManifest = QStringLiteral("manifest.tfrec");
+const QString kManifest = QStringLiteral("manifest.tsrec");
+// The manifest's name before the rename to TenSense (2026-11-15).
+const QString kOldManifest = QStringLiteral("manifest.tfrec");
+
+// The record's manifest: manifest.tsrec, or an older record's
+// manifest.tfrec; empty when there is neither.
+QString manifestIn(const QString &dir)
+{
+    for (const QString &name : {kManifest, kOldManifest})
+        if (QFile::exists(dir + "/" + name))
+            return dir + "/" + name;
+    return {};
+}
 
 QByteArray sha256Hex(const QByteArray &bytes)
 {
@@ -138,7 +150,7 @@ QStringList filesUnder(const QString &dir)
     const QDir base(dir);
     while (it.hasNext()) {
         const QString rel = base.relativeFilePath(it.next());
-        if (rel != kManifest)
+        if (rel != kManifest && rel != kOldManifest)
             out << rel;
     }
     out.sort();
@@ -373,12 +385,13 @@ OpenedRecord openRecord(const QString &dirIn)
     if (QFileInfo(dir).isFile())
         dir = QFileInfo(dir).absolutePath();  // the manifest itself was named
     r.dir = dir;
-    if (!QFile::exists(dir + "/" + kManifest)) {
+    const QString manifestPath = manifestIn(dir);
+    if (manifestPath.isEmpty()) {
         r.error = "no " + kManifest + " in " + dir + "; it is not a TenSense record";
         return r;
     }
     QString err;
-    const QJsonObject manifest = readJson(dir + "/" + kManifest, &err);
+    const QJsonObject manifest = readJson(manifestPath, &err);
     if (!err.isEmpty()) {
         r.error = err;
         return r;
@@ -386,7 +399,7 @@ OpenedRecord openRecord(const QString &dirIn)
     // "tenforge-record": written before the rename to TenSense (2026-11-15).
     if (const QString fmt = manifest.value("format").toString();
         fmt != "tensense-record" && fmt != "tenforge-record") {
-        r.error = dir + "/" + kManifest + " is not a TenSense record manifest";
+        r.error = manifestPath + " is not a TenSense record manifest";
         return r;
     }
     const QString version = manifest.value("version").toString();
@@ -515,7 +528,10 @@ OpenedRecord openRecord(const QString &dirIn)
 QString addUnlistedFiles(const QString &dir)
 {
     QString err;
-    QJsonObject manifest = readJson(dir + "/" + kManifest, &err);
+    const QString manifestPath = manifestIn(dir);
+    if (manifestPath.isEmpty())
+        return "no " + kManifest + " in " + dir;
+    QJsonObject manifest = readJson(manifestPath, &err);
     if (!err.isEmpty())
         return err;
     QJsonArray files = manifest.value("files").toArray();
@@ -528,11 +544,11 @@ QString addUnlistedFiles(const QString &dir)
                                  {"sha256", QString::fromLatin1(sha256Hex(f.readAll()))}});
     }
     manifest["files"] = files;
-    QSaveFile mf(dir + "/" + kManifest);
+    QSaveFile mf(manifestPath);
     const QByteArray mb = jsonBytes(manifest);
     if (!mf.open(QIODevice::WriteOnly) || mf.write(mb) != mb.size() || !mf.commit())
         return "cannot write the manifest in " + dir;
     return {};
 }
 
-} // namespace tf::core
+} // namespace ts::core

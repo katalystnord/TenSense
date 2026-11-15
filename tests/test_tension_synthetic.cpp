@@ -14,10 +14,10 @@
 #include <sstream>
 #include <string>
 
-using namespace tf::analysis;
+using namespace ts::analysis;
 
-#ifndef TF_FIXTURES
-#error "TF_FIXTURES must point at tests/fixtures"
+#ifndef TS_FIXTURES
+#error "TS_FIXTURES must point at tests/fixtures"
 #endif
 
 namespace {
@@ -43,7 +43,7 @@ struct Fixture {
 
 Fixture load(const std::string &name)
 {
-    const std::string dir = std::string(TF_FIXTURES) + "/synthetic/";
+    const std::string dir = std::string(TS_FIXTURES) + "/synthetic/";
     Fixture fx;
     std::ifstream j(dir + name + ".json");
     std::stringstream ss;
@@ -80,81 +80,81 @@ const Determination &get(const TensionResult &r, const std::string &id)
 
 } // namespace
 
-TF_CASE(continuous_curve_gives_its_constructed_proof_strength_and_modulus)
+TS_CASE(continuous_curve_gives_its_constructed_proof_strength_and_modulus)
 {
     const Fixture fx = load("ro-continuous");
     const TensionResult r = analyseTension(fx.input, TensionMethod{});
-    TF_CHECK(get(r, "E").determined);
-    TF_NEAR(get(r, "E").value, fx.answer("E_Pa"), 0.001 * fx.answer("E_Pa"));
+    TS_CHECK(get(r, "E").determined);
+    TS_NEAR(get(r, "E").value, fx.answer("E_Pa"), 0.001 * fx.answer("E_Pa"));
     // 0.05 MPa: far inside the 2 MPa of EN 10002-1 A.5, and wide enough for
     // the fitted (not given) modulus.
-    TF_NEAR(get(r, "Rp0.2").value, fx.answer("Rp0.2_Pa"), 0.05e6);
-    TF_NEAR(get(r, "Rm").value, fx.answer("Rm_Pa"), 1e3);
-    TF_NEAR(get(r, "Fm").value, fx.answer("Fm_N"), 0.01);
-    TF_NEAR(get(r, "Agt").value, fx.answer("Agt_1"), 1e-5);
-    TF_NEAR(get(r, "Ag").value, fx.answer("Ag_1"), 1e-5);
-    TF_NEAR(get(r, "At").value, fx.answer("At_1"), 1e-5);
-    TF_NEAR(get(r, "A").value, fx.answer("A_1"), 1e-5);
+    TS_NEAR(get(r, "Rp0.2").value, fx.answer("Rp0.2_Pa"), 0.05e6);
+    TS_NEAR(get(r, "Rm").value, fx.answer("Rm_Pa"), 1e3);
+    TS_NEAR(get(r, "Fm").value, fx.answer("Fm_N"), 0.01);
+    TS_NEAR(get(r, "Agt").value, fx.answer("Agt_1"), 1e-5);
+    TS_NEAR(get(r, "Ag").value, fx.answer("Ag_1"), 1e-5);
+    TS_NEAR(get(r, "At").value, fx.answer("At_1"), 1e-5);
+    TS_NEAR(get(r, "A").value, fx.answer("A_1"), 1e-5);
 }
 
-TF_CASE(continuous_curve_has_no_yield_point)
+TS_CASE(continuous_curve_has_no_yield_point)
 {
     const Fixture fx = load("ro-continuous");
     const TensionResult r = analyseTension(fx.input, TensionMethod{});
     const auto it = r.results.find("ReH");
-    TF_CHECK(it != r.results.end());
-    TF_CHECK(it != r.results.end() && !it->second.determined);
-    TF_CHECK(it != r.results.end() && !it->second.reason.empty());
+    TS_CHECK(it != r.results.end());
+    TS_CHECK(it != r.results.end() && !it->second.determined);
+    TS_CHECK(it != r.results.end() && !it->second.reason.empty());
 }
 
-TF_CASE(discontinuous_curve_gives_its_planted_yield_points)
+TS_CASE(discontinuous_curve_gives_its_planted_yield_points)
 {
     const Fixture fx = load("discontinuous");
     const TensionResult r = analyseTension(fx.input, TensionMethod{});
-    TF_NEAR(get(r, "ReH").value, fx.answer("ReH_Pa"), 1e3);
-    TF_NEAR(get(r, "ReL").value, fx.answer("ReL_Pa"), 1e3);
-    TF_NEAR(get(r, "Rm").value, fx.answer("Rm_Pa"), 1e3);
-    TF_NEAR(get(r, "E").value, fx.answer("E_Pa"), 0.001 * fx.answer("E_Pa"));
-    TF_NEAR(get(r, "Agt").value, fx.answer("Agt_1"), 1e-5);
-    TF_NEAR(get(r, "Ag").value, fx.answer("Ag_1"), 1e-5);
-    TF_NEAR(get(r, "At").value, fx.answer("At_1"), 1e-5);
-    TF_NEAR(get(r, "A").value, fx.answer("A_1"), 1e-5);
+    TS_NEAR(get(r, "ReH").value, fx.answer("ReH_Pa"), 1e3);
+    TS_NEAR(get(r, "ReL").value, fx.answer("ReL_Pa"), 1e3);
+    TS_NEAR(get(r, "Rm").value, fx.answer("Rm_Pa"), 1e3);
+    TS_NEAR(get(r, "E").value, fx.answer("E_Pa"), 0.001 * fx.answer("E_Pa"));
+    TS_NEAR(get(r, "Agt").value, fx.answer("Agt_1"), 1e-5);
+    TS_NEAR(get(r, "Ag").value, fx.answer("Ag_1"), 1e-5);
+    TS_NEAR(get(r, "At").value, fx.answer("At_1"), 1e-5);
+    TS_NEAR(get(r, "A").value, fx.answer("A_1"), 1e-5);
 }
 
-TF_CASE(lower_yield_follows_the_transient_rule_the_method_names)
+TS_CASE(lower_yield_follows_the_transient_rule_the_method_names)
 {
     const Fixture fx = load("transient-lowest");
     TensionMethod m;
     m.lowerYieldIgnoresTransient = false;
-    TF_NEAR(get(analyseTension(fx.input, m), "ReL").value,
+    TS_NEAR(get(analyseTension(fx.input, m), "ReL").value,
             fx.answer("ReL_including_transient_Pa"), 1e3);
     m.lowerYieldIgnoresTransient = true;
-    TF_NEAR(get(analyseTension(fx.input, m), "ReL").value,
+    TS_NEAR(get(analyseTension(fx.input, m), "ReL").value,
             fx.answer("ReL_ignoring_transient_Pa"), 1e3);
 }
 
-TF_CASE(every_result_says_which_primitive_made_it)
+TS_CASE(every_result_says_which_primitive_made_it)
 {
     const Fixture fx = load("discontinuous");
     const TensionResult r = analyseTension(fx.input, TensionMethod{});
     for (const auto &[id, d] : r.results) {
         if (d.determined && d.primitive.empty())
-            tf::test::fail(__FILE__, __LINE__, id + " has no primitive");
+            ts::test::fail(__FILE__, __LINE__, id + " has no primitive");
     }
-    TF_CHECK(get(r, "E").fit.has_value());
-    TF_CHECK(get(r, "E").window.has_value());
+    TS_CHECK(get(r, "E").fit.has_value());
+    TS_CHECK(get(r, "E").window.has_value());
 }
 
-TF_CASE(missing_geometry_is_refused_not_guessed)
+TS_CASE(missing_geometry_is_refused_not_guessed)
 {
     Fixture fx = load("ro-continuous");
     fx.input.area = 0;
     const TensionResult r = analyseTension(fx.input, TensionMethod{});
-    TF_CHECK(!get(r, "Rm").determined);
-    TF_CHECK(r.results.count("Rm") && r.results.at("Rm").reason.find("area") != std::string::npos);
+    TS_CHECK(!get(r, "Rm").determined);
+    TS_CHECK(r.results.count("Rm") && r.results.at("Rm").reason.find("area") != std::string::npos);
 }
 
-TF_CASE(extensometer_removed_early_keeps_force_results_and_refuses_strain_ones)
+TS_CASE(extensometer_removed_early_keeps_force_results_and_refuses_strain_ones)
 {
     // As in BAM's S355 tests: the extensometer comes off at 3 % strain, the
     // force channel runs on to fracture. Stress results stay; strains after
@@ -164,18 +164,18 @@ TF_CASE(extensometer_removed_early_keeps_force_results_and_refuses_strain_ones)
         if (x / fx.input.gaugeLength > 0.03)
             x = std::nan("");
     const TensionResult r = analyseTension(fx.input, TensionMethod{});
-    TF_NEAR(get(r, "ReH").value, fx.answer("ReH_Pa"), 1e3);
-    TF_NEAR(get(r, "ReL").value, fx.answer("ReL_Pa"), 1e3);
-    TF_NEAR(get(r, "Rm").value, fx.answer("Rm_Pa"), 1e3);
-    TF_NEAR(get(r, "E").value, fx.answer("E_Pa"), 0.001 * fx.answer("E_Pa"));
+    TS_NEAR(get(r, "ReH").value, fx.answer("ReH_Pa"), 1e3);
+    TS_NEAR(get(r, "ReL").value, fx.answer("ReL_Pa"), 1e3);
+    TS_NEAR(get(r, "Rm").value, fx.answer("Rm_Pa"), 1e3);
+    TS_NEAR(get(r, "E").value, fx.answer("E_Pa"), 0.001 * fx.answer("E_Pa"));
     for (const char *id : {"Agt", "Ag", "At", "A"}) {
         const auto &d = r.results.at(id);
         if (d.determined || d.reason.find("extension") == std::string::npos)
-            tf::test::fail(__FILE__, __LINE__, std::string(id) + " should be refused for missing extension");
+            ts::test::fail(__FILE__, __LINE__, std::string(id) + " should be refused for missing extension");
     }
 }
 
-TF_CASE(polymer_curve_gives_its_modulus_from_a_strain_window_and_its_break)
+TS_CASE(polymer_curve_gives_its_modulus_from_a_strain_window_and_its_break)
 {
     // ISO 527 style: the modulus between two strains, strain counted from
     // the recorded zero, maximum and break read off the curve.
@@ -188,13 +188,13 @@ TF_CASE(polymer_curve_gives_its_modulus_from_a_strain_window_and_its_break)
     m.yieldPoint = false;
     m.proofOffsets.clear();
     const TensionResult r = analyseTension(fx.input, m);
-    TF_NEAR(get(r, "E").value, fx.answer("Et_Pa"), 1e-6 * fx.answer("Et_Pa"));
-    TF_CHECK(get(r, "E").window.has_value());
-    TF_NEAR(get(r, "Rm").value, fx.answer("sigma_m_Pa"), 1e3);
-    TF_NEAR(get(r, "Agt").value, fx.answer("epsilon_m_1"), 1e-6);
-    TF_NEAR(get(r, "At").value, fx.answer("epsilon_b_1"), 1e-6);
-    TF_NEAR(get(r, "Rb").value, fx.answer("sigma_b_Pa"), 1e3);
-    TF_CHECK(r.results.count("Rp0.2") == 0);
+    TS_NEAR(get(r, "E").value, fx.answer("Et_Pa"), 1e-6 * fx.answer("Et_Pa"));
+    TS_CHECK(get(r, "E").window.has_value());
+    TS_NEAR(get(r, "Rm").value, fx.answer("sigma_m_Pa"), 1e3);
+    TS_NEAR(get(r, "Agt").value, fx.answer("epsilon_m_1"), 1e-6);
+    TS_NEAR(get(r, "At").value, fx.answer("epsilon_b_1"), 1e-6);
+    TS_NEAR(get(r, "Rb").value, fx.answer("sigma_b_Pa"), 1e3);
+    TS_CHECK(r.results.count("Rp0.2") == 0);
 }
 
-int main() { return tf::test::run(); }
+int main() { return ts::test::run(); }
